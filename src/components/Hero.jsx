@@ -4,40 +4,101 @@ import gsap from 'gsap';
 
 const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+const serviceNames = [
+  "Brand Strategy",
+  "Graphic Design",
+  "Content & Copy",
+  "Social Creative",
+  "Ad Campaigns",
+  "Video & Motion",
+  "Photo Direction",
+  "UI/UX Design",
+  "Web Development"
+];
+
 export default function Hero() {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const hoveredNodeRef = useRef(-1);
+  const animStateRef = useRef({ progress: 0 });
 
-  // ── Intro animations ──
+  // ── Intro Reveal Sequence ──
   useEffect(() => {
-    gsap.fromTo(".reveal-text",
-      { y: "110%" },
-      { y: "0%", duration: 1.4, ease: "power4.out", stagger: 0.1, delay: 0.3 }
+    const tl = gsap.timeline();
+
+    // 1. Logo fade-in & slide-down
+    tl.fromTo(".logo-link",
+      { opacity: 0, y: -15 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
     );
-    gsap.fromTo(".fade-in-el",
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 1.0, ease: "power3.out", stagger: 0.15, delay: 1.0 }
+
+    // 2. Navigation items staggered fade-in & slide-down
+    tl.fromTo(".nav-item-animate",
+      { opacity: 0, y: -15 },
+      { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" },
+      "-=0.6"
+    );
+
+    // 3. Headline reveal line by line
+    tl.fromTo(".reveal-text",
+      { y: "110%" },
+      { y: "0%", duration: 1.2, ease: "power4.out", stagger: 0.15 },
+      "-=0.4"
+    );
+
+    // 4. 9D Orbit expansion
+    tl.to(animStateRef.current,
+      { progress: 1, duration: 1.8, ease: "power3.out" },
+      "-=0.4"
+    );
+
+    // 5. Description fade-in
+    tl.fromTo(".hero-description",
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      "-=1.2"
+    );
+
+    // 6. Accent line fade-in
+    tl.fromTo(".hero-accent",
+      { opacity: 0, scaleX: 0 },
+      { opacity: 1, scaleX: 1, duration: 0.8, ease: "power3.out" },
+      "-=1.0"
+    );
+
+    // 7. CTA fade-in
+    tl.fromTo(".hero-cta",
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      "-=0.8"
     );
   }, []);
 
-  // ── Scroll-based fade & translate ──
+  // ── Scroll-based translate, scale & darken ──
   useEffect(() => {
     const content = contentRef.current;
-    if (!content) return;
+    const container = containerRef.current;
+    if (!content || !container) return;
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const maxScroll = 400;
+      const maxScroll = 200; // Scroll 200px
       const progress = Math.min(scrollY / maxScroll, 1);
 
-      const translateY = -progress * 28;
-      const opacity = 1 - progress * 0.7;
-
+      // 1. Heading moves up slightly
+      const translateY = -progress * 30;
       content.style.transform = `translateY(${translateY}px)`;
-      content.style.opacity = opacity;
+
+      // 2. Orbit scales down 3%
+      container.style.setProperty('--orbit-scale', 1 - progress * 0.03);
+
+      // 3. Background darkens slightly (via black overlay)
+      const bgOverlay = container.querySelector('.hero-bg-overlay');
+      if (bgOverlay) {
+        bgOverlay.style.opacity = progress * 0.65;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -64,17 +125,14 @@ export default function Hero() {
     };
     setSize();
 
-    const animState = { progress: 0 };
-    gsap.to(animState, { progress: 1, duration: 2.0, ease: "power3.out", delay: 0.3 });
-
     window.addEventListener('resize', setSize);
 
     // Touch vs mouse detection
     const isTouch = isTouchDevice();
 
-    // Slow continuous rotation — ~50 seconds per revolution
+    // Slow continuous rotation — exactly 60 seconds per revolution (60s * 60fps = 3600 frames)
     let baseAngle = 0;
-    const rotationSpeed = (2 * Math.PI) / (50 * 60);
+    const rotationSpeed = (2 * Math.PI) / 3600;
 
     const findClosestNode = (clientX, clientY) => {
       const rect = canvas.getBoundingClientRect();
@@ -121,9 +179,24 @@ export default function Hero() {
       hoveredNodeRef.current = -1;
     };
 
+    const handleClick = () => {
+      const hoveredNode = hoveredNodeRef.current;
+      if (hoveredNode >= 0) {
+        // Dispatch selectDimension event (1-indexed)
+        window.dispatchEvent(new CustomEvent('selectDimension', { detail: hoveredNode + 1 }));
+
+        // Scroll to Philosophy section
+        const philosophySec = document.getElementById('philosophy');
+        if (philosophySec) {
+          philosophySec.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
     canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
+    canvas.addEventListener('click', handleClick);
 
     // Smooth mouse influence (lerped)
     let tiltX = 0;
@@ -133,7 +206,7 @@ export default function Hero() {
       if (!ctx) return;
       ctx.clearRect(0, 0, w, h);
 
-      const p = animState.progress;
+      const p = animStateRef.current.progress;
       const t = Date.now() * 0.001;
       const cx = w / 2;
       const cy = h / 2;
@@ -178,7 +251,7 @@ export default function Hero() {
       ctx.fill();
 
       if (p > 0.5) {
-        ctx.font = `700 ${14 * p}px var(--font-heading)`;
+        ctx.font = `700 ${14 * p}px Outfit, sans-serif`;
         ctx.fillStyle = `rgba(4, 12, 8, ${p})`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -217,6 +290,43 @@ export default function Hero() {
         ctx.arc(nx, ny, nodeRadius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(190, 242, 100, ${(isHovered ? 1 : 0.85) * p})`;
         ctx.fill();
+
+        // Interactive Signature Hover: Leader line and service title
+        if (isHovered && p > 0.8) {
+          const isRight = nx > tcx;
+          
+          // Leader line coordinates
+          const lineLength = 50;
+          const dx = isRight ? lineLength : -lineLength;
+          const dy = ny > tcy ? 30 : -30;
+
+          ctx.beginPath();
+          ctx.moveTo(nx, ny);
+          ctx.lineTo(nx + dx * 0.4, ny + dy * 0.4);
+          ctx.lineTo(nx + dx, ny + dy);
+          ctx.strokeStyle = 'rgba(190, 242, 100, 0.4)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+
+          // Text layout alignment
+          ctx.textAlign = isRight ? 'left' : 'right';
+          ctx.textBaseline = 'middle';
+
+          // 01 / Number in green
+          ctx.font = '700 10px Outfit, sans-serif';
+          ctx.fillStyle = '#bef264';
+          const labelNum = `0${i + 1}`;
+          ctx.fillText(labelNum, nx + dx + (isRight ? 8 : -8), ny + dy - 7);
+
+          // Service Title in white
+          ctx.font = '500 13px Inter, sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(serviceNames[i], nx + dx + (isRight ? 8 : -8), ny + dy + 7);
+
+          // Reset alignments
+          ctx.textAlign = 'start';
+          ctx.textBaseline = 'alphabetic';
+        }
       }
 
       animationFrameId = requestAnimationFrame(draw);
@@ -230,6 +340,7 @@ export default function Hero() {
       window.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('touchstart', handleTouchStart);
       canvas.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener('click', handleClick);
     };
   }, []);
 
@@ -241,12 +352,15 @@ export default function Hero() {
         background: 'radial-gradient(circle at 55% 50%, rgba(190, 242, 100, 0.015), transparent 55%)'
       }}
     >
+      {/* Background Dark Overlay for Scroll Interaction */}
+      <div className="hero-bg-overlay absolute inset-0 bg-[#040c08] pointer-events-none opacity-0 z-[1] transition-opacity duration-150" />
+
       {/* Grid guides — hidden on phones */}
       <div className="blueprint-grid-line vertical left-5 xs:left-6 md:left-16 hidden sm:block" />
       <div className="blueprint-grid-line vertical left-[50%] hidden lg:block" />
       <div className="blueprint-grid-line horizontal bottom-0" />
 
-      {/* Corner labels — hidden on small phones, appear from large phones */}
+      {/* Corner labels */}
       <div className="absolute top-10 xs:top-12 left-5 xs:left-6 md:left-16 font-body text-[7px] xs:text-[8px] tracking-[0.12em] xs:tracking-[0.15em] text-white/[0.35] select-none z-20 hidden xs:block">
         The Creative Agency of Naya Growth
       </div>
@@ -254,41 +368,45 @@ export default function Hero() {
         Naya Growth Pvt. Ltd.
       </div>
 
-      {/* Nine Core Canvas — responsive offset via CSS */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+      {/* Nine Core Canvas */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]">
         <div className="w-full h-full pointer-events-auto canvas-orbit-wrapper">
           <canvas ref={canvasRef} className="w-full h-full" />
         </div>
       </div>
 
-      {/* Content — scroll fade target */}
+      {/* Content */}
       <div
         ref={contentRef}
         className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8"
         style={{ willChange: 'transform, opacity' }}
       >
-        {/* Heading — using fully responsive hero-heading CSS class */}
         <h1 className="hero-heading">
-          <div className="reveal-mask"><span className="reveal-text block">Building</span></div>
-          <div className="reveal-mask"><span className="reveal-text block">Brands</span></div>
-          <div className="reveal-mask mt-1 xs:mt-1.5 sm:mt-2"><span className="reveal-text block">Across</span></div>
-          <div className="reveal-mask"><span className="reveal-text block">Nine</span></div>
-          <div className="reveal-mask"><span className="reveal-text block text-[#bef264]">Dimensions.</span></div>
+          <div className="reveal-mask">
+            <span className="reveal-text block">
+              Building <span className="italic font-light">Brands</span>
+            </span>
+          </div>
+          <div className="reveal-mask mt-1 xs:mt-1.5 sm:mt-2">
+            <span className="reveal-text block">
+              Across Nine <span className="text-[#bef264] italic">Dimensions.</span>
+            </span>
+          </div>
         </h1>
 
         {/* Line accent */}
-        <div className="fade-in-el w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-2 xs:mb-2.5 sm:mb-3 opacity-0" />
+        <div className="hero-accent w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-6 xs:mt-8 sm:mt-10 mb-4 xs:mb-5 sm:mb-6 opacity-0 origin-left" />
 
         {/* Description */}
-        <p className="fade-in-el font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-3 xs:mb-4 sm:mb-5 opacity-0">
-          Nine creative disciplines. One creative system for ambitious brands.
+        <p className="hero-description font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-6 xs:mb-8 sm:mb-10 opacity-0">
+          Nine creative disciplines. One creative system built to shape modern brands.
         </p>
 
         {/* CTA */}
-        <div className="fade-in-el opacity-0">
+        <div className="hero-cta opacity-0">
           <a
             href="#services"
-            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/15 hover:border-white/40 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase"
+            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/15 hover:border-white/70 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase"
           >
             <span>Explore The System</span>
             <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform duration-300" />

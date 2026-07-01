@@ -3,6 +3,8 @@ import { CursorProvider } from './context/CursorContext';
 import Cursor from './components/Cursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Story from './components/Story';
+import Philosophy from './components/Philosophy';
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
 
         <Navbar />
         <Hero />
+        <Story />
+        <Philosophy />
         <Cursor />
       </div>
     </CursorProvider>

@@ -190,7 +190,7 @@ export default function Philosophy() {
           <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#10B981] uppercase mb-3 xs:mb-4">
             Interactive Grid
           </span>
-          <h2 className="fade-in-el font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white leading-none">
+          <h2 className="fade-in-el font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-none">
             The Nine Dimensions
           </h2>
           <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#10B981]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
@@ -214,7 +214,7 @@ export default function Philosophy() {
                 Dimension System
               </span>
               
-              <h3 className="anim-fade-up font-heading text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-3 xs:mb-4 sm:mb-5 md:mb-6 uppercase tracking-tight">
+              <h3 className="anim-fade-up font-heading text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 xs:mb-4 sm:mb-5 md:mb-6 tracking-tight">
                 {activeDetails.title}
               </h3>
               

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;700;800&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 @import "tailwindcss";
 
@@ -8,7 +8,7 @@
   --color-neon-emerald: #10B981;
   --color-mint-green: #34D399;
 
-  --font-heading: 'Syne', sans-serif;
+  --font-heading: 'Cormorant Garamond', serif;
   --font-subheading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
 
@@ -428,35 +428,35 @@ body.cursor-hovering-connect .cursor-ring {
    Breakpoints: phone centered → tablet partial → desktop offset
    ══════════════════════════════════════════════════════════════ */
 .canvas-orbit-wrapper {
-  transform: translateX(0%);
-  transition: transform 0.3s ease;
+  transform: translateX(0%) scale(var(--orbit-scale, 1));
+  transition: transform 0.1s ease-out;
 }
 
 /* 481px+ iPads/tablets — slight offset */
 @media (min-width: 481px) {
   .canvas-orbit-wrapper {
-    transform: translateX(8%);
+    transform: translateX(8%) scale(var(--orbit-scale, 1));
   }
 }
 
 /* 769px+ large tablets — more offset */
 @media (min-width: 769px) {
   .canvas-orbit-wrapper {
-    transform: translateX(12%);
+    transform: translateX(12%) scale(var(--orbit-scale, 1));
   }
 }
 
 /* 1025px+ laptops — full offset */
 @media (min-width: 1025px) {
   .canvas-orbit-wrapper {
-    transform: translateX(18%);
+    transform: translateX(18%) scale(var(--orbit-scale, 1));
   }
 }
 
 /* 1921px+ ultrawide — slightly more to keep orbit in visual frame */
 @media (min-width: 1921px) {
   .canvas-orbit-wrapper {
-    transform: translateX(22%);
+    transform: translateX(22%) scale(var(--orbit-scale, 1));
   }
 }
 
@@ -537,60 +537,60 @@ body.cursor-hovering-connect .cursor-ring {
    ══════════════════════════════════════════════════════════════ */
 .hero-heading {
   font-family: var(--font-heading);
-  font-weight: 800;
-  text-transform: uppercase;
+  font-weight: 500;
+  text-transform: none;
   color: #ffffff;
   user-select: none;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  font-size: clamp(1.4rem, 8.5vw, 2.3rem); /* mobile fluid sizing */
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 10vw, 3.8rem); /* fluid sizing for elegant serif */
 }
 
 /* Large phones (376px–480px) */
 @media (min-width: 376px) {
   .hero-heading {
-    font-size: clamp(1.8rem, 8.5vw, 2.7rem);
+    font-size: clamp(2.8rem, 10vw, 4.4rem);
   }
 }
 
 /* iPads and tablets (481px–768px) */
 @media (min-width: 481px) {
   .hero-heading {
-    font-size: clamp(2.3rem, 7vw, 3.2rem);
+    font-size: clamp(3.5rem, 8vw, 5rem);
   }
 }
 
 /* Large tablets and notebooks (769px–1024px) */
 @media (min-width: 769px) {
   .hero-heading {
-    font-size: clamp(2.8rem, 6vw, 3.5rem);
+    font-size: clamp(4.2rem, 7.5vw, 5.8rem);
   }
 }
 
 /* Small laptops (1025px–1366px) */
 @media (min-width: 1025px) {
   .hero-heading {
-    font-size: clamp(3rem, 4vw, 3.8rem);
+    font-size: clamp(4.8rem, 5.5vw, 6.5rem);
   }
 }
 
 /* Large laptops & standard desktops (1367px+) */
 @media (min-width: 1367px) {
   .hero-heading {
-    font-size: clamp(3.2rem, 3.8vw, 4.2rem);
+    font-size: clamp(5.5rem, 5vw, 7.5rem);
   }
 }
 
 /* Height-safety fallback for short screens (e.g., laptop/desktop with small viewport height) */
 @media (min-width: 1025px) and (max-height: 720px) {
   .hero-heading {
-    font-size: clamp(2.5rem, 7.2vh, 3.5rem) !important;
+    font-size: clamp(3.5rem, 7.5vh, 4.8rem) !important;
   }
 }
 
 /* Very short heights (mobile landscape or extremely short laptop heights) */
 @media (max-height: 520px) {
   .hero-heading {
-    font-size: clamp(1.2rem, 8.5vh, 2.2rem) !important;
+    font-size: clamp(1.8rem, 8.5vh, 2.8rem) !important;
   }
 }

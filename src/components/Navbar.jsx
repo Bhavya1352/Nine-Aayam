@@ -61,7 +61,7 @@ export default function Navbar() {
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="nav-link font-subheading text-[0.75rem] xl:text-[0.8rem] font-medium tracking-[0.15em] text-[#f3f4f6]/60 hover:text-white transition-colors duration-300 relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-[#bef264] after:transition-all after:duration-300 hover:after:w-full"
+              className="nav-link nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-medium tracking-[0.15em] text-[#f3f4f6]/60 hover:text-white transition-colors duration-300 relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-[#bef264] after:transition-all after:duration-300 hover:after:w-full"
               onMouseEnter={() => setCursor('view')}
               onMouseLeave={() => setCursor('')}
             >
@@ -71,7 +71,7 @@ export default function Navbar() {
 
           <a
             href="#connect"
-            className="font-subheading text-[0.75rem] xl:text-[0.8rem] font-bold tracking-[0.15em] text-[#bef264] border border-[#bef264]/20 rounded-full px-5 xl:px-6 py-2 xl:py-2.5 bg-[#bef264]/5 hover:bg-[#bef264] hover:text-[#040c08] hover:border-[#bef264] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#bef264]/5"
+            className="nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-bold tracking-[0.15em] text-[#bef264] border border-[#bef264]/20 rounded-full px-5 xl:px-6 py-2 xl:py-2.5 bg-[#bef264]/5 hover:bg-[#bef264] hover:text-[#040c08] hover:border-[#bef264] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#bef264]/5"
             onMouseEnter={() => setCursor('connect')}
             onMouseLeave={() => setCursor('')}
           >
@@ -83,7 +83,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden text-white hover:text-[#bef264] transition-colors p-1"
+          className="lg:hidden nav-item-animate text-white hover:text-[#bef264] transition-colors p-1"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (
