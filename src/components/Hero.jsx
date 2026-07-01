@@ -1,14 +1,50 @@
 import React, { useEffect, useRef } from 'react';
-import { useCursor } from '../context/CursorContext';
-import { ArrowUpRight } from 'lucide-react';
-import MagneticButton from './MagneticButton';
+import { ArrowRight } from 'lucide-react';
+import gsap from 'gsap';
+
+const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 export default function Hero() {
-  const { setCursor } = useCursor();
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const scrollIndicatorRef = useRef(null);
+  const contentRef = useRef(null);
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const hoveredNodeRef = useRef(-1);
 
+  // ── Intro animations ──
+  useEffect(() => {
+    gsap.fromTo(".reveal-text",
+      { y: "110%" },
+      { y: "0%", duration: 1.4, ease: "power4.out", stagger: 0.1, delay: 0.3 }
+    );
+    gsap.fromTo(".fade-in-el",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 1.0, ease: "power3.out", stagger: 0.15, delay: 1.0 }
+    );
+  }, []);
+
+  // ── Scroll-based fade & translate ──
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = 400;
+      const progress = Math.min(scrollY / maxScroll, 1);
+
+      const translateY = -progress * 28;
+      const opacity = 1 - progress * 0.7;
+
+      content.style.transform = `translateY(${translateY}px)`;
+      content.style.opacity = opacity;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // ── Canvas: orbit, mouse tilt, hover nodes ──
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -16,211 +52,256 @@ export default function Hero() {
     if (!ctx) return;
 
     let animationFrameId;
-    let particles = [];
-    const particleCount = 120;
-    const connectionDistance = 145;
-    
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    
+    let w, h;
+    const dpr = window.devicePixelRatio || 1;
+
+    const setSize = () => {
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    setSize();
+
+    const animState = { progress: 0 };
+    gsap.to(animState, { progress: 1, duration: 2.0, ease: "power3.out", delay: 0.3 });
+
+    window.addEventListener('resize', setSize);
+
+    // Touch vs mouse detection
+    const isTouch = isTouchDevice();
+
+    // Slow continuous rotation — ~50 seconds per revolution
+    let baseAngle = 0;
+    const rotationSpeed = (2 * Math.PI) / (50 * 60);
+
+    const findClosestNode = (clientX, clientY) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = clientX - rect.left;
+      const my = clientY - rect.top;
+      const cx = w / 2;
+      const cy = h / 2;
+      const orbitRadius = Math.min(w, h) * 0.34;
+
+      let closest = -1;
+      let closestDist = isTouch ? 40 : 22;
+      for (let i = 0; i < 9; i++) {
+        const angle = baseAngle + (i / 9) * Math.PI * 2;
+        const nx = cx + orbitRadius * Math.cos(angle);
+        const ny = cy + orbitRadius * Math.sin(angle);
+        const dist = Math.hypot(mx - nx, my - ny);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = i;
+        }
+      }
+      return closest;
+    };
+
     const handleMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      if (isTouch) return;
+      mouseRef.current.x = e.clientX / window.innerWidth;
+      mouseRef.current.y = e.clientY / window.innerHeight;
+
+      const closest = findClosestNode(e.clientX, e.clientY);
+      hoveredNodeRef.current = closest;
+      canvas.style.cursor = closest >= 0 ? 'pointer' : 'default';
     };
-    
-    const handleResize = () => {
-      if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        const closest = findClosestNode(touch.clientX, touch.clientY);
+        hoveredNodeRef.current = closest;
+      }
     };
-    
+
+    const handleTouchEnd = () => {
+      hoveredNodeRef.current = -1;
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
-    handleResize();
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-    let scrollY = 0;
-    const handleScroll = () => {
-      scrollY = window.scrollY;
-      if (scrollIndicatorRef.current) {
-        const opacity = Math.max(0, 1 - scrollY / 300);
-        scrollIndicatorRef.current.style.opacity = opacity;
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
+    // Smooth mouse influence (lerped)
+    let tiltX = 0;
+    let tiltY = 0;
 
-    class Particle {
-      constructor() {
-        this.reset();
-        this.z = Math.random() * 800;
-      }
+    const draw = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, w, h);
 
-      reset() {
-        this.x = (Math.random() - 0.5) * window.innerWidth * 1.5;
-        this.y = (Math.random() - 0.5) * window.innerHeight * 1.5;
-        this.z = 800;
-        this.vx = (Math.random() - 0.5) * 0.7;
-        this.vy = (Math.random() - 0.5) * 0.7;
-        this.vz = -0.4 - Math.random() * 1.0;
-        this.radius = 1 + Math.random() * 1.8;
+      const p = animState.progress;
+      const t = Date.now() * 0.001;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      baseAngle += rotationSpeed;
+
+      // Lerp mouse tilt (desktop only)
+      if (!isTouch) {
+        const targetTiltX = (mouseRef.current.x - 0.5) * 18;
+        const targetTiltY = (mouseRef.current.y - 0.5) * 14;
+        tiltX += (targetTiltX - tiltX) * 0.04;
+        tiltY += (targetTiltY - tiltY) * 0.04;
       }
 
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        const scrollFactor = scrollY * 1.5;
-        this.z += this.vz - scrollFactor * 0.05;
+      // Breathing scale
+      const breathe = 1 + Math.sin(t * 0.8) * 0.008;
+      const orbitRadius = Math.min(w, h) * 0.34 * breathe;
 
-        let virtualMouseX = mouse.x - window.innerWidth / 2;
-        let virtualMouseY = mouse.y - window.innerHeight / 2;
+      // Apply tilt offset to center
+      const tcx = cx + tiltX;
+      const tcy = cy + tiltY;
 
-        let scale = 300 / (this.z + 300);
-        let dx = virtualMouseX - (this.x * scale);
-        let dy = virtualMouseY - (this.y * scale);
-        let dist = Math.sqrt(dx * dx + dy * dy);
+      // ── Orbit ring ──
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(190, 242, 100, ${0.22 * p})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
 
-        if (dist < 180) {
-          let force = (180 - dist) / 180;
-          this.x -= (dx / dist) * force * 12;
-          this.y -= (dy / dist) * force * 12;
-        }
+      // Subtle halo
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p * 1.01, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(190, 242, 100, ${0.06 * p})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
 
-        if (this.z <= -300 || Math.abs(this.x) > window.innerWidth * 2 || Math.abs(this.y) > window.innerHeight * 2) {
-          this.reset();
-        }
+      // ── Central Core with "9D" ──
+      const coreRadius = 12 * p;
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, coreRadius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(190, 242, 100, ${0.9 * p})`;
+      ctx.fill();
+
+      if (p > 0.5) {
+        ctx.font = `700 ${14 * p}px var(--font-heading)`;
+        ctx.fillStyle = `rgba(4, 12, 8, ${p})`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('9D', tcx, tcy + 0.5);
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'alphabetic';
       }
 
-      draw() {
-        let focalLength = 300;
-        let scale = focalLength / (this.z + focalLength);
-        let projX = canvas.width / 2 + this.x * scale;
-        let projY = canvas.height / 2 + this.y * scale;
+      // ── 9 evenly spaced nodes ──
+      const hoveredNode = hoveredNodeRef.current;
 
-        if (projX > 0 && projX < canvas.width && projY > 0 && projY < canvas.height) {
-          let opacity = Math.min(1, Math.max(0, 1 - (this.z / 800))) * (1 - scrollY / 600);
-          if (opacity <= 0) return;
-          
+      for (let i = 0; i < 9; i++) {
+        const angle = baseAngle + (i / 9) * Math.PI * 2;
+        const nx = tcx + orbitRadius * p * Math.cos(angle);
+        const ny = tcy + orbitRadius * p * Math.sin(angle);
+        const isHovered = i === hoveredNode;
+
+        // Spoke line
+        ctx.beginPath();
+        ctx.moveTo(tcx, tcy);
+        ctx.lineTo(nx, ny);
+        ctx.strokeStyle = `rgba(190, 242, 100, ${(isHovered ? 0.18 : 0.07) * p})`;
+        ctx.lineWidth = isHovered ? 0.8 : 0.5;
+        ctx.stroke();
+
+        // Node dot
+        const nodeRadius = isHovered ? 6 : 3;
+        if (isHovered) {
           ctx.beginPath();
-          ctx.arc(projX, projY, this.radius * scale * 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(16, 185, 129, ${opacity * 0.55})`;
+          ctx.arc(nx, ny, 10, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(190, 242, 100, ${0.08 * p})`;
           ctx.fill();
         }
-      }
-    }
 
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    const animate = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < particles.length; i++) {
-        let focalLength = 300;
-        let p1 = particles[i];
-        let scale1 = focalLength / (p1.z + focalLength);
-        let x1 = canvas.width / 2 + p1.x * scale1;
-        let y1 = canvas.height / 2 + p1.y * scale1;
-
-        for (let j = i + 1; j < particles.length; j++) {
-          let p2 = particles[j];
-          let scale2 = focalLength / (p2.z + focalLength);
-          let x2 = canvas.width / 2 + p2.x * scale2;
-          let y2 = canvas.height / 2 + p2.y * scale2;
-
-          let dx = x1 - x2;
-          let dy = y1 - y2;
-          let distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < connectionDistance) {
-            let alpha = (1 - distance / connectionDistance) * 0.14 * (1 - scrollY / 600);
-            if (alpha > 0) {
-              ctx.beginPath();
-              ctx.moveTo(x1, y1);
-              ctx.lineTo(x2, y2);
-              ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
-              ctx.lineWidth = 0.55 * Math.min(scale1, scale2);
-              ctx.stroke();
-            }
-          }
-        }
+        ctx.beginPath();
+        ctx.arc(nx, ny, nodeRadius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(190, 242, 100, ${(isHovered ? 1 : 0.85) * p})`;
+        ctx.fill();
       }
 
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(draw);
     };
-    animate();
+
+    draw();
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', setSize);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className="relative min-h-screen w-full flex items-center justify-center px-6 py-20 z-10 overflow-hidden"
+      className="hero relative min-h-screen min-h-dvh w-full flex items-center overflow-hidden z-10"
+      style={{
+        background: 'radial-gradient(circle at 55% 50%, rgba(190, 242, 100, 0.015), transparent 55%)'
+      }}
     >
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-65 z-0">
-        <canvas ref={canvasRef} className="w-full h-full" />
+      {/* Grid guides — hidden on phones */}
+      <div className="blueprint-grid-line vertical left-5 xs:left-6 md:left-16 hidden sm:block" />
+      <div className="blueprint-grid-line vertical left-[50%] hidden lg:block" />
+      <div className="blueprint-grid-line horizontal bottom-0" />
+
+      {/* Corner labels — hidden on small phones, appear from large phones */}
+      <div className="absolute top-10 xs:top-12 left-5 xs:left-6 md:left-16 font-body text-[7px] xs:text-[8px] tracking-[0.12em] xs:tracking-[0.15em] text-white/[0.35] select-none z-20 hidden xs:block">
+        The Creative Agency of Naya Growth
+      </div>
+      <div className="absolute top-10 xs:top-12 right-5 xs:right-6 md:right-16 font-body text-[7px] xs:text-[8px] tracking-[0.2em] xs:tracking-[0.25em] text-white/[0.12] uppercase select-none text-right z-20 hidden xs:block">
+        Naya Growth Pvt. Ltd.
       </div>
 
-      <div className="max-w-[900px] text-center flex flex-col items-center justify-center z-10 relative">
-        <div 
-          className="font-subheading text-[0.85rem] font-bold tracking-[0.35em] text-[#10B981] mb-6 py-2 px-6 bg-[#10B981]/5 border border-[#10B981]/15 rounded-full backdrop-blur-sm"
-          onMouseEnter={() => setCursor('view')}
-          onMouseLeave={() => setCursor('')}
-        >
-          NINE DIMENSIONS • ONE CREATIVE SYSTEM
+      {/* Nine Core Canvas — responsive offset via CSS */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div className="w-full h-full pointer-events-auto canvas-orbit-wrapper">
+          <canvas ref={canvasRef} className="w-full h-full" />
         </div>
-        
-        <h1 className="font-heading text-5xl md:text-8xl font-black mb-8 leading-[0.95] tracking-tight">
-          <span className="bg-gradient-to-r from-white via-white to-[#34D399] bg-clip-text text-transparent">
-            NINE AAYAM
-          </span>
+      </div>
+
+      {/* Content — scroll fade target */}
+      <div
+        ref={contentRef}
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8"
+        style={{ willChange: 'transform, opacity' }}
+      >
+        {/* Heading — height-sensitive fluid typography using vh to prevent vertical overflow */}
+        <h1
+          className="font-heading font-extrabold uppercase text-white select-none"
+          style={{
+            fontSize: 'clamp(1.3rem, 7.5vh, 3.6rem)',
+            lineHeight: 0.95,
+            letterSpacing: '-0.03em'
+          }}
+        >
+          <div className="reveal-mask"><span className="reveal-text block">Building</span></div>
+          <div className="reveal-mask"><span className="reveal-text block">Brands</span></div>
+          <div className="reveal-mask mt-1 xs:mt-1.5 sm:mt-2"><span className="reveal-text block">Across</span></div>
+          <div className="reveal-mask"><span className="reveal-text block">Nine</span></div>
+          <div className="reveal-mask"><span className="reveal-text block text-[#bef264]">Dimensions.</span></div>
         </h1>
-        
-        <p className="text-lg md:text-xl font-body font-normal text-gray-400 max-w-[700px] leading-relaxed mb-12">
-          Helping businesses build stronger digital experiences through premium 3D design, branding, and AI-driven video content.
+
+        {/* Line accent */}
+        <div className="fade-in-el w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-2.5 xs:mt-3 sm:mt-4 mb-1.5 xs:mb-2 sm:mb-3 opacity-0" />
+
+        {/* Description */}
+        <p className="fade-in-el font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-2.5 xs:mb-3 sm:mb-4 opacity-0">
+          Nine creative disciplines. One creative system for ambitious brands.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-5">
-          <MagneticButton 
-            href="#philosophy" 
-            variant="outline" 
-            cursorType="explore"
-            className="text-[0.95rem] py-3.5 px-8"
+        {/* CTA */}
+        <div className="fade-in-el opacity-0">
+          <a
+            href="#services"
+            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/15 hover:border-white/40 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase"
           >
-            Explore System
-          </MagneticButton>
-          <MagneticButton 
-            href="#connect" 
-            variant="primary" 
-            className="text-[0.95rem] py-3.5 px-8"
-          >
-            <span>Start a Project</span>
-            <ArrowUpRight className="w-5 h-5" />
-          </MagneticButton>
+            <span>Explore The System</span>
+            <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform duration-300" />
+          </a>
         </div>
-      </div>
 
-      <div 
-        ref={scrollIndicatorRef}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-60 transition-opacity duration-300 pointer-events-none"
-      >
-        <span className="font-subheading text-[10px] font-bold tracking-[0.25em] text-gray-400 uppercase">
-          Scroll to Explore
-        </span>
-        <div className="w-0.5 h-12 bg-white/10 relative overflow-hidden rounded">
-          <div className="absolute top-0 left-0 w-full h-[15px] bg-[#10B981] rounded animate-scroll-indicator" />
-        </div>
       </div>
     </section>
   );
