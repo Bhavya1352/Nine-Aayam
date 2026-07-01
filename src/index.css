@@ -531,3 +531,66 @@ body.cursor-hovering-connect .cursor-ring {
     max-width: 1400px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO HEADING & CONTENT BREAKPOINT RESPONSIVENESS
+   ══════════════════════════════════════════════════════════════ */
+.hero-heading {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+  user-select: none;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-size: clamp(1.4rem, 8.5vw, 2.3rem); /* mobile fluid sizing */
+}
+
+/* Large phones (376px–480px) */
+@media (min-width: 376px) {
+  .hero-heading {
+    font-size: clamp(1.8rem, 8.5vw, 2.7rem);
+  }
+}
+
+/* iPads and tablets (481px–768px) */
+@media (min-width: 481px) {
+  .hero-heading {
+    font-size: clamp(2.3rem, 7vw, 3.2rem);
+  }
+}
+
+/* Large tablets and notebooks (769px–1024px) */
+@media (min-width: 769px) {
+  .hero-heading {
+    font-size: clamp(2.8rem, 6vw, 3.5rem);
+  }
+}
+
+/* Small laptops (1025px–1366px) */
+@media (min-width: 1025px) {
+  .hero-heading {
+    font-size: clamp(3rem, 4vw, 3.8rem);
+  }
+}
+
+/* Large laptops & standard desktops (1367px+) */
+@media (min-width: 1367px) {
+  .hero-heading {
+    font-size: clamp(3.2rem, 3.8vw, 4.2rem);
+  }
+}
+
+/* Height-safety fallback for short screens (e.g., laptop/desktop with small viewport height) */
+@media (min-width: 1025px) and (max-height: 720px) {
+  .hero-heading {
+    font-size: clamp(2.5rem, 7.2vh, 3.5rem) !important;
+  }
+}
+
+/* Very short heights (mobile landscape or extremely short laptop heights) */
+@media (max-height: 520px) {
+  .hero-heading {
+    font-size: clamp(1.2rem, 8.5vh, 2.2rem) !important;
+  }
+}

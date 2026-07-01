@@ -264,30 +264,23 @@ export default function Hero() {
       {/* Content — scroll fade target */}
       <div
         ref={contentRef}
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-16 xs:py-20 sm:py-22 md:py-24 lg:py-28"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8"
         style={{ willChange: 'transform, opacity' }}
       >
-        {/* Heading — fluid typography via clamp, sized to fit viewport */}
-        <h1
-          className="font-heading font-extrabold uppercase text-white select-none"
-          style={{
-            fontSize: 'clamp(1.5rem, 4vw, 4.2rem)',
-            lineHeight: 0.95,
-            letterSpacing: '-0.03em'
-          }}
-        >
+        {/* Heading — using fully responsive hero-heading CSS class */}
+        <h1 className="hero-heading">
           <div className="reveal-mask"><span className="reveal-text block">Building</span></div>
           <div className="reveal-mask"><span className="reveal-text block">Brands</span></div>
-          <div className="reveal-mask mt-1.5 xs:mt-2 sm:mt-3"><span className="reveal-text block">Across</span></div>
+          <div className="reveal-mask mt-1 xs:mt-1.5 sm:mt-2"><span className="reveal-text block">Across</span></div>
           <div className="reveal-mask"><span className="reveal-text block">Nine</span></div>
           <div className="reveal-mask"><span className="reveal-text block text-[#bef264]">Dimensions.</span></div>
         </h1>
 
         {/* Line accent */}
-        <div className="fade-in-el w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-4 xs:mt-5 sm:mt-6 md:mt-8 mb-2.5 xs:mb-3 sm:mb-4 md:mb-5 opacity-0" />
+        <div className="fade-in-el w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-2 xs:mb-2.5 sm:mb-3 opacity-0" />
 
         {/* Description */}
-        <p className="fade-in-el font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-4 xs:mb-5 sm:mb-6 md:mb-8 opacity-0">
+        <p className="fade-in-el font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-3 xs:mb-4 sm:mb-5 opacity-0">
           Nine creative disciplines. One creative system for ambitious brands.
         </p>
 
