@@ -239,6 +239,51 @@ export default function Hero() {
       ctx.stroke();
       ctx.setLineDash([]); 
 
+      // ── NEW: Counter-rotating inner HUD dial ──
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p * 0.52, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(198, 138, 46, ${0.07 * p})`;
+      ctx.lineWidth = 0.55;
+      ctx.stroke();
+
+      const innerTicks = 36;
+      for (let k = 0; k < innerTicks; k++) {
+        const tickAngle = (k / innerTicks) * Math.PI * 2 - baseAngle * 0.8;
+        const r1 = orbitRadius * p * 0.52;
+        const r2 = orbitRadius * p * (k % 4 === 0 ? 0.49 : 0.505);
+        const x1 = tcx + r1 * Math.cos(tickAngle);
+        const y1 = tcy + r1 * Math.sin(tickAngle);
+        const x2 = tcx + r2 * Math.cos(tickAngle);
+        const y2 = tcy + r2 * Math.sin(tickAngle);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = `rgba(198, 138, 46, ${(k % 4 === 0 ? 0.12 : 0.05) * p})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // ── NEW: Volumetric Technical status readout in corner ──
+      if (p > 0.8) {
+        ctx.font = '6px Courier New, monospace';
+        ctx.fillStyle = `rgba(198, 138, 46, ${0.28 * p})`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(`SYS.STATUS // NINE.AAYAM.V1`, 24, 24);
+        ctx.fillText(`COORD.X   // ${tcx.toFixed(1)}px`, 24, 34);
+        ctx.fillText(`COORD.Y   // ${tcy.toFixed(1)}px`, 24, 44);
+        ctx.fillText(`ROT.DEG   // ${((baseAngle * 180) / Math.PI % 360).toFixed(1)}°`, 24, 54);
+        
+        const hoveredNodeIndex = hoveredNodeRef.current;
+        if (hoveredNodeIndex >= 0) {
+          ctx.fillStyle = '#c68a2e';
+          ctx.fillText(`LOCK.ON   // DIMENSION_0${hoveredNodeIndex + 1}`, 24, 64);
+        } else {
+          ctx.fillText(`LOCK.ON   // SCANNING`, 24, 64);
+        }
+      }
+
       // Dial ticks
       const totalTicks = 90;
       for (let j = 0; j < totalTicks; j++) {
@@ -309,12 +354,70 @@ export default function Hero() {
         ctx.lineWidth = isHovered ? 0.8 : 0.5;
         ctx.stroke();
 
+        // ── NEW: Data flow particles along connector lines ──
+        const flowProgress = (t * 0.5 + i * 0.11) % 1.0;
+        const px = tcx + (nx - tcx) * flowProgress;
+        const py = tcy + (ny - tcy) * flowProgress;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(198, 138, 46, ${(isHovered ? 0.9 : 0.4) * p})`;
+        ctx.fill();
+
         const nodeRadius = isHovered ? 6 : 3;
         if (isHovered) {
           ctx.beginPath();
           ctx.arc(nx, ny, 10, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(198, 138, 46, ${0.08 * p})`;
           ctx.fill();
+
+          // ── NEW: Viewfinder Target brackets surrounding hovered node ──
+          if (p > 0.8) {
+            const bracketSize = 8;
+            const bracketGap = 2.5;
+            ctx.strokeStyle = 'rgba(198, 138, 46, 0.7)';
+            ctx.lineWidth = 0.75;
+
+            // Top-Left bracket
+            ctx.beginPath();
+            ctx.moveTo(nx - bracketSize, ny - bracketSize + bracketGap);
+            ctx.lineTo(nx - bracketSize, ny - bracketSize);
+            ctx.lineTo(nx - bracketSize + bracketGap, ny - bracketSize);
+            ctx.stroke();
+
+            // Top-Right bracket
+            ctx.beginPath();
+            ctx.moveTo(nx + bracketSize, ny - bracketSize + bracketGap);
+            ctx.lineTo(nx + bracketSize, ny - bracketSize);
+            ctx.lineTo(nx + bracketSize - bracketGap, ny - bracketSize);
+            ctx.stroke();
+
+            // Bottom-Left bracket
+            ctx.beginPath();
+            ctx.moveTo(nx - bracketSize, ny + bracketSize - bracketGap);
+            ctx.lineTo(nx - bracketSize, ny + bracketSize);
+            ctx.lineTo(nx - bracketSize + bracketGap, ny + bracketSize);
+            ctx.stroke();
+
+            // Bottom-Right bracket
+            ctx.beginPath();
+            ctx.moveTo(nx + bracketSize, ny + bracketSize - bracketGap);
+            ctx.lineTo(nx + bracketSize, ny + bracketSize);
+            ctx.lineTo(nx + bracketSize - bracketGap, ny + bracketSize);
+            ctx.stroke();
+          }
+
+          // ── NEW: Concentric Radar ripples expanding from node ──
+          const rippleCount = 2;
+          for (let rIdx = 0; rIdx < rippleCount; rIdx++) {
+            const rippleProgress = ((t * 1.4 + rIdx / rippleCount) % 1.0);
+            const rippleR = 7 + rippleProgress * 18;
+            const rippleAlpha = (1 - rippleProgress) * 0.4 * p;
+            ctx.beginPath();
+            ctx.arc(nx, ny, rippleR, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(198, 138, 46, ${rippleAlpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
         }
 
         ctx.beginPath();

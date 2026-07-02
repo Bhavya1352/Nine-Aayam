@@ -201,7 +201,7 @@ export default function Philosophy() {
             The Nine Dimensions
           </h2>
           <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#c68a2e]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
-          <p className="fade-in-el font-body text-gray-400 text-xs xs:text-sm sm:text-base leading-relaxed max-w-[620px]">
+          <p className="fade-in-el font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-relaxed max-w-[620px]">
             Click nodes on the visual instrument or explore their properties to see how we project design assets across our unified creative system.
           </p>
         </div>
@@ -225,7 +225,7 @@ export default function Philosophy() {
                 {activeDetails.title}
               </h3>
               
-              <p className="anim-fade-up font-body text-gray-400 text-xs xs:text-sm sm:text-base md:text-[1.05rem] leading-relaxed max-w-[600px] mb-5 xs:mb-6 sm:mb-7 md:mb-8">
+              <p className="anim-fade-up font-body text-gray-300 text-xs xs:text-sm sm:text-base md:text-[1.05rem] leading-relaxed max-w-[600px] mb-5 xs:mb-6 sm:mb-7 md:mb-8">
                 {activeDetails.short}
               </p>
               
@@ -235,7 +235,7 @@ export default function Philosophy() {
                 </span>
                 <ul className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 w-full">
                   {activeDetails.capabilities.map((cap, i) => (
-                    <li key={i} className="flex items-start gap-2 xs:gap-3 text-[11px] xs:text-xs text-gray-300 font-body">
+                    <li key={i} className="flex items-start gap-2 xs:gap-3 text-[11px] xs:text-xs text-gray-200 font-body">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#c68a2e] mt-1 xs:mt-1.5 flex-shrink-0" />
                       <span>{cap}</span>
                     </li>

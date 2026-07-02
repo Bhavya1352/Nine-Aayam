@@ -267,7 +267,7 @@ export default function Story() {
             
             {/* Left description text */}
             <div className="editorial-text max-w-full md:max-w-[450px] text-left">
-              <p className="font-body text-gray-300 text-sm xs:text-base sm:text-lg leading-[1.68] mb-5">
+              <p className="font-body text-gray-200 text-sm xs:text-base sm:text-lg leading-[1.68] mb-5">
                 Inspired by the Sanskrit word <strong className="text-[#c68a2e] font-medium font-subheading tracking-[-0.03em] italic">Aayam / आयाम</strong>, meaning <em>dimension, expansion, extension, depth, and aspect</em>. It defines how a structure claims visual territory.
               </p>
             </div>
@@ -277,7 +277,7 @@ export default function Story() {
 
             {/* Right quote description */}
             <div className="editorial-text max-w-full md:max-w-[480px] text-left">
-              <p className="font-body text-gray-400 text-xs xs:text-sm md:text-base leading-[1.68]">
+              <p className="font-body text-gray-300 text-xs xs:text-sm md:text-base leading-[1.68]">
                 Nine Aayam is the creative agency vertical of Naya Growth Private Limited. We own the visible, communicative, UI/UX, and experience-driven side of brand growth, aligning nine core dimensions into a single creative system.
               </p>
             </div>
@@ -304,7 +304,7 @@ export default function Story() {
             <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5">
               The Nine Creative Dimensions
             </h3>
-            <p className="font-body text-gray-400 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[500px]">
+            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[500px]">
               Every strong brand grows through coordinate alignment. These are the nine public-facing service menus built to shape modern brands.
             </p>
           </div>
@@ -346,7 +346,7 @@ export default function Story() {
                       <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#c68a2e] group-hover:translate-x-1 transition-all duration-300">
                         {item.title}
                       </h4>
-                      <p className="font-body text-xs text-gray-300 leading-[1.6] mb-4">
+                      <p className="font-body text-xs text-gray-200 leading-[1.6] mb-4">
                         {item.desc}
                       </p>
                     </div>
@@ -354,7 +354,7 @@ export default function Story() {
                     {/* Bullet badges */}
                     <div className="flex flex-wrap gap-1.5 mt-auto">
                       {item.bullets.map((b, i) => (
-                        <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/30 px-2 py-0.5 rounded tracking-wide uppercase">
+                        <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase">
                           {b}
                         </span>
                       ))}
@@ -387,7 +387,7 @@ export default function Story() {
             <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5">
               Scope Matrix Alignment
             </h3>
-            <p className="font-body text-gray-400 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[600px]">
+            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[600px]">
               We believe in extreme focus. We own the visible experience of brand growth, while backend systems remain independent.
             </p>
           </div>
@@ -418,11 +418,11 @@ export default function Story() {
                 <h4 className="font-heading text-xl font-medium text-white select-none">Creative Scope</h4>
               </div>
 
-              <p className="font-body text-xs text-gray-300 leading-[1.6] mb-6 relative z-10 select-none">
+              <p className="font-body text-xs text-gray-200 leading-[1.6] mb-6 relative z-10 select-none">
                 The sensory, visible, and interactive assets that establish authority, command customer attention, and shape digital trust.
               </p>
 
-              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-300 relative z-10">
+              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-200 relative z-10">
                 <li className="flex items-start gap-2">
                   <span className="text-[#c68a2e] font-bold select-none">✓</span>
                   <span>Brand Strategy, Logos, Guidelines, Guidelines Assets</span>
@@ -462,11 +462,11 @@ export default function Story() {
                 <h4 className="font-heading text-xl font-medium text-gray-500 select-none">Operational Scope</h4>
               </div>
 
-              <p className="font-body text-xs text-gray-400 leading-[1.6] mb-6 select-none">
+              <p className="font-body text-xs text-gray-300 leading-[1.6] mb-6 select-none">
                 Operational integrations, tracking scripts, sales pipelines, and database automations handled by separate growth verticals.
               </p>
 
-              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-500">
+              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-400">
                 <li className="flex items-start gap-2">
                   <span className="text-gray-600 font-bold select-none">✗</span>
                   <span>CRM setup, pipelines, and customer database setups</span>
