@@ -28,27 +28,27 @@ export default function Hero() {
   useEffect(() => {
     const tl = gsap.timeline();
 
-    // 1. Logo fade-in & slide-down
+    // 1. Logo fade-in
     tl.fromTo(".logo-link",
       { opacity: 0, y: -15 },
       { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
     );
 
-    // 2. Navigation items staggered fade-in & slide-down
+    // 2. Nav links staggered reveal
     tl.fromTo(".nav-item-animate",
       { opacity: 0, y: -15 },
       { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" },
       "-=0.6"
     );
 
-    // 3. Headline reveal line by line
+    // 3. Headline reveal
     tl.fromTo(".reveal-text",
       { y: "110%" },
       { y: "0%", duration: 1.2, ease: "power4.out", stagger: 0.15 },
       "-=0.4"
     );
 
-    // 4. 9D Orbit expansion
+    // 4. Orbit expansion
     tl.to(animStateRef.current,
       { progress: 1, duration: 1.8, ease: "power3.out" },
       "-=0.4"
@@ -76,7 +76,7 @@ export default function Hero() {
     );
   }, []);
 
-  // ── Scroll-based translate, scale & darken ──
+  // ── Scroll translate & scale effects ──
   useEffect(() => {
     const content = contentRef.current;
     const container = containerRef.current;
@@ -84,17 +84,13 @@ export default function Hero() {
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const maxScroll = 200; // Scroll 200px
+      const maxScroll = 200;
       const progress = Math.min(scrollY / maxScroll, 1);
 
-      // 1. Heading moves up slightly
       const translateY = -progress * 30;
       content.style.transform = `translateY(${translateY}px)`;
-
-      // 2. Orbit scales down 3%
       container.style.setProperty('--orbit-scale', 1 - progress * 0.03);
 
-      // 3. Background darkens slightly (via black overlay)
       const bgOverlay = container.querySelector('.hero-bg-overlay');
       if (bgOverlay) {
         bgOverlay.style.opacity = progress * 0.65;
@@ -105,7 +101,7 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ── Canvas: orbit, mouse tilt, hover nodes ──
+  // ── Canvas: precision instrument orbit dial ──
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -127,10 +123,7 @@ export default function Hero() {
 
     window.addEventListener('resize', setSize);
 
-    // Touch vs mouse detection
     const isTouch = isTouchDevice();
-
-    // Slow continuous rotation — exactly 60 seconds per revolution (60s * 60fps = 3600 frames)
     let baseAngle = 0;
     const rotationSpeed = (2 * Math.PI) / 3600;
 
@@ -182,10 +175,8 @@ export default function Hero() {
     const handleClick = () => {
       const hoveredNode = hoveredNodeRef.current;
       if (hoveredNode >= 0) {
-        // Dispatch selectDimension event (1-indexed)
         window.dispatchEvent(new CustomEvent('selectDimension', { detail: hoveredNode + 1 }));
 
-        // Scroll to Philosophy section
         const philosophySec = document.getElementById('philosophy');
         if (philosophySec) {
           philosophySec.scrollIntoView({ behavior: 'smooth' });
@@ -198,7 +189,6 @@ export default function Hero() {
     canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
     canvas.addEventListener('click', handleClick);
 
-    // Smooth mouse influence (lerped)
     let tiltX = 0;
     let tiltY = 0;
 
@@ -213,7 +203,6 @@ export default function Hero() {
 
       baseAngle += rotationSpeed;
 
-      // Lerp mouse tilt (desktop only)
       if (!isTouch) {
         const targetTiltX = (mouseRef.current.x - 0.5) * 18;
         const targetTiltY = (mouseRef.current.y - 0.5) * 14;
@@ -221,38 +210,83 @@ export default function Hero() {
         tiltY += (targetTiltY - tiltY) * 0.04;
       }
 
-      // Breathing scale
       const breathe = 1 + Math.sin(t * 0.8) * 0.008;
       const orbitRadius = Math.min(w, h) * 0.34 * breathe;
 
-      // Apply tilt offset to center
       const tcx = cx + tiltX;
       const tcy = cy + tiltY;
 
-      // ── Orbit ring ──
+      // Concentric circles & guidelines
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p * 1.38, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(198, 138, 46, ${0.02 * p})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p * 1.22, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(198, 138, 46, ${0.045 * p})`;
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 15]);
+      ctx.stroke();
+      ctx.setLineDash([]); 
+
+      ctx.beginPath();
+      ctx.arc(tcx, tcy, orbitRadius * p * 0.72, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(198, 138, 46, ${0.035 * p})`;
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([1, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]); 
+
+      // Dial ticks
+      const totalTicks = 90;
+      for (let j = 0; j < totalTicks; j++) {
+        const tickAngle = (j / totalTicks) * Math.PI * 2 + baseAngle * 0.1;
+        const outerR = orbitRadius * p * 1.05;
+        const innerR = orbitRadius * p * (j % 10 === 0 ? 1.018 : j % 5 === 0 ? 1.028 : 1.036);
+        const x1 = tcx + outerR * Math.cos(tickAngle);
+        const y1 = tcy + outerR * Math.sin(tickAngle);
+        const x2 = tcx + innerR * Math.cos(tickAngle);
+        const y2 = tcy + innerR * Math.sin(tickAngle);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = `rgba(198, 138, 46, ${(j % 5 === 0 ? 0.08 : 0.03) * p})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+
+        // Monospace index labels
+        if (j % 15 === 0 && p > 0.7) {
+          const textR = orbitRadius * p * 1.11;
+          const tx = tcx + textR * Math.cos(tickAngle);
+          const ty = tcy + textR * Math.sin(tickAngle);
+          ctx.font = '5px Courier New, monospace';
+          ctx.fillStyle = `rgba(198, 138, 46, ${0.18 * p})`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`${j * 4}°`, tx, ty);
+        }
+      }
+
+      // Orbit ring
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(190, 242, 100, ${0.22 * p})`;
+      ctx.strokeStyle = `rgba(198, 138, 46, ${0.22 * p})`;
       ctx.lineWidth = 0.8;
       ctx.stroke();
 
-      // Subtle halo
-      ctx.beginPath();
-      ctx.arc(tcx, tcy, orbitRadius * p * 1.01, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(190, 242, 100, ${0.06 * p})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // ── Central Core with "9D" ──
+      // Core 9D button
       const coreRadius = 12 * p;
       ctx.beginPath();
       ctx.arc(tcx, tcy, coreRadius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(190, 242, 100, ${0.9 * p})`;
+      ctx.fillStyle = `rgba(198, 138, 46, ${0.9 * p})`;
       ctx.fill();
 
       if (p > 0.5) {
-        ctx.font = `700 ${14 * p}px Outfit, sans-serif`;
-        ctx.fillStyle = `rgba(4, 12, 8, ${p})`;
+        ctx.font = `700 ${14 * p}px Inter, sans-serif`;
+        ctx.fillStyle = `rgba(5, 5, 21, ${p})`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('9D', tcx, tcy + 0.5);
@@ -260,42 +294,37 @@ export default function Hero() {
         ctx.textBaseline = 'alphabetic';
       }
 
-      // ── 9 evenly spaced nodes ──
+      // Nodes
       const hoveredNode = hoveredNodeRef.current;
-
       for (let i = 0; i < 9; i++) {
         const angle = baseAngle + (i / 9) * Math.PI * 2;
         const nx = tcx + orbitRadius * p * Math.cos(angle);
         const ny = tcy + orbitRadius * p * Math.sin(angle);
         const isHovered = i === hoveredNode;
 
-        // Spoke line
         ctx.beginPath();
         ctx.moveTo(tcx, tcy);
         ctx.lineTo(nx, ny);
-        ctx.strokeStyle = `rgba(190, 242, 100, ${(isHovered ? 0.18 : 0.07) * p})`;
+        ctx.strokeStyle = `rgba(198, 138, 46, ${(isHovered ? 0.18 : 0.07) * p})`;
         ctx.lineWidth = isHovered ? 0.8 : 0.5;
         ctx.stroke();
 
-        // Node dot
         const nodeRadius = isHovered ? 6 : 3;
         if (isHovered) {
           ctx.beginPath();
           ctx.arc(nx, ny, 10, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(190, 242, 100, ${0.08 * p})`;
+          ctx.fillStyle = `rgba(198, 138, 46, ${0.08 * p})`;
           ctx.fill();
         }
 
         ctx.beginPath();
         ctx.arc(nx, ny, nodeRadius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(190, 242, 100, ${(isHovered ? 1 : 0.85) * p})`;
+        ctx.fillStyle = `rgba(198, 138, 46, ${(isHovered ? 1 : 0.85) * p})`;
         ctx.fill();
 
-        // Interactive Signature Hover: Leader line and service title
+        // Point leader lines on hover
         if (isHovered && p > 0.8) {
           const isRight = nx > tcx;
-          
-          // Leader line coordinates
           const lineLength = 50;
           const dx = isRight ? lineLength : -lineLength;
           const dy = ny > tcy ? 30 : -30;
@@ -304,26 +333,21 @@ export default function Hero() {
           ctx.moveTo(nx, ny);
           ctx.lineTo(nx + dx * 0.4, ny + dy * 0.4);
           ctx.lineTo(nx + dx, ny + dy);
-          ctx.strokeStyle = 'rgba(190, 242, 100, 0.4)';
+          ctx.strokeStyle = 'rgba(198, 138, 46, 0.4)';
           ctx.lineWidth = 0.8;
           ctx.stroke();
 
-          // Text layout alignment
           ctx.textAlign = isRight ? 'left' : 'right';
           ctx.textBaseline = 'middle';
 
-          // 01 / Number in green
-          ctx.font = '700 10px Outfit, sans-serif';
-          ctx.fillStyle = '#bef264';
-          const labelNum = `0${i + 1}`;
-          ctx.fillText(labelNum, nx + dx + (isRight ? 8 : -8), ny + dy - 7);
+          ctx.font = '700 10px Inter, sans-serif';
+          ctx.fillStyle = '#c68a2e';
+          ctx.fillText(`0${i + 1}`, nx + dx + (isRight ? 8 : -8), ny + dy - 7);
 
-          // Service Title in white
           ctx.font = '500 13px Inter, sans-serif';
           ctx.fillStyle = '#ffffff';
           ctx.fillText(serviceNames[i], nx + dx + (isRight ? 8 : -8), ny + dy + 7);
 
-          // Reset alignments
           ctx.textAlign = 'start';
           ctx.textBaseline = 'alphabetic';
         }
@@ -347,26 +371,20 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="hero relative min-h-screen min-h-dvh w-full flex items-center overflow-hidden z-10"
+      className="hero relative min-h-screen min-h-dvh w-full flex items-center overflow-hidden z-10 pt-16"
       style={{
-        background: 'radial-gradient(circle at 55% 50%, rgba(190, 242, 100, 0.015), transparent 55%)'
+        background: 'radial-gradient(circle at 55% 50%, rgba(198, 138, 46, 0.015), transparent 55%)'
       }}
     >
+      {/* 2. Subtle radial amber light behind Hero (Requirement 2) */}
+      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#c68a2e]/[0.05] rounded-full filter blur-[250px] pointer-events-none z-[1]" />
+
       {/* Background Dark Overlay for Scroll Interaction */}
-      <div className="hero-bg-overlay absolute inset-0 bg-[#040c08] pointer-events-none opacity-0 z-[1] transition-opacity duration-150" />
+      <div className="hero-bg-overlay absolute inset-0 bg-[#050515] pointer-events-none opacity-0 z-[1] transition-opacity duration-150" />
 
       {/* Grid guides — hidden on phones */}
       <div className="blueprint-grid-line vertical left-5 xs:left-6 md:left-16 hidden sm:block" />
-      <div className="blueprint-grid-line vertical left-[50%] hidden lg:block" />
       <div className="blueprint-grid-line horizontal bottom-0" />
-
-      {/* Corner labels */}
-      <div className="absolute top-10 xs:top-12 left-5 xs:left-6 md:left-16 font-body text-[7px] xs:text-[8px] tracking-[0.12em] xs:tracking-[0.15em] text-white/[0.35] select-none z-20 hidden xs:block">
-        The Creative Agency of Naya Growth
-      </div>
-      <div className="absolute top-10 xs:top-12 right-5 xs:right-6 md:right-16 font-body text-[7px] xs:text-[8px] tracking-[0.2em] xs:tracking-[0.25em] text-white/[0.12] uppercase select-none text-right z-20 hidden xs:block">
-        Naya Growth Pvt. Ltd.
-      </div>
 
       {/* Nine Core Canvas */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]">
@@ -381,24 +399,25 @@ export default function Hero() {
         className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8"
         style={{ willChange: 'transform, opacity' }}
       >
-        <h1 className="hero-heading">
+        {/* 3. Headline breathing layout change */}
+        <h1 className="hero-heading leading-[1.05] tracking-tight">
           <div className="reveal-mask">
             <span className="reveal-text block">
-              Building <span className="italic font-light">Brands</span>
+              Building Brands
             </span>
           </div>
-          <div className="reveal-mask mt-1 xs:mt-1.5 sm:mt-2">
+          <div className="reveal-mask mt-1 sm:mt-2 translate-x-[4px]">
             <span className="reveal-text block">
-              Across Nine <span className="text-[#bef264] italic">Dimensions.</span>
+              Across Nine <span className="text-[#c68a2e] italic tracking-[-0.03em] font-light">Dimensions.</span>
             </span>
           </div>
         </h1>
 
         {/* Line accent */}
-        <div className="hero-accent w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#bef264]/40 mt-6 xs:mt-8 sm:mt-10 mb-4 xs:mb-5 sm:mb-6 opacity-0 origin-left" />
+        <div className="hero-accent w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#c68a2e]/30 mt-8 sm:mt-10 mb-5 sm:mb-6 opacity-0 origin-left" />
 
         {/* Description */}
-        <p className="hero-description font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-relaxed text-gray-400 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-6 xs:mb-8 sm:mb-10 opacity-0">
+        <p className="hero-description font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-[1.68] text-gray-350 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-6 xs:mb-8 sm:mb-10 opacity-0">
           Nine creative disciplines. One creative system built to shape modern brands.
         </p>
 
@@ -406,7 +425,7 @@ export default function Hero() {
         <div className="hero-cta opacity-0">
           <a
             href="#services"
-            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/15 hover:border-white/70 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase"
+            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/10 hover:border-[#c68a2e]/60 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase hover:shadow-[0_0_20px_rgba(198,138,46,0.1)]"
           >
             <span>Explore The System</span>
             <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform duration-300" />

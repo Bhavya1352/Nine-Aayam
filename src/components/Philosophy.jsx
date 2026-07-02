@@ -49,57 +49,57 @@ const dimensionData = {
   },
   5: {
     num: "05",
-    title: "Advertising & Campaign Creatives",
-    short: "Performance creatives built to capture attention and scale. We optimize layouts specifically for Meta and Google display channels.",
+    title: "Ad Campaigns",
+    short: "Strategic paid traffic creatives designed to stand out. We balance visual hook-rates with copy angles to secure maximum ROI.",
     capabilities: [
-      "High-CTR ad layout concepts",
-      "Varying campaign display banners",
-      "Meta ad concepts & scripting variations",
-      "Launch campaign visual asset sets"
+      "High-converting Meta ad structures",
+      "Google Display Network layout assets",
+      "Festive launch campaign suites",
+      "A/B creative testing system assets"
     ]
   },
   6: {
     num: "06",
-    title: "Video & Motion",
-    short: "Stop-scroll animations, dynamic video editing, and modern cinematic storytelling that conveys premium brand speed.",
+    title: "Video & Motion Design",
+    short: "Motion systems and vertical content pacing built for modern channels. We turn static brand stories into high-tempo, narrative assets.",
     capabilities: [
-      "Shorts & Reels visual pacing",
-      "Cinematic brand video edits",
-      "2D/3D motion graphics overlay",
-      "Animated logos & kinetic assets"
+      "LinkedIn dynamic video templates",
+      "Subtle cinematic reel treatments",
+      "Subtitles layout & timing direction",
+      "Interactive social media animations"
     ]
   },
   7: {
     num: "07",
-    title: "Photography Direction",
-    short: "Pre-production planning, storyboarding, and aesthetic direction for product and founder lifestyle shoots.",
+    title: "Photo Direction",
+    short: "Visual coordination that makes brand imagery feel intentional. We set production moodboards, styling rules, and art guidelines.",
     capabilities: [
-      "Product shoot conceptualization",
-      "Founder & executive portrait styleguides",
-      "Storyboards & visual moodboards",
-      "Prop, lighting, and scene planning"
+      "Office team shoot moodboards",
+      "Art direction for founder profiles",
+      "Staging guidelines & catalog style",
+      "Visual moodboards & style coordinates"
     ]
   },
   8: {
     num: "08",
     title: "UI/UX Design",
-    short: "Editorial, clean interface design mapped to top-tier conversion pipelines. We build systems in Figma designed for engineering handoff.",
+    short: "High-end product structures built in Figma. We balance responsive interfaces with visual design consistency.",
     capabilities: [
-      "Figma user interface systems",
-      "Interactive digital prototypes",
-      "Responsive layout architectures",
-      "Design systems & styling libraries"
+      "Interactive product wireframing",
+      "Visual design systems & assets libraries",
+      "High-fidelity responsive layouts",
+      "Figma workspace styling guidelines"
     ]
   },
   9: {
     num: "09",
-    title: "Website & Landing Pages",
-    short: "High-performance front-end engineering delivering clean interactions, smooth animations, and fast load speeds.",
+    title: "Web Development",
+    short: "Premium frontend deployment that behaves fluidly. We engineer high-performance web systems utilizing creative code.",
     capabilities: [
-      "Corporate business websites",
-      "High-converting marketing portals",
-      "Product landing pages & microsites",
-      "Creative interactions & WebGL integrations"
+      "Modern React frontend systems",
+      "Fluid page transitions & load models",
+      "Performance optimization & structures",
+      "Custom animation libraries integrations"
     ]
   }
 };
@@ -107,45 +107,52 @@ const dimensionData = {
 export default function Philosophy() {
   const { setCursor } = useCursor();
   const [activeDim, setActiveDim] = useState(1);
-  const dialRef = useRef(null);
   const contentRef = useRef(null);
+  const dialRef = useRef(null);
   const scrollGlowRef = useRef(null);
 
-  const radius = 170; // dial radius
+  const radius = 140; // Dial radius
   const nodes = Array.from({ length: 9 }, (_, i) => i + 1);
 
-  const handleNodeClick = (index) => {
-    setActiveDim(index);
-    
-    const targetRotation = -(index - 1) * 40;
-    
-    gsap.to(dialRef.current, {
-      rotation: targetRotation,
-      duration: 0.85,
-      ease: "power3.out"
-    });
-
-    gsap.to(".node-number", {
-      rotation: -targetRotation,
-      duration: 0.85,
-      ease: "power3.out"
-    });
+  // Rotate dial to set active node at the top
+  const handleNodeClick = (num) => {
+    setActiveDim(num);
   };
 
-  // Listen to dimension selection events from Hero canvas
+  // Listen to selectDimension event from Hero canvas click
   useEffect(() => {
     const handleSelectDimension = (e) => {
-      const dimensionId = e.detail;
-      if (dimensionId >= 1 && dimensionId <= 9) {
-        handleNodeClick(dimensionId);
+      const targetDim = e.detail;
+      if (dimensionData[targetDim]) {
+        setActiveDim(targetDim);
       }
     };
     window.addEventListener('selectDimension', handleSelectDimension);
     return () => window.removeEventListener('selectDimension', handleSelectDimension);
   }, []);
 
-  // Animate content change
+  // Dial rotation animation
   useEffect(() => {
+    const angle = -(activeDim - 1) * 40; // 360 / 9 = 40 deg
+    gsap.to(dialRef.current, {
+      rotation: angle,
+      duration: 0.85,
+      ease: "power3.out"
+    });
+
+    // Make individual nodes face upright
+    const nodesEl = dialRef.current?.querySelectorAll('.node-position');
+    if (nodesEl) {
+      nodesEl.forEach((node) => {
+        gsap.to(node, {
+          rotation: -angle,
+          duration: 0.85,
+          ease: "power3.out"
+        });
+      });
+    }
+
+    // Stagger fade-up text on active dimension change
     if (contentRef.current) {
       const q = gsap.utils.selector(contentRef.current);
       gsap.set(q(".anim-fade-up"), { opacity: 0, y: 15 });
@@ -176,7 +183,7 @@ export default function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="relative z-10 py-14 xs:py-16 sm:py-20 md:py-28 lg:py-36 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 bg-[#040c08] border-t border-white/[0.02] overflow-hidden"
+      className="relative z-10 py-14 xs:py-16 sm:py-20 md:py-28 lg:py-36 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 bg-[#050515] border-t border-white/[0.02] overflow-hidden"
     >
       {/* Blueprint Grid */}
       <div className="blueprint-grid-line vertical left-5 sm:left-6 md:left-16 hidden sm:block" />
@@ -187,13 +194,13 @@ export default function Philosophy() {
         
         {/* Section Intro */}
         <div className="flex flex-col items-start mb-10 xs:mb-12 sm:mb-16 md:mb-20 lg:mb-28 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
-          <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#10B981] uppercase mb-3 xs:mb-4">
+          <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#c68a2e] uppercase mb-3 xs:mb-4">
             Interactive Grid
           </span>
           <h2 className="fade-in-el font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-none">
             The Nine Dimensions
           </h2>
-          <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#10B981]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
+          <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#c68a2e]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
           <p className="fade-in-el font-body text-gray-400 text-xs xs:text-sm sm:text-base leading-relaxed max-w-[620px]">
             Click nodes on the visual instrument or explore their properties to see how we project design assets across our unified creative system.
           </p>
@@ -202,15 +209,15 @@ export default function Philosophy() {
         {/* Two-Column Layout */}
         <div className="grid lg:grid-cols-12 gap-6 xs:gap-8 sm:gap-10 md:gap-12 lg:gap-20 xl:gap-24 items-center">
           
-          {/* Content Pane — below dial on mobile, left on desktop */}
+          {/* Content Pane ── below dial on mobile, left on desktop */}
           <div className="lg:col-span-7 flex flex-col items-start text-left min-h-0 lg:min-h-[460px] pl-0 sm:pl-4 md:pl-8 lg:pl-12 order-2 lg:order-1">
             <div ref={contentRef} className="w-full flex flex-col items-start">
               
-              <span className="anim-fade-up font-heading text-[3rem] xs:text-[4rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#10B981]/[0.08] leading-none select-none tracking-tighter mb-1 xs:mb-2">
+              <span className="anim-fade-up font-heading text-[3rem] xs:text-[4rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#c68a2e]/[0.08] leading-none select-none tracking-tighter mb-1 xs:mb-2">
                 {activeDetails.num}
               </span>
               
-              <span className="anim-fade-up font-subheading text-[10px] xs:text-xs font-bold text-[#10B981] tracking-[0.2em] xs:tracking-[0.25em] uppercase block mb-2 xs:mb-3">
+              <span className="anim-fade-up font-subheading text-[10px] xs:text-xs font-bold text-[#c68a2e] tracking-[0.2em] xs:tracking-[0.25em] uppercase block mb-2 xs:mb-3">
                 Dimension System
               </span>
               
@@ -229,7 +236,7 @@ export default function Philosophy() {
                 <ul className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 w-full">
                   {activeDetails.capabilities.map((cap, i) => (
                     <li key={i} className="flex items-start gap-2 xs:gap-3 text-[11px] xs:text-xs text-gray-300 font-body">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] mt-1 xs:mt-1.5 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#c68a2e] mt-1 xs:mt-1.5 flex-shrink-0" />
                       <span>{cap}</span>
                     </li>
                   ))}
@@ -251,14 +258,14 @@ export default function Philosophy() {
             <div className="philosophy-dial-container relative w-[380px] h-[380px] flex items-center justify-center select-none z-10">
               
               {/* Center indicator */}
-              <div className="absolute z-20 w-20 xs:w-24 h-20 xs:h-24 bg-[#040c08] border border-white/[0.08] rounded-full flex flex-col items-center justify-center shadow-2xl">
+              <div className="absolute z-20 w-20 xs:w-24 h-20 xs:h-24 bg-[#050515] border border-white/[0.08] rounded-full flex flex-col items-center justify-center shadow-2xl">
                 <span className="font-heading text-base xs:text-lg font-black text-white">9D</span>
                 <span className="font-subheading text-[6px] xs:text-[7px] font-bold text-gray-500 tracking-[0.15em] xs:tracking-[0.2em]">AAYAM</span>
               </div>
 
               {/* SVG rings */}
               <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" viewBox="0 0 380 380">
-                <circle cx="190" cy="190" r={radius} fill="none" stroke="rgba(16, 185, 129, 0.05)" strokeWidth="1" strokeDasharray="4 6" />
+                <circle cx="190" cy="190" r={radius} fill="none" stroke="rgba(198, 138, 46, 0.08)" strokeWidth="1" strokeDasharray="4 6" />
                 <circle cx="190" cy="190" r={radius - 40} fill="none" stroke="rgba(255, 255, 255, 0.02)" strokeWidth="1" />
               </svg>
 
@@ -288,8 +295,8 @@ export default function Philosophy() {
                     >
                       <div className={`w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 ${
                         isActive 
-                          ? 'bg-[#10B981] border-[#10B981] text-[#040c08] shadow-lg shadow-[#10B981]/20 scale-110' 
-                          : 'bg-black/90 border-white/[0.08] hover:border-[#10B981] text-gray-400 hover:text-white backdrop-blur'
+                          ? 'bg-[#c68a2e] border-[#c68a2e] text-[#050515] shadow-lg shadow-[#c68a2e]/20 scale-110' 
+                          : 'bg-black/90 border-white/[0.08] hover:border-[#c68a2e] text-gray-400 hover:text-white backdrop-blur'
                       }`}>
                         <span className="node-number font-subheading text-[8px] font-extrabold">
                           {num.toString().padStart(2, '0')}
@@ -309,7 +316,7 @@ export default function Philosophy() {
                   type="button"
                   className={`py-1 xs:py-1.5 px-2.5 xs:px-3 rounded text-[9px] xs:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
                     activeDim === num 
-                      ? 'bg-[#10B981] text-[#040c08]' 
+                      ? 'bg-[#c68a2e] text-[#050515]' 
                       : 'bg-white/[0.02] border border-white/[0.04] text-gray-400 hover:text-white'
                   }`}
                   onClick={() => handleNodeClick(num)}

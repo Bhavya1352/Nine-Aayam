@@ -41,8 +41,8 @@ export default function MagneticButton({
   const baseStyles = "flex items-center justify-center font-subheading font-semibold rounded-full gap-1.5 transition-all duration-300";
   
   const variants = {
-    primary: "bg-[#10B981] text-[#040c08] shadow-lg shadow-[#10B981]/20 hover:bg-[#34D399] hover:shadow-[#10B981]/30",
-    outline: "bg-transparent text-white border border-[#10B981]/25 backdrop-blur hover:bg-[#10B981]/10"
+    primary: "bg-[#c68a2e] text-[#050515] shadow-lg shadow-[#c68a2e]/20 hover:bg-[#c68a2e]/90 hover:shadow-[#c68a2e]/30",
+    outline: "bg-transparent text-white border border-[#c68a2e]/25 backdrop-blur hover:bg-[#c68a2e]/10"
   };
 
   return (
