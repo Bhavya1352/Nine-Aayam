@@ -71,6 +71,81 @@ const serviceGridData = [
   }
 ];
 
+const getCardStyles = (idx) => {
+  switch (idx) {
+    case 0:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[290px] lg:min-h-[340px]",
+        padding: "pt-8 pb-6 px-6",
+        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
+      };
+    case 1:
+      return {
+        colSpan: "col-span-1 md:col-span-2",
+        minHeight: "min-h-[270px] lg:min-h-[310px]",
+        padding: "pt-6 pb-6 px-8",
+        bgGlow: "from-[#110f33]/90 via-[#0a0a24]/95 to-[#050515]/98"
+      };
+    case 2:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[280px] lg:min-h-[320px]",
+        padding: "pt-7 pb-6 px-6",
+        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
+      };
+    case 3:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[310px] lg:min-h-[360px]",
+        padding: "pt-9 pb-7 px-6",
+        bgGlow: "from-[#0e0a2b]/90 via-[#080820]/95 to-[#050515]/98"
+      };
+    case 4:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[250px] lg:min-h-[290px]",
+        padding: "pt-5 pb-5 px-6",
+        bgGlow: "from-[#0a081c]/90 via-[#050515]/95 to-[#02020a]/98"
+      };
+    case 5:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[300px] lg:min-h-[350px]",
+        padding: "pt-8 pb-7 px-6",
+        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
+      };
+    case 6:
+      return {
+        colSpan: "col-span-1 md:col-span-2",
+        minHeight: "min-h-[270px] lg:min-h-[300px]",
+        padding: "pt-6 pb-6 px-8",
+        bgGlow: "from-[#110f33]/90 via-[#0a0a24]/95 to-[#050515]/98"
+      };
+    case 7:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[320px] lg:min-h-[370px]",
+        padding: "pt-9 pb-8 px-6",
+        bgGlow: "from-[#0e0a2b]/90 via-[#080820]/95 to-[#050515]/98"
+      };
+    case 8:
+      return {
+        colSpan: "col-span-1 md:col-span-2",
+        minHeight: "min-h-[280px] lg:min-h-[310px]",
+        padding: "pt-7 pb-6 px-8",
+        bgGlow: "from-[#13103c]/95 via-[#0b0b2b]/97 to-[#050515]/99"
+      };
+    default:
+      return {
+        colSpan: "col-span-1",
+        minHeight: "min-h-[260px]",
+        padding: "p-6",
+        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
+      };
+  }
+};
+
 export default function Story() {
   const { setCursor } = useCursor();
 
@@ -149,18 +224,56 @@ export default function Story() {
       }
     );
 
-    // 2. Services grid boxes staggered slide-up
-    gsap.fromTo(".service-cabinet-box",
-      { opacity: 0, y: 40 },
+    // 2. Services grid boxes staggered slide-up with scattered reveal
+    gsap.fromTo(".service-cabinet-box-wrapper",
+      { 
+        opacity: 0.5,
+        x: (idx) => {
+          const isMobile = window.innerWidth < 768;
+          const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+          
+          if (isMobile) {
+            return gsap.utils.random(-30, 30);
+          } else if (isTablet) {
+            const col = idx % 2;
+            const baseShift = col === 0 ? 180 : -180;
+            return baseShift + gsap.utils.random(-20, 20);
+          } else {
+            const xOffsets = [320, -280, 320, 0, -320, 320, -280, 320, -280];
+            return xOffsets[idx] + gsap.utils.random(-30, 30);
+          }
+        },
+        y: (idx) => {
+          const isMobile = window.innerWidth < 768;
+          const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+          
+          if (isMobile) {
+            const diff = 4 - idx;
+            return diff * 80 + gsap.utils.random(-15, 15);
+          } else if (isTablet) {
+            const row = Math.floor(idx / 2);
+            const diff = 2 - row;
+            return diff * 120 + gsap.utils.random(-20, 20);
+          } else {
+            const yOffsets = [220, 220, 50, 50, 50, -150, -150, -300, -300];
+            return yOffsets[idx] + gsap.utils.random(-25, 25);
+          }
+        },
+        rotation: () => gsap.utils.random(-35, 35),
+        scale: 0.75
+      },
       {
         opacity: 1,
+        x: 0,
         y: 0,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: "power3.out",
+        rotation: 0,
+        scale: 1,
+        duration: 0.85,
+        stagger: 0.05,
+        ease: "back.out(1.4)",
         scrollTrigger: {
           trigger: ".services-grid-trigger",
-          start: "top 75%",
+          start: "top 45%",
           toggleActions: "play none none reverse"
         }
       }
@@ -312,52 +425,52 @@ export default function Story() {
           {/* Grid cabinets with varied heights and tactile depth gradients */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
             {serviceGridData.map((item, idx) => {
-              const cardOffsetPadding = idx % 3 === 0 ? "pt-7 pb-6 min-h-[220px]" 
-                                      : idx % 3 === 1 ? "pt-5 pb-7 min-h-[235px]" 
-                                      : "pt-8 pb-5 min-h-[210px]";
+              const styles = getCardStyles(idx);
 
               return (
                 <div
                   key={idx}
-                  className={`service-cabinet-box bg-gradient-to-b from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98 border border-[#c68a2e]/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.6)] p-6 rounded-lg relative overflow-hidden transition-all duration-[400ms] ease-[cubic-bezier(.22,.61,.36,1)] hover:border-[#c68a2e]/35 group hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.7)] cursor-none ${cardOffsetPadding}`}
-                  onMouseEnter={() => setCursor('view')}
-                  onMouseLeave={() => setCursor('')}
+                  className={`service-cabinet-box-wrapper ${styles.colSpan} w-full h-full`}
                 >
-                  {/* corner angle markers */}
-                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/5 group-hover:border-[#c68a2e]/30" />
-                  <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/5 group-hover:border-[#c68a2e]/30" />
-                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/5 group-hover:border-[#c68a2e]/30" />
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/5 group-hover:border-[#c68a2e]/30" />
+                  <div
+                    className={`service-cabinet-box bg-gradient-to-b ${styles.bgGlow} border border-[#c68a2e]/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.6)] rounded-lg relative overflow-hidden transition-all duration-[400ms] ease-[cubic-bezier(.22,.61,.36,1)] hover:border-[#c68a2e]/35 group hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.7)] cursor-none w-full h-full flex flex-col justify-between ${styles.padding} ${styles.minHeight}`}
+                    onMouseEnter={() => setCursor('view')}
+                    onMouseLeave={() => setCursor('')}
+                  >
+                    {/* corner angle markers */}
+                    <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/5 group-hover:border-[#c68a2e]/30" />
+                    <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/5 group-hover:border-[#c68a2e]/30" />
+                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/5 group-hover:border-[#c68a2e]/30" />
+                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/5 group-hover:border-[#c68a2e]/30" />
 
-                  {/* Rotating compass SVG reticle inside box */}
-                  <svg className="absolute right-4 bottom-4 w-12 h-12 opacity-[0.02] group-hover:opacity-[0.14] group-hover:scale-105 transition-all duration-[600ms] pointer-events-none" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" stroke="#c68a2e" strokeWidth="0.8" fill="none" strokeDasharray="3 6" className="origin-center animate-[spin_30s_linear_infinite]" />
-                    <line x1="10" y1="50" x2="90" y2="50" stroke="#c68a2e" strokeWidth="0.5" />
-                    <line x1="50" y1="10" x2="50" y2="90" stroke="#c68a2e" strokeWidth="0.5" />
-                  </svg>
+                    {/* Rotating compass SVG reticle inside box */}
+                    <svg className="absolute right-4 bottom-4 w-12 h-12 opacity-[0.02] group-hover:opacity-[0.14] group-hover:scale-105 transition-all duration-[600ms] pointer-events-none" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" stroke="#c68a2e" strokeWidth="0.8" fill="none" strokeDasharray="3 6" className="origin-center animate-[spin_30s_linear_infinite]" />
+                      <line x1="10" y1="50" x2="90" y2="50" stroke="#c68a2e" strokeWidth="0.5" />
+                      <line x1="50" y1="10" x2="50" y2="90" stroke="#c68a2e" strokeWidth="0.5" />
+                    </svg>
 
-
-
-                  <div className="flex flex-col justify-between h-full relative z-10">
-                    <div>
-                      <span className="font-subheading text-[8px] font-bold tracking-[0.25em] text-[#c68a2e] block mb-3">
-                        {item.tag}
-                      </span>
-                      <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#c68a2e] group-hover:translate-x-1 transition-all duration-300">
-                        {item.title}
-                      </h4>
-                      <p className="font-body text-xs text-gray-200 leading-[1.6] mb-4">
-                        {item.desc}
-                      </p>
-                    </div>
-
-                    {/* Bullet badges */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {item.bullets.map((b, i) => (
-                        <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase">
-                          {b}
+                    <div className="flex flex-col justify-between h-full relative z-10">
+                      <div>
+                        <span className="font-subheading text-[8px] font-bold tracking-[0.25em] text-[#c68a2e] block mb-3">
+                          {item.tag}
                         </span>
-                      ))}
+                        <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#c68a2e] group-hover:translate-x-1 transition-all duration-300">
+                          {item.title}
+                        </h4>
+                        <p className="font-body text-xs text-gray-200 leading-[1.6] mb-4">
+                          {item.desc}
+                        </p>
+                      </div>
+
+                      {/* Bullet badges */}
+                      <div className="flex flex-wrap gap-1.5 mt-auto">
+                        {item.bullets.map((b, i) => (
+                          <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase">
+                            {b}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

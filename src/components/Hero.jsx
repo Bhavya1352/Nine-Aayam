@@ -264,26 +264,6 @@ export default function Hero() {
         ctx.stroke();
       }
 
-      // ── NEW: Volumetric Technical status readout in corner ──
-      if (p > 0.8) {
-        ctx.font = '6px Courier New, monospace';
-        ctx.fillStyle = `rgba(198, 138, 46, ${0.28 * p})`;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-        ctx.fillText(`SYS.STATUS // NINE.AAYAM.V1`, 24, 24);
-        ctx.fillText(`COORD.X   // ${tcx.toFixed(1)}px`, 24, 34);
-        ctx.fillText(`COORD.Y   // ${tcy.toFixed(1)}px`, 24, 44);
-        ctx.fillText(`ROT.DEG   // ${((baseAngle * 180) / Math.PI % 360).toFixed(1)}°`, 24, 54);
-        
-        const hoveredNodeIndex = hoveredNodeRef.current;
-        if (hoveredNodeIndex >= 0) {
-          ctx.fillStyle = '#c68a2e';
-          ctx.fillText(`LOCK.ON   // DIMENSION_0${hoveredNodeIndex + 1}`, 24, 64);
-        } else {
-          ctx.fillText(`LOCK.ON   // SCANNING`, 24, 64);
-        }
-      }
-
       // Dial ticks
       const totalTicks = 90;
       for (let j = 0; j < totalTicks; j++) {
