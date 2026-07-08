@@ -28,51 +28,57 @@ export default function Hero() {
   useEffect(() => {
     const tl = gsap.timeline();
 
-    // 1. Logo fade-in
-    tl.fromTo(".logo-link",
-      { opacity: 0, y: -15 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+    // 1. Background Ambient Glow and Canvas Wrapper fade-in immediately
+    tl.fromTo(".canvas-orbit-wrapper",
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 1.8, ease: "power3.out" },
+      0
     );
 
-    // 2. Nav links staggered reveal
-    tl.fromTo(".nav-item-animate",
-      { opacity: 0, y: -15 },
-      { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" },
-      "-=0.6"
-    );
-
-    // 3. Headline reveal
-    tl.fromTo(".reveal-text",
-      { y: "110%" },
-      { y: "0%", duration: 1.2, ease: "power4.out", stagger: 0.15 },
-      "-=0.4"
-    );
-
-    // 4. Orbit expansion
+    // 2. Expand orbital lines progress
     tl.to(animStateRef.current,
-      { progress: 1, duration: 1.8, ease: "power3.out" },
-      "-=0.4"
+      { progress: 1, duration: 2.2, ease: "power3.out" },
+      0.3
     );
 
-    // 5. Description fade-in
+    // 3. Logo and Nav Items slide down (Navbar entry)
+    tl.fromTo(".logo-link",
+      { opacity: 0, y: -20, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: "power3.out" },
+      0.15
+    );
+    tl.fromTo(".nav-item-animate",
+      { opacity: 0, y: -18 },
+      { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: "power3.out" },
+      0.25
+    );
+
+    // 4. Headline reveal (Reveal text blocks)
+    tl.fromTo(".reveal-text",
+      { y: "120%" },
+      { y: "0%", duration: 1.3, ease: "power4.out", stagger: 0.14 },
+      0.4
+    );
+
+    // 5. Accent line elegant draw
+    tl.fromTo(".hero-accent",
+      { opacity: 0, scaleX: 0, transformOrigin: "left" },
+      { opacity: 1, scaleX: 1, duration: 0.9, ease: "power3.out" },
+      0.7
+    );
+
+    // 6. Description (Paragraph) fade-in
     tl.fromTo(".hero-description",
       { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-      "-=1.2"
+      { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+      0.85
     );
 
-    // 6. Accent line fade-in
-    tl.fromTo(".hero-accent",
-      { opacity: 0, scaleX: 0 },
-      { opacity: 1, scaleX: 1, duration: 0.8, ease: "power3.out" },
-      "-=1.0"
-    );
-
-    // 7. CTA fade-in
+    // 7. CTA button slide/fade-in
     tl.fromTo(".hero-cta",
       { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-      "-=0.8"
+      { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+      1.0
     );
   }, []);
 
@@ -210,39 +216,46 @@ export default function Hero() {
         tiltY += (targetTiltY - tiltY) * 0.04;
       }
 
-      const breathe = 1 + Math.sin(t * 0.8) * 0.008;
+      // Enhanced breathing with dual frequency for more organic feel
+      const breathe1 = Math.sin(t * 0.7) * 0.006;
+      const breathe2 = Math.sin(t * 1.3) * 0.004;
+      const breathe = 1 + breathe1 + breathe2;
       const orbitRadius = Math.min(w, h) * 0.34 * breathe;
 
       const tcx = cx + tiltX;
       const tcy = cy + tiltY;
 
-      // Concentric circles & guidelines
+      // Concentric circles & guidelines with animated dash offset
+      const dashOffset = t * 8;
+      
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p * 1.38, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(198, 138, 46, ${0.02 * p})`;
+      ctx.strokeStyle = `rgba(212, 155, 63, ${0.025 * p})`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p * 1.22, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(198, 138, 46, ${0.045 * p})`;
+      ctx.strokeStyle = `rgba(212, 155, 63, ${0.05 * p})`;
       ctx.lineWidth = 0.5;
       ctx.setLineDash([3, 15]);
+      ctx.lineDashOffset = -dashOffset;
       ctx.stroke();
       ctx.setLineDash([]); 
 
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p * 0.72, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(198, 138, 46, ${0.035 * p})`;
+      ctx.strokeStyle = `rgba(212, 155, 63, ${0.04 * p})`;
       ctx.lineWidth = 0.5;
       ctx.setLineDash([1, 6]);
+      ctx.lineDashOffset = dashOffset * 0.5;
       ctx.stroke();
       ctx.setLineDash([]); 
 
-      // ── NEW: Counter-rotating inner HUD dial ──
+      // ── Counter-rotating inner HUD dial with enhanced animation ──
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p * 0.52, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(198, 138, 46, ${0.07 * p})`;
+      ctx.strokeStyle = `rgba(212, 155, 63, ${0.08 * p})`;
       ctx.lineWidth = 0.55;
       ctx.stroke();
 
@@ -259,13 +272,14 @@ export default function Hero() {
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.strokeStyle = `rgba(198, 138, 46, ${(k % 4 === 0 ? 0.12 : 0.05) * p})`;
+        ctx.strokeStyle = `rgba(212, 155, 63, ${(k % 4 === 0 ? 0.14 : 0.06) * p})`;
         ctx.lineWidth = 0.5;
         ctx.stroke();
       }
 
-      // Dial ticks
+      // Dial ticks with subtle pulsing
       const totalTicks = 90;
+      const tickPulse = 1 + Math.sin(t * 2) * 0.05;
       for (let j = 0; j < totalTicks; j++) {
         const tickAngle = (j / totalTicks) * Math.PI * 2 + baseAngle * 0.1;
         const outerR = orbitRadius * p * 1.05;
@@ -278,35 +292,36 @@ export default function Hero() {
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.strokeStyle = `rgba(198, 138, 46, ${(j % 5 === 0 ? 0.08 : 0.03) * p})`;
+        ctx.strokeStyle = `rgba(212, 155, 63, ${(j % 5 === 0 ? 0.09 : 0.035) * p * tickPulse})`;
         ctx.lineWidth = 0.5;
         ctx.stroke();
 
-        // Monospace index labels
+        // Monospace index labels with fade-in
         if (j % 15 === 0 && p > 0.7) {
           const textR = orbitRadius * p * 1.11;
           const tx = tcx + textR * Math.cos(tickAngle);
           const ty = tcy + textR * Math.sin(tickAngle);
           ctx.font = '5px Courier New, monospace';
-          ctx.fillStyle = `rgba(198, 138, 46, ${0.18 * p})`;
+          ctx.fillStyle = `rgba(212, 155, 63, ${0.2 * p})`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(`${j * 4}°`, tx, ty);
         }
       }
 
-      // Orbit ring
+      // Orbit ring with subtle glow
       ctx.beginPath();
       ctx.arc(tcx, tcy, orbitRadius * p, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(198, 138, 46, ${0.22 * p})`;
+      ctx.strokeStyle = `rgba(212, 155, 63, ${0.24 * p})`;
       ctx.lineWidth = 0.8;
       ctx.stroke();
 
-      // Core 9D button
+      // Core 9D button with double-frequency luxury breathing
       const coreRadius = 12 * p;
+      const coreGlow = 1 + Math.sin(t * 0.8) * 0.04 + Math.sin(t * 1.6) * 0.02;
       ctx.beginPath();
-      ctx.arc(tcx, tcy, coreRadius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(198, 138, 46, ${0.9 * p})`;
+      ctx.arc(tcx, tcy, coreRadius * coreGlow, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(212, 155, 63, ${0.92 * p})`;
       ctx.fill();
 
       if (p > 0.5) {
@@ -327,34 +342,53 @@ export default function Hero() {
         const ny = tcy + orbitRadius * p * Math.sin(angle);
         const isHovered = i === hoveredNode;
 
+        // Soft twinkling effect when not hovered
+        const twinkle = isHovered ? 1.0 : (0.6 + Math.sin(t * 2.5 + i * 1.7) * 0.25);
+
         ctx.beginPath();
         ctx.moveTo(tcx, tcy);
         ctx.lineTo(nx, ny);
-        ctx.strokeStyle = `rgba(198, 138, 46, ${(isHovered ? 0.18 : 0.07) * p})`;
+        ctx.strokeStyle = `rgba(212, 155, 63, ${(isHovered ? 0.18 : 0.07) * p})`;
         ctx.lineWidth = isHovered ? 0.8 : 0.5;
         ctx.stroke();
 
-        // ── NEW: Data flow particles along connector lines ──
+        // ── Enhanced data flow particles along connector lines with trail effect ──
         const flowProgress = (t * 0.5 + i * 0.11) % 1.0;
         const px = tcx + (nx - tcx) * flowProgress;
         const py = tcy + (ny - tcy) * flowProgress;
+        
+        // Trail effect
+        const trailLength = 3;
+        for (let trail = 0; trail < trailLength; trail++) {
+          const trailProgress = Math.max(0, flowProgress - (trail * 0.03));
+          const trailPx = tcx + (nx - tcx) * trailProgress;
+          const trailPy = tcy + (ny - tcy) * trailProgress;
+          const trailAlpha = (1 - trail / trailLength) * (isHovered ? 0.7 : 0.25);
+          
+          ctx.beginPath();
+          ctx.arc(trailPx, trailPy, 1.2 - trail * 0.3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 155, 63, ${trailAlpha * p})`;
+          ctx.fill();
+        }
+        
+        // Main particle
         ctx.beginPath();
         ctx.arc(px, py, 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(198, 138, 46, ${(isHovered ? 0.9 : 0.4) * p})`;
+        ctx.fillStyle = `rgba(212, 155, 63, ${(isHovered ? 0.95 : 0.45) * p})`;
         ctx.fill();
 
         const nodeRadius = isHovered ? 6 : 3;
         if (isHovered) {
           ctx.beginPath();
           ctx.arc(nx, ny, 10, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(198, 138, 46, ${0.08 * p})`;
+          ctx.fillStyle = `rgba(212, 155, 63, ${0.08 * p})`;
           ctx.fill();
 
-          // ── NEW: Viewfinder Target brackets surrounding hovered node ──
+          // ── Viewfinder Target brackets surrounding hovered node ──
           if (p > 0.8) {
             const bracketSize = 8;
             const bracketGap = 2.5;
-            ctx.strokeStyle = 'rgba(198, 138, 46, 0.7)';
+            ctx.strokeStyle = 'rgba(212, 155, 63, 0.7)';
             ctx.lineWidth = 0.75;
 
             // Top-Left bracket
@@ -386,7 +420,7 @@ export default function Hero() {
             ctx.stroke();
           }
 
-          // ── NEW: Concentric Radar ripples expanding from node ──
+          // ── Concentric Radar ripples expanding from node ──
           const rippleCount = 2;
           for (let rIdx = 0; rIdx < rippleCount; rIdx++) {
             const rippleProgress = ((t * 1.4 + rIdx / rippleCount) % 1.0);
@@ -394,7 +428,7 @@ export default function Hero() {
             const rippleAlpha = (1 - rippleProgress) * 0.4 * p;
             ctx.beginPath();
             ctx.arc(nx, ny, rippleR, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(198, 138, 46, ${rippleAlpha})`;
+            ctx.strokeStyle = `rgba(212, 155, 63, ${rippleAlpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -402,7 +436,7 @@ export default function Hero() {
 
         ctx.beginPath();
         ctx.arc(nx, ny, nodeRadius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(198, 138, 46, ${(isHovered ? 1 : 0.85) * p})`;
+        ctx.fillStyle = `rgba(212, 155, 63, ${(isHovered ? 1.0 : 0.85 * twinkle) * p})`;
         ctx.fill();
 
         // Point leader lines on hover
@@ -416,7 +450,7 @@ export default function Hero() {
           ctx.moveTo(nx, ny);
           ctx.lineTo(nx + dx * 0.4, ny + dy * 0.4);
           ctx.lineTo(nx + dx, ny + dy);
-          ctx.strokeStyle = 'rgba(198, 138, 46, 0.4)';
+          ctx.strokeStyle = 'rgba(212, 155, 63, 0.4)';
           ctx.lineWidth = 0.8;
           ctx.stroke();
 
@@ -424,7 +458,7 @@ export default function Hero() {
           ctx.textBaseline = 'middle';
 
           ctx.font = '700 10px Inter, sans-serif';
-          ctx.fillStyle = '#c68a2e';
+          ctx.fillStyle = '#d49b3f';
           ctx.fillText(`0${i + 1}`, nx + dx + (isRight ? 8 : -8), ny + dy - 7);
 
           ctx.font = '500 13px Inter, sans-serif';
@@ -456,11 +490,11 @@ export default function Hero() {
       ref={containerRef}
       className="hero relative min-h-screen min-h-dvh w-full flex items-center overflow-hidden z-10 pt-16"
       style={{
-        background: 'radial-gradient(circle at 55% 50%, rgba(198, 138, 46, 0.015), transparent 55%)'
+        background: 'radial-gradient(circle at 55% 50%, rgba(212, 155, 63, 0.015), transparent 55%)'
       }}
     >
-      {/* 2. Subtle radial amber light behind Hero (Requirement 2) */}
-      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#c68a2e]/[0.05] rounded-full filter blur-[250px] pointer-events-none z-[1]" />
+      {/* Dark Vignette Overlay for Depth */}
+      <div className="vignette-overlay" />
 
       {/* Background Dark Overlay for Scroll Interaction */}
       <div className="hero-bg-overlay absolute inset-0 bg-[#050515] pointer-events-none opacity-0 z-[1] transition-opacity duration-150" />
@@ -471,36 +505,38 @@ export default function Hero() {
 
       {/* Nine Core Canvas */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]">
-        <div className="w-full h-full pointer-events-auto canvas-orbit-wrapper">
-          <canvas ref={canvasRef} className="w-full h-full" />
+        <div className="w-full h-full pointer-events-auto canvas-orbit-wrapper relative">
+          {/* Subtle gold ambient light sitting directly behind the orbital illustration */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#d49b3f]/[0.05] rounded-full filter blur-[220px] pointer-events-none z-0" />
+          <canvas ref={canvasRef} className="w-full h-full relative z-10" />
         </div>
       </div>
 
       {/* Content */}
       <div
         ref={contentRef}
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 xl:px-16 py-4 xs:py-5 sm:py-6 md:py-8 lg:py-8 -translate-y-4 sm:-translate-y-6 md:-translate-y-8 lg:-translate-y-10"
         style={{ willChange: 'transform, opacity' }}
       >
-        {/* 3. Headline breathing layout change */}
-        <h1 className="hero-heading leading-[1.05] tracking-tight">
+        {/* 3. Headline breathing layout change with balanced line break */}
+        <h1 className="hero-heading leading-[1.10] tracking-tight">
           <div className="reveal-mask">
             <span className="reveal-text block">
-              Building Brands
+              Building Brands Across
             </span>
           </div>
-          <div className="reveal-mask mt-1 sm:mt-2 translate-x-[4px]">
+          <div className="reveal-mask mt-1 sm:mt-2">
             <span className="reveal-text block">
-              Across Nine <span className="text-[#c68a2e] italic tracking-[-0.03em] font-light">Dimensions.</span>
+              Nine <span className="text-[#d49b3f] italic tracking-[-0.02em] font-light opacity-95">Dimensions.</span>
             </span>
           </div>
         </h1>
 
         {/* Line accent */}
-        <div className="hero-accent w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#c68a2e]/30 mt-8 sm:mt-10 mb-5 sm:mb-6 opacity-0 origin-left" />
+        <div className="hero-accent w-8 xs:w-10 sm:w-14 h-[1.5px] bg-[#d49b3f]/30 mt-6 sm:mt-8 mb-4 sm:mb-5 opacity-0 origin-left" />
 
         {/* Description */}
-        <p className="hero-description font-body text-[11px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-[1.68] text-gray-350 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-6 xs:mb-8 sm:mb-10 opacity-0">
+        <p className="hero-description font-body text-[11.5px] xs:text-xs sm:text-sm md:text-[0.95rem] leading-[1.68] text-gray-350 max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] mb-8 sm:mb-12 opacity-0">
           Nine creative disciplines. One creative system built to shape modern brands.
         </p>
 
@@ -508,10 +544,10 @@ export default function Hero() {
         <div className="hero-cta opacity-0">
           <a
             href="#services"
-            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-4 xs:px-5 sm:px-6 md:px-7 py-2 xs:py-2.5 sm:py-3 border border-white/10 hover:border-[#c68a2e]/60 text-white rounded-full transition-all duration-300 font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.1em] xs:tracking-[0.12em] sm:tracking-[0.15em] uppercase hover:shadow-[0_0_20px_rgba(198,138,46,0.1)]"
+            className="group inline-flex items-center gap-2 xs:gap-2.5 sm:gap-3 px-5 xs:px-6 sm:px-7 py-2.5 xs:py-3 border border-white/10 hover:border-[#d49b3f]/50 text-white rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] backdrop-blur-sm font-body text-[0.65rem] xs:text-[0.7rem] sm:text-[0.75rem] md:text-[0.8rem] font-medium tracking-[0.12em] xs:tracking-[0.14em] sm:tracking-[0.16em] uppercase hover:shadow-[0_0_30px_rgba(212,155,63,0.12)] hover:-translate-y-0.5 hover:bg-[#d49b3f]/[0.08]"
           >
             <span>Explore The System</span>
-            <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] text-[#d49b3f]" />
           </a>
         </div>
 

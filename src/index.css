@@ -5,8 +5,10 @@
 @theme {
   --color-obsidian-deep: #050515;
   --color-obsidian-dark: #0d0c24;
-  --color-neon-emerald: #c68a2e;
-  --color-mint-green: #c68a2e;
+  --color-neon-emerald: #d49b3f;
+  --color-mint-green: #d49b3f;
+  --color-brand-gold: #d49b3f;
+  --color-gray-350: #b0b0bc;
 
   --font-heading: 'Cormorant Garamond', serif;
   --font-subheading: 'Inter', sans-serif;
@@ -45,7 +47,7 @@ body {
    SCROLLBAR
    ══════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -53,12 +55,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(198, 138, 46, 0.12);
-  border-radius: 4px;
+  background: rgba(198, 138, 46, 0.15);
+  border-radius: 3px;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c68a2e;
+  background: rgba(198, 138, 46, 0.4);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(198, 138, 46, 0.6);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -76,7 +83,7 @@ body {
 .glow-1 {
   width: 70vw;
   height: 70vw;
-  background: #c68a2e;
+  background: #d49b3f;
   top: -15%;
   left: -20%;
   opacity: 0.06;
@@ -87,7 +94,7 @@ body {
 .glow-2 {
   width: 50vw;
   height: 50vw;
-  background: #c68a2e;
+  background: #d49b3f;
   bottom: 10%;
   right: -15%;
   opacity: 0.06;
@@ -205,7 +212,7 @@ body {
   left: 0;
   width: 6px;
   height: 6px;
-  background-color: #c68a2e;
+  background-color: #d49b3f;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.3s, height 0.3s, background-color 0.3s;
@@ -217,7 +224,7 @@ body {
   left: 0;
   width: 40px;
   height: 40px;
-  border: 1px solid #c68a2e;
+  border: 1px solid #d49b3f;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -242,8 +249,8 @@ body {
 body.cursor-hovering-explore .cursor-ring {
   width: 90px;
   height: 90px;
-  background-color: #c68a2e;
-  border-color: #c68a2e;
+  background-color: #d49b3f;
+  border-color: #d49b3f;
 }
 
 body.cursor-hovering-explore .cursor-label {
@@ -253,8 +260,8 @@ body.cursor-hovering-explore .cursor-label {
 body.cursor-hovering-play .cursor-ring {
   width: 100px;
   height: 100px;
-  background-color: #c68a2e;
-  border-color: #c68a2e;
+  background-color: #d49b3f;
+  border-color: #d49b3f;
 }
 
 body.cursor-hovering-play .cursor-label {
@@ -265,15 +272,15 @@ body.cursor-hovering-view .cursor-ring {
   width: 80px;
   height: 80px;
   background-color: transparent;
-  border-color: #c68a2e;
+  border-color: #d49b3f;
   border-width: 2px;
 }
 
 body.cursor-hovering-connect .cursor-ring {
   width: 70px;
   height: 70px;
-  background-color: rgba(198, 138, 46, 0.1);
-  border-color: #c68a2e;
+  background-color: rgba(212, 155, 63, 0.1);
+  border-color: #d49b3f;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -517,6 +524,29 @@ body.cursor-hovering-connect .cursor-ring {
     min-width: 44px;
     min-height: 44px;
   }
+
+  /* Enhanced touch feedback for buttons */
+  button:active,
+  a:active {
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+  }
+
+  /* Touch feedback for cards */
+  .service-cabinet-box:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease;
+  }
+
+  /* Better touch target spacing */
+  .nav-item-animate {
+    padding: 8px 12px;
+  }
+
+  /* Remove magnetic effects on touch */
+  .service-cabinet-box-wrapper {
+    transform: none !important;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -539,45 +569,110 @@ body.cursor-hovering-connect .cursor-ring {
   font-family: var(--font-heading);
   font-weight: 500;
   text-transform: none;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.95);
   user-select: none;
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  font-size: clamp(2.2rem, 10vw, 3.8rem); /* fluid sizing for elegant serif */
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  font-size: clamp(2.0rem, 8vw, 3.2rem); /* fluid sizing for elegant serif */
+}
+
+/* Enhanced typography for section headings */
+.section-heading {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+.subheading {
+  font-family: var(--font-subheading);
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+}
+
+.body-text {
+  font-family: var(--font-body);
+  letter-spacing: 0.005em;
+  line-height: 1.7;
+}
+
+/* Subtle text gradient for key headings */
+.text-gradient-subtle {
+  background: linear-gradient(135deg, #ffffff 0%, #e8e8e8 50%, #d4d4d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-amber {
+  background: linear-gradient(135deg, #d49b3f 0%, #e5b364 50%, #d49b3f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark vignette overlay for depth background */
+.vignette-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at center, transparent 35%, rgba(5, 5, 21, 0.45) 75%, rgba(5, 5, 21, 0.85) 100%);
+}
+
+/* Border animation for cards */
+.card-border-animate {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-border-animate::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(198, 138, 46, 0.15), transparent);
+  transition: left 0.6s ease;
+}
+
+.card-border-animate:hover::before {
+  left: 100%;
 }
 
 /* Large phones (376px–480px) */
 @media (min-width: 376px) {
   .hero-heading {
-    font-size: clamp(2.8rem, 10vw, 4.4rem);
+    font-size: clamp(2.4rem, 8vw, 3.4rem);
   }
 }
 
 /* iPads and tablets (481px–768px) */
 @media (min-width: 481px) {
   .hero-heading {
-    font-size: clamp(3.5rem, 8vw, 5rem);
+    font-size: clamp(2.8rem, 7vw, 3.8rem);
   }
 }
 
 /* Large tablets and notebooks (769px–1024px) */
 @media (min-width: 769px) {
   .hero-heading {
-    font-size: clamp(4.2rem, 7.5vw, 5.8rem);
+    font-size: clamp(3.2rem, 6vw, 4.2rem);
   }
 }
 
 /* Small laptops (1025px–1366px) */
 @media (min-width: 1025px) {
   .hero-heading {
-    font-size: clamp(4.8rem, 5.5vw, 6.5rem);
+    font-size: clamp(3.6rem, 5vw, 4.6rem);
   }
 }
 
 /* Large laptops & standard desktops (1367px+) */
 @media (min-width: 1367px) {
   .hero-heading {
-    font-size: clamp(5.5rem, 5vw, 7.5rem);
+    font-size: clamp(4.0rem, 4.2vw, 5.2rem);
   }
 }
 

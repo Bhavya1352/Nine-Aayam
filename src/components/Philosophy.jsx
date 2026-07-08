@@ -131,47 +131,47 @@ export default function Philosophy() {
     return () => window.removeEventListener('selectDimension', handleSelectDimension);
   }, []);
 
-  // Dial rotation animation
+  // Dial rotation animation with enhanced easing
   useEffect(() => {
     const angle = -(activeDim - 1) * 40; // 360 / 9 = 40 deg
     gsap.to(dialRef.current, {
       rotation: angle,
-      duration: 0.85,
-      ease: "power3.out"
+      duration: 1.0,
+      ease: "power2.inOut"
     });
 
-    // Make individual nodes face upright
+    // Make individual nodes face upright with subtle overshoot
     const nodesEl = dialRef.current?.querySelectorAll('.node-position');
     if (nodesEl) {
       nodesEl.forEach((node) => {
         gsap.to(node, {
           rotation: -angle,
-          duration: 0.85,
-          ease: "power3.out"
+          duration: 1.0,
+          ease: "power2.inOut"
         });
       });
     }
 
-    // Stagger fade-up text on active dimension change
+    // Stagger fade-up text on active dimension change with refined timing
     if (contentRef.current) {
       const q = gsap.utils.selector(contentRef.current);
-      gsap.set(q(".anim-fade-up"), { opacity: 0, y: 15 });
+      gsap.set(q(".anim-fade-up"), { opacity: 0, y: 18 });
       gsap.to(q(".anim-fade-up"), {
         opacity: 1,
         y: 0,
-        duration: 0.65,
-        stagger: 0.08,
+        duration: 0.75,
+        stagger: 0.1,
         ease: "power3.out"
       });
     }
   }, [activeDim]);
 
-  // Breathing glow
+  // Breathing glow with dual frequency for more organic feel
   useEffect(() => {
     gsap.to(scrollGlowRef.current, {
-      opacity: 0.25,
-      scale: 1.05,
-      duration: 3,
+      opacity: 0.28,
+      scale: 1.06,
+      duration: 3.5,
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut"
@@ -194,13 +194,13 @@ export default function Philosophy() {
         
         {/* Section Intro */}
         <div className="flex flex-col items-start mb-10 xs:mb-12 sm:mb-16 md:mb-20 lg:mb-28 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
-          <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#c68a2e] uppercase mb-3 xs:mb-4">
+          <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#d49b3f] uppercase mb-3 xs:mb-4">
             Interactive Grid
           </span>
           <h2 className="fade-in-el font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-none">
             The Nine Dimensions
           </h2>
-          <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#c68a2e]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
+          <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#d49b3f]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
           <p className="fade-in-el font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-relaxed max-w-[620px]">
             Click nodes on the visual instrument or explore their properties to see how we project design assets across our unified creative system.
           </p>
@@ -213,11 +213,11 @@ export default function Philosophy() {
           <div className="lg:col-span-7 flex flex-col items-start text-left min-h-0 lg:min-h-[460px] pl-0 sm:pl-4 md:pl-8 lg:pl-12 order-2 lg:order-1">
             <div ref={contentRef} className="w-full flex flex-col items-start">
               
-              <span className="anim-fade-up font-heading text-[3rem] xs:text-[4rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#c68a2e]/[0.08] leading-none select-none tracking-tighter mb-1 xs:mb-2">
+              <span className="anim-fade-up font-heading text-[3rem] xs:text-[4rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#d49b3f]/[0.08] leading-none select-none tracking-tighter mb-1 xs:mb-2">
                 {activeDetails.num}
               </span>
               
-              <span className="anim-fade-up font-subheading text-[10px] xs:text-xs font-bold text-[#c68a2e] tracking-[0.2em] xs:tracking-[0.25em] uppercase block mb-2 xs:mb-3">
+              <span className="anim-fade-up font-subheading text-[10px] xs:text-xs font-bold text-[#d49b3f] tracking-[0.2em] xs:tracking-[0.25em] uppercase block mb-2 xs:mb-3">
                 Dimension System
               </span>
               
@@ -236,7 +236,7 @@ export default function Philosophy() {
                 <ul className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 w-full">
                   {activeDetails.capabilities.map((cap, i) => (
                     <li key={i} className="flex items-start gap-2 xs:gap-3 text-[11px] xs:text-xs text-gray-200 font-body">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#c68a2e] mt-1 xs:mt-1.5 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#d49b3f] mt-1 xs:mt-1.5 flex-shrink-0" />
                       <span>{cap}</span>
                     </li>
                   ))}
@@ -265,7 +265,7 @@ export default function Philosophy() {
 
               {/* SVG rings */}
               <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" viewBox="0 0 380 380">
-                <circle cx="190" cy="190" r={radius} fill="none" stroke="rgba(198, 138, 46, 0.08)" strokeWidth="1" strokeDasharray="4 6" />
+                <circle cx="190" cy="190" r={radius} fill="none" stroke="rgba(212, 155, 63, 0.08)" strokeWidth="1" strokeDasharray="4 6" />
                 <circle cx="190" cy="190" r={radius - 40} fill="none" stroke="rgba(255, 255, 255, 0.02)" strokeWidth="1" />
               </svg>
 
@@ -284,7 +284,7 @@ export default function Philosophy() {
                     <button
                       key={num}
                       type="button"
-                      className="node-position absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2"
+                      className="node-position absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ease-out transform -translate-x-1/2 -translate-y-1/2"
                       style={{
                         left: `${x}px`,
                         top: `${y}px`,
@@ -293,10 +293,10 @@ export default function Philosophy() {
                       onMouseEnter={() => setCursor('view')}
                       onMouseLeave={() => setCursor('')}
                     >
-                      <div className={`w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 ${
+                      <div className={`w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 ease-out ${
                         isActive 
-                          ? 'bg-[#c68a2e] border-[#c68a2e] text-[#050515] shadow-lg shadow-[#c68a2e]/20 scale-110' 
-                          : 'bg-black/90 border-white/[0.08] hover:border-[#c68a2e] text-gray-400 hover:text-white backdrop-blur'
+                          ? 'bg-[#d49b3f] border-[#d49b3f] text-[#050515] shadow-lg shadow-[#d49b3f]/25 scale-110' 
+                          : 'bg-black/90 border-white/[0.08] hover:border-[#d49b3f] text-gray-400 hover:text-white backdrop-blur hover:scale-105'
                       }`}>
                         <span className="node-number font-subheading text-[8px] font-extrabold">
                           {num.toString().padStart(2, '0')}
@@ -316,7 +316,7 @@ export default function Philosophy() {
                   type="button"
                   className={`py-1 xs:py-1.5 px-2.5 xs:px-3 rounded text-[9px] xs:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
                     activeDim === num 
-                      ? 'bg-[#c68a2e] text-[#050515]' 
+                      ? 'bg-[#d49b3f] text-[#050515]' 
                       : 'bg-white/[0.02] border border-white/[0.04] text-gray-400 hover:text-white'
                   }`}
                   onClick={() => handleNodeClick(num)}

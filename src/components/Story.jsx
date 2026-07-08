@@ -208,39 +208,50 @@ export default function Story() {
   };
 
   useEffect(() => {
-    // 1. Editorial heading reveal
+    // 1. Editorial heading reveal with parallax
     gsap.fromTo(".editorial-text",
-      { opacity: 0, y: 30 },
+      { opacity: 0, y: 40 },
       {
         opacity: 1,
         y: 0,
-        duration: 1.0,
+        duration: 1.2,
         ease: "power3.out",
         scrollTrigger: {
           trigger: ".editorial-trigger",
-          start: "top 80%",
+          start: "top 75%",
           toggleActions: "play none none reverse"
         }
       }
     );
 
-    // 2. Services grid boxes staggered slide-up with scattered reveal
+    // Parallax effect for Sanskrit watermark
+    gsap.to(".sanskrit-watermark", {
+      y: -50,
+      scrollTrigger: {
+        trigger: ".editorial-trigger",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1
+      }
+    });
+
+    // 2. Services grid boxes staggered slide-up with scattered reveal and refined easing
     gsap.fromTo(".service-cabinet-box-wrapper",
       { 
-        opacity: 0.5,
+        opacity: 0.4,
         x: (idx) => {
           const isMobile = window.innerWidth < 768;
           const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
           
           if (isMobile) {
-            return gsap.utils.random(-30, 30);
+            return gsap.utils.random(-35, 35);
           } else if (isTablet) {
             const col = idx % 2;
             const baseShift = col === 0 ? 180 : -180;
-            return baseShift + gsap.utils.random(-20, 20);
+            return baseShift + gsap.utils.random(-25, 25);
           } else {
             const xOffsets = [320, -280, 320, 0, -320, 320, -280, 320, -280];
-            return xOffsets[idx] + gsap.utils.random(-30, 30);
+            return xOffsets[idx] + gsap.utils.random(-35, 35);
           }
         },
         y: (idx) => {
@@ -249,18 +260,18 @@ export default function Story() {
           
           if (isMobile) {
             const diff = 4 - idx;
-            return diff * 80 + gsap.utils.random(-15, 15);
+            return diff * 90 + gsap.utils.random(-20, 20);
           } else if (isTablet) {
             const row = Math.floor(idx / 2);
             const diff = 2 - row;
-            return diff * 120 + gsap.utils.random(-20, 20);
+            return diff * 130 + gsap.utils.random(-25, 25);
           } else {
             const yOffsets = [220, 220, 50, 50, 50, -150, -150, -300, -300];
-            return yOffsets[idx] + gsap.utils.random(-25, 25);
+            return yOffsets[idx] + gsap.utils.random(-30, 30);
           }
         },
-        rotation: () => gsap.utils.random(-35, 35),
-        scale: 0.75
+        rotation: () => gsap.utils.random(-40, 40),
+        scale: 0.72
       },
       {
         opacity: 1,
@@ -268,44 +279,47 @@ export default function Story() {
         y: 0,
         rotation: 0,
         scale: 1,
-        duration: 0.85,
-        stagger: 0.05,
-        ease: "back.out(1.4)",
+        duration: () => gsap.utils.random(0.85, 1.05),
+        stagger: {
+          each: () => gsap.utils.random(0.05, 0.08),
+          from: "random"
+        },
+        ease: "back.out(1.2)",
         scrollTrigger: {
           trigger: ".services-grid-trigger",
-          start: "top 45%",
+          start: "top 40%",
           toggleActions: "play none none reverse"
         }
       }
     );
 
-    // 3. In/Out matrix cards reveal
+    // 3. In/Out matrix cards reveal with parallax
     gsap.fromTo(".matrix-card-trigger",
-      { opacity: 0, y: 50 },
+      { opacity: 0, y: 60 },
       {
         opacity: 1,
         y: 0,
-        duration: 1.0,
-        stagger: 0.15,
+        duration: 1.1,
+        stagger: 0.18,
         ease: "power3.out",
         scrollTrigger: {
           trigger: ".matrix-trigger",
-          start: "top 80%",
+          start: "top 75%",
           toggleActions: "play none none reverse"
         }
       }
     );
 
-    // 4. Horizontal scroll line draw animation
+    // 4. Horizontal scroll line draw animation with smoother timing
     gsap.fromTo(".scroll-draw-line",
       { scaleX: 0 },
       {
         scaleX: 1,
-        duration: 1.6,
+        duration: 1.8,
         ease: "power3.out",
         scrollTrigger: {
           trigger: ".scroll-draw-line",
-          start: "top 92%"
+          start: "top 90%"
         }
       }
     );
@@ -315,7 +329,7 @@ export default function Story() {
     <section id="story" className="relative z-10 bg-[#050515] overflow-hidden border-b border-white/[0.02] py-8">
       
       {/* 8. Sanskrit Yantra Geometry background guides */}
-      <div className="absolute top-[8%] left-[4%] w-[480px] h-[480px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#c68a2e]">
+      <div className="absolute top-[8%] left-[4%] w-[480px] h-[480px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#d49b3f]">
         <svg viewBox="0 0 200 200" className="w-full h-full" fill="none" stroke="currentColor" strokeWidth="0.5">
           <circle cx="100" cy="100" r="80" strokeDasharray="1 3" />
           <circle cx="100" cy="100" r="60" />
@@ -328,7 +342,7 @@ export default function Story() {
         </svg>
       </div>
 
-      <div className="absolute bottom-[25%] right-[2%] w-[500px] h-[500px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#c68a2e]">
+      <div className="absolute bottom-[25%] right-[2%] w-[500px] h-[500px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#d49b3f]">
         <svg viewBox="0 0 200 200" className="w-full h-full" fill="none" stroke="currentColor" strokeWidth="0.5">
           <circle cx="100" cy="100" r="90" />
           <circle cx="100" cy="100" r="75" strokeDasharray="2 2" />
@@ -367,12 +381,12 @@ export default function Story() {
         <div className="max-w-[1200px] mr-auto lg:pl-16 flex flex-col items-start relative z-10">
           
           {/* Large Section Number */}
-          <div className="flex flex-col items-start mb-8 font-heading text-[#c68a2e]/85">
-            <span className="text-6xl md:text-8xl font-light tracking-tight leading-none">01</span>
+          <div className="flex flex-col items-start mb-8 font-heading text-[#d49b3f]/85">
+            <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">01</span>
             <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">System Foundation</span>
           </div>
 
-          <h2 className="editorial-text font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium text-white leading-[1.08] tracking-tight max-w-[980px] mb-8 xs:mb-10 translate-x-[3px]">
+          <h2 className="editorial-text font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium text-white leading-[1.08] tracking-tight max-w-[980px] mb-8 xs:mb-10 translate-x-[3px] section-heading">
             A Brand is not flat pixels. It is a multi-dimensional posture scaling in space.
           </h2>
 
@@ -381,12 +395,12 @@ export default function Story() {
             {/* Left description text */}
             <div className="editorial-text max-w-full md:max-w-[450px] text-left">
               <p className="font-body text-gray-200 text-sm xs:text-base sm:text-lg leading-[1.68] mb-5">
-                Inspired by the Sanskrit word <strong className="text-[#c68a2e] font-medium font-subheading tracking-[-0.03em] italic">Aayam / आयाम</strong>, meaning <em>dimension, expansion, extension, depth, and aspect</em>. It defines how a structure claims visual territory.
+                Inspired by the Sanskrit word <strong className="text-[#d49b3f] font-medium font-subheading tracking-[-0.03em] italic">Aayam / आयाम</strong>, meaning <em>dimension, expansion, extension, depth, and aspect</em>. It defines how a structure claims visual territory.
               </p>
             </div>
             
             {/* Vertical construction connector line */}
-            <div className="hidden md:block w-[1px] bg-gradient-to-b from-[#c68a2e]/30 via-[#c68a2e]/10 to-transparent mx-8 lg:mx-12 self-stretch" />
+            <div className="hidden md:block w-[1px] bg-gradient-to-b from-[#d49b3f]/30 via-[#d49b3f]/10 to-transparent mx-8 lg:mx-12 self-stretch" />
 
             {/* Right quote description */}
             <div className="editorial-text max-w-full md:max-w-[480px] text-left">
@@ -410,14 +424,14 @@ export default function Story() {
           
           {/* Header block with editorial layout */}
           <div className="flex flex-col items-start mb-14 sm:mb-20">
-            <div className="flex flex-col items-start mb-8 font-heading text-[#c68a2e]/85">
-              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none">02</span>
+            <div className="flex flex-col items-start mb-8 font-heading text-[#d49b3f]/85">
+              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">02</span>
               <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">Capabilities Cabinet</span>
             </div>
-            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5">
+            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5 section-heading">
               The Nine Creative Dimensions
             </h3>
-            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[500px]">
+            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[500px] body-text">
               Every strong brand grows through coordinate alignment. These are the nine public-facing service menus built to shape modern brands.
             </p>
           </div>
@@ -433,29 +447,29 @@ export default function Story() {
                   className={`service-cabinet-box-wrapper ${styles.colSpan} w-full h-full`}
                 >
                   <div
-                    className={`service-cabinet-box bg-gradient-to-b ${styles.bgGlow} border border-[#c68a2e]/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.6)] rounded-lg relative overflow-hidden transition-all duration-[400ms] ease-[cubic-bezier(.22,.61,.36,1)] hover:border-[#c68a2e]/35 group hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.7)] cursor-none w-full h-full flex flex-col justify-between ${styles.padding} ${styles.minHeight}`}
+                    className={`service-cabinet-box card-border-animate bg-gradient-to-b ${styles.bgGlow} border border-[#d49b3f]/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.6)] rounded-lg relative overflow-hidden transition-all duration-[500ms] ease-[cubic-bezier(.22,.61,.36,1)] hover:border-[#d49b3f]/40 group hover:-translate-y-1.5 hover:shadow-[0_25px_50px_rgba(0,0,0,0.75)] cursor-none w-full h-full flex flex-col justify-between ${styles.padding} ${styles.minHeight}`}
                     onMouseEnter={() => setCursor('view')}
                     onMouseLeave={() => setCursor('')}
                   >
                     {/* corner angle markers */}
-                    <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/5 group-hover:border-[#c68a2e]/30" />
-                    <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/5 group-hover:border-[#c68a2e]/30" />
-                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/5 group-hover:border-[#c68a2e]/30" />
-                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/5 group-hover:border-[#c68a2e]/30" />
+                    <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/5 group-hover:border-[#d49b3f]/30" />
+                    <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/5 group-hover:border-[#d49b3f]/30" />
+                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/5 group-hover:border-[#d49b3f]/30" />
+                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/5 group-hover:border-[#d49b3f]/30" />
 
-                    {/* Rotating compass SVG reticle inside box */}
-                    <svg className="absolute right-4 bottom-4 w-12 h-12 opacity-[0.02] group-hover:opacity-[0.14] group-hover:scale-105 transition-all duration-[600ms] pointer-events-none" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" stroke="#c68a2e" strokeWidth="0.8" fill="none" strokeDasharray="3 6" className="origin-center animate-[spin_30s_linear_infinite]" />
-                      <line x1="10" y1="50" x2="90" y2="50" stroke="#c68a2e" strokeWidth="0.5" />
-                      <line x1="50" y1="10" x2="50" y2="90" stroke="#c68a2e" strokeWidth="0.5" />
+                    {/* Rotating compass SVG reticle inside box with enhanced animation */}
+                    <svg className="absolute right-4 bottom-4 w-12 h-12 opacity-[0.02] group-hover:opacity-[0.16] group-hover:scale-110 group-hover:rotate-12 transition-all duration-[700ms] ease-out pointer-events-none" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" stroke="#d49b3f" strokeWidth="0.8" fill="none" strokeDasharray="3 6" className="origin-center animate-[spin_30s_linear_infinite]" />
+                      <line x1="10" y1="50" x2="90" y2="50" stroke="#d49b3f" strokeWidth="0.5" />
+                      <line x1="50" y1="10" x2="50" y2="90" stroke="#d49b3f" strokeWidth="0.5" />
                     </svg>
 
                     <div className="flex flex-col justify-between h-full relative z-10">
                       <div>
-                        <span className="font-subheading text-[8px] font-bold tracking-[0.25em] text-[#c68a2e] block mb-3">
+                        <span className="font-subheading text-[8px] font-bold tracking-[0.25em] text-[#d49b3f] block mb-3 text-gradient-amber">
                           {item.tag}
                         </span>
-                        <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#c68a2e] group-hover:translate-x-1 transition-all duration-300">
+                        <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#d49b3f] group-hover:translate-x-1 transition-all duration-300 ease-out">
                           {item.title}
                         </h4>
                         <p className="font-body text-xs text-gray-200 leading-[1.6] mb-4">
@@ -466,7 +480,7 @@ export default function Story() {
                       {/* Bullet badges */}
                       <div className="flex flex-wrap gap-1.5 mt-auto">
                         {item.bullets.map((b, i) => (
-                          <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase">
+                          <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase group-hover:border-[#d49b3f]/20 group-hover:text-white/60 transition-all duration-300 ease-out">
                             {b}
                           </span>
                         ))}
@@ -493,14 +507,14 @@ export default function Story() {
           
           {/* Header block with editorial layout pushed to right */}
           <div className="flex flex-col items-end text-end ml-auto max-w-[700px] mb-14 sm:mb-20 pr-4 md:pr-12">
-            <div className="flex flex-col items-end mb-8 font-heading text-[#c68a2e]/85">
-              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none">03</span>
+            <div className="flex flex-col items-end mb-8 font-heading text-[#d49b3f]/85">
+              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">03</span>
               <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">Operational Boundaries</span>
             </div>
-            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5">
+            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5 section-heading">
               Scope Matrix Alignment
             </h3>
-            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[600px]">
+            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[600px] body-text">
               We believe in extreme focus. We own the visible experience of brand growth, while backend systems remain independent.
             </p>
           </div>
@@ -514,20 +528,20 @@ export default function Story() {
               onMouseMove={handleScopeMouseMove}
               onMouseEnter={handleScopeMouseEnter}
               onMouseLeave={handleScopeMouseLeave}
-              className="matrix-card-trigger bg-gradient-to-b from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98 border border-[#c68a2e]/15 p-6 sm:p-8 rounded-lg relative overflow-hidden group hover:border-[#c68a2e]/30 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.5)]"
+              className="matrix-card-trigger bg-gradient-to-b from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98 border border-[#d49b3f]/15 p-6 sm:p-8 rounded-lg relative overflow-hidden group hover:border-[#d49b3f]/30 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.5)]"
             >
               {/* Cursor tracking radial light overlay */}
               <div 
                 ref={scopeGlowRef}
-                className="absolute pointer-events-none w-72 h-72 bg-[#c68a2e] rounded-full filter blur-[100px] opacity-0 -translate-x-1/2 -translate-y-1/2 will-change-transform z-0"
+                className="absolute pointer-events-none w-72 h-72 bg-[#d49b3f] rounded-full filter blur-[100px] opacity-0 -translate-x-1/2 -translate-y-1/2 will-change-transform z-0"
               />
 
-              <div className="absolute top-0 right-0 bg-[#c68a2e]/10 text-[#c68a2e] text-[8px] font-subheading tracking-widest font-bold px-3 py-1.5 uppercase border-b border-l border-[#c68a2e]/15 rounded-bl select-none">
+              <div className="absolute top-0 right-0 bg-[#d49b3f]/10 text-[#d49b3f] text-[8px] font-subheading tracking-widest font-bold px-3 py-1.5 uppercase border-b border-l border-[#d49b3f]/15 rounded-bl select-none">
                 IN-SYSTEM
               </div>
 
               <div className="flex items-center gap-2 mb-6 relative z-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#c68a2e] live-badge-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#d49b3f] live-badge-pulse" />
                 <h4 className="font-heading text-xl font-medium text-white select-none">Creative Scope</h4>
               </div>
 
@@ -537,27 +551,27 @@ export default function Story() {
 
               <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-200 relative z-10">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>Brand Strategy, Logos, Guidelines, Guidelines Assets</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>Graphic Design, Sales Decks, Company Profiles</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>Copywriting, ad scripts, storytelling copy calendars</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>Instagram, LinkedIn creatives, custom Reels templates</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>UI/UX prototype wireframes, design systems in Figma</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c68a2e] font-bold select-none">✓</span>
+                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
                   <span>High-performance front-end creative code, Web builds</span>
                 </li>
               </ul>

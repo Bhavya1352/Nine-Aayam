@@ -38,7 +38,7 @@ export default function Navbar() {
   return (
     <header
       id="header"
-      className={`fixed top-0 left-0 w-full z-[1000] px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 transition-all duration-300 ${isScrolled
+      className={`fixed top-0 left-0 w-full z-[1000] px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isScrolled
           ? 'bg-[#050515]/85 border-b border-white/[0.04] backdrop-blur-md py-3 xs:py-3.5 sm:py-4 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
           : 'bg-transparent border-b border-transparent py-3.5 xs:py-4 sm:py-5 md:py-6'
         }`}
@@ -48,11 +48,11 @@ export default function Navbar() {
         {/* Logo */}
         <a
           href="#"
-          className="logo-link font-heading text-sm xs:text-base sm:text-lg md:text-xl font-bold tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.2em] text-white hover:opacity-85 transition-opacity"
+          className="logo-link font-heading text-sm xs:text-base sm:text-lg md:text-xl font-bold tracking-[0.1em] xs:tracking-[0.15em] sm:tracking-[0.2em] text-white hover:opacity-90 hover:scale-[1.02] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           onMouseEnter={() => setCursor('connect')}
           onMouseLeave={() => setCursor('')}
         >
-          NINE <span className="text-[#c68a2e] font-light">AAYAM</span>
+          NINE <span className="text-[#d49b3f] font-light">AAYAM</span>
         </a>
 
         {/* Desktop Navigation — visible from 1025px (small laptops) */}
@@ -64,7 +64,7 @@ export default function Navbar() {
             <a
               key={item.label}
               href={item.id}
-              className="nav-link nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-medium tracking-[0.15em] text-[#f3f4f6]/60 hover:text-white transition-colors duration-300 relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-[#c68a2e] after:transition-all after:duration-300 hover:after:w-full"
+              className="nav-link nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-medium tracking-[0.15em] text-[#f3f4f6]/60 hover:text-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-[#d49b3f] after:transition-all after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:w-full hover:-translate-y-0.5"
               onMouseEnter={() => setCursor('view')}
               onMouseLeave={() => setCursor('')}
             >
@@ -74,7 +74,7 @@ export default function Navbar() {
 
           <a
             href="mailto:connect@nayagrowth.com"
-            className="nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-bold tracking-[0.15em] text-[#c68a2e] border border-[#c68a2e]/20 rounded-full px-5 xl:px-6 py-2 xl:py-2.5 bg-[#c68a2e]/5 hover:bg-[#c68a2e] hover:text-[#050515] hover:border-[#c68a2e] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#c68a2e]/5"
+            className="nav-item-animate font-subheading text-[0.75rem] xl:text-[0.8rem] font-bold tracking-[0.15em] text-[#d49b3f] border border-[#d49b3f]/25 rounded-full px-5 xl:px-6 py-2 xl:py-2.5 bg-[#d49b3f]/5 hover:bg-[#d49b3f] hover:text-[#050515] hover:border-[#d49b3f] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] uppercase hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(212,155,63,0.15)] shadow-sm shadow-[#d49b3f]/5"
             onMouseEnter={() => setCursor('connect')}
             onMouseLeave={() => setCursor('')}
           >
@@ -86,7 +86,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden nav-item-animate text-white hover:text-[#c68a2e] transition-colors p-1"
+          className="lg:hidden nav-item-animate text-white hover:text-[#d49b3f] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] p-1 hover:scale-110"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (
@@ -123,7 +123,7 @@ export default function Navbar() {
           <a
             href="mailto:connect@nayagrowth.com"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="font-subheading text-xs xs:text-sm font-bold tracking-[0.1em] text-[#c68a2e] border border-[#c68a2e]/20 rounded-full py-2.5 xs:py-3 text-center bg-[#c68a2e]/5 hover:bg-[#c68a2e] hover:text-[#050515] transition-all duration-300 uppercase mt-4"
+            className="font-subheading text-xs xs:text-sm font-bold tracking-[0.1em] text-[#d49b3f] border border-[#d49b3f]/25 rounded-full py-2.5 xs:py-3 text-center bg-[#d49b3f]/5 hover:bg-[#d49b3f] hover:text-[#050515] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] uppercase mt-4"
           >
             Start a Project
           </a>
