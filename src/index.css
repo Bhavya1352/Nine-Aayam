@@ -1,371 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  --color-obsidian-deep: #050515;
-  --color-obsidian-dark: #0d0c24;
-  --color-neon-emerald: #d49b3f;
-  --color-mint-green: #d49b3f;
-  --color-brand-gold: #d49b3f;
-  --color-gray-350: #b0b0bc;
+  --color-obsidian-deep: #1B1F24;
+  --color-obsidian-dark: #252B33;
+  --color-card-premium: #2C333D;
+  --color-neon-emerald: #C97A3D;
+  --color-mint-green: #E0A96D;
+  --color-brand-gold: #C97A3D;
+  --color-brand-accent: #E0A96D;
+  --color-gray-350: #C4C8CF;
+  --color-border-premium: rgba(255, 255, 255, 0.08);
 
   --font-heading: 'Cormorant Garamond', serif;
-  --font-subheading: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-subheading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
 
-  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Custom breakpoints matching user's screen sizes */
-  --breakpoint-xs: 376px;    /* large phones start */
-  --breakpoint-sm: 481px;    /* iPads/tablets start */
-  --breakpoint-md: 769px;    /* large tablets start */
-  --breakpoint-lg: 1025px;   /* small laptops start */
-  --breakpoint-xl: 1367px;   /* large laptops start */
-  --breakpoint-2xl: 1601px;  /* standard desktop start */
-  --breakpoint-3xl: 1921px;  /* ultrawide start */
-}
+  --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
-html {
-  scroll-behavior: smooth;
-  background-color: #050515;
-  color: #f3f4f6;
-  font-family: var(--font-body);
-}
-
-body {
-  overflow-x: hidden;
-  background: radial-gradient(circle at 50% 50%, #0d0c24 0%, #050515 100%);
-  min-height: 100vh;
-  min-height: 100dvh;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   SCROLLBAR
-   ══════════════════════════════════════════════════════════════ */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #050515;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(198, 138, 46, 0.15);
-  border-radius: 3px;
-  transition: background 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(198, 138, 46, 0.4);
-}
-
-::-webkit-scrollbar-thumb:active {
-  background: rgba(198, 138, 46, 0.6);
-}
-
-/* ══════════════════════════════════════════════════════════════
-   AMBIENT GLOWS — responsive sizing & performance
-   ══════════════════════════════════════════════════════════════ */
-.ambient-glow {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: screen;
-}
-
-/* Small phones (320–375px) — minimal glow for performance */
-.glow-1 {
-  width: 70vw;
-  height: 70vw;
-  background: #d49b3f;
-  top: -15%;
-  left: -20%;
-  opacity: 0.06;
-  filter: blur(80px);
-  animation: floatGlow1 25s infinite alternate ease-in-out;
-}
-
-.glow-2 {
-  width: 50vw;
-  height: 50vw;
-  background: #d49b3f;
-  bottom: 10%;
-  right: -15%;
-  opacity: 0.06;
-  filter: blur(80px);
-  animation: floatGlow2 20s infinite alternate ease-in-out;
-}
-
-/* Large phones (376–480px) */
-@media (min-width: 376px) {
-  .glow-1 {
-    width: 60vw;
-    height: 60vw;
-    opacity: 0.08;
-    filter: blur(100px);
-  }
-  .glow-2 {
-    width: 45vw;
-    height: 45vw;
-    opacity: 0.08;
-    filter: blur(100px);
-  }
-}
-
-/* iPads/tablets (481–768px) */
-@media (min-width: 481px) {
-  .glow-1 {
-    width: 50vw;
-    height: 50vw;
-    opacity: 0.10;
-    filter: blur(120px);
-    left: -10%;
-  }
-  .glow-2 {
-    width: 40vw;
-    height: 40vw;
-    opacity: 0.10;
-    filter: blur(120px);
-    right: -5%;
-  }
-}
-
-/* Large tablets (769–1024px) */
-@media (min-width: 769px) {
-  .glow-1 {
-    width: 45vw;
-    height: 45vw;
-    opacity: 0.12;
-    filter: blur(140px);
-  }
-  .glow-2 {
-    width: 35vw;
-    height: 35vw;
-    opacity: 0.12;
-    filter: blur(140px);
-  }
-}
-
-/* Small laptops+ (1025px+) — original design intent */
-@media (min-width: 1025px) {
-  .glow-1 {
-    width: 45vw;
-    height: 45vw;
-    opacity: 0.15;
-    filter: blur(140px);
-  }
-  .glow-2 {
-    width: 35vw;
-    height: 35vw;
-    opacity: 0.15;
-    filter: blur(140px);
-  }
-}
-
-@keyframes floatGlow1 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  100% {
-    transform: translate(8%, 10%) scale(1.15);
-  }
-}
-
-@keyframes floatGlow2 {
-  0% {
-    transform: translate(0, 0) scale(1.1);
-  }
-  100% {
-    transform: translate(-10%, -8%) scale(0.9);
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   CUSTOM CURSOR — hidden on touch devices
-   ══════════════════════════════════════════════════════════════ */
-#custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* Hide custom cursor on touch devices */
-@media (hover: none) and (pointer: coarse) {
-  #custom-cursor {
-    display: none !important;
-  }
-}
-
-.cursor-dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  background-color: #d49b3f;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, background-color 0.3s;
-}
-
-.cursor-ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #d49b3f;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.3s var(--transition-fast), height 0.3s var(--transition-fast), border-color 0.3s, background-color 0.3s, border-radius 0.3s;
-}
-
-.cursor-label {
-  font-family: var(--font-subheading);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: #050515;
-  opacity: 0;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-
-body.cursor-hovering-explore .cursor-ring {
-  width: 90px;
-  height: 90px;
-  background-color: #d49b3f;
-  border-color: #d49b3f;
-}
-
-body.cursor-hovering-explore .cursor-label {
-  opacity: 1;
-}
-
-body.cursor-hovering-play .cursor-ring {
-  width: 100px;
-  height: 100px;
-  background-color: #d49b3f;
-  border-color: #d49b3f;
-}
-
-body.cursor-hovering-play .cursor-label {
-  opacity: 1;
-}
-
-body.cursor-hovering-view .cursor-ring {
-  width: 80px;
-  height: 80px;
-  background-color: transparent;
-  border-color: #d49b3f;
-  border-width: 2px;
-}
-
-body.cursor-hovering-connect .cursor-ring {
-  width: 70px;
-  height: 70px;
-  background-color: rgba(212, 155, 63, 0.1);
-  border-color: #d49b3f;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   GLASS & ANIMATIONS
-   ══════════════════════════════════════════════════════════════ */
-.glass-effect {
-  background: rgba(13, 12, 36, 0.65);
-  border: 1px solid rgba(198, 138, 46, 0.12);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-}
-
-@keyframes fadeInSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-fade-in-slide {
-  animation: fadeInSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pulseCoreGlow {
-  0% {
-    box-shadow: 0 0 15px rgba(198, 138, 46, 0.15), inset 0 0 10px rgba(198, 138, 46, 0.1);
-  }
-  100% {
-    box-shadow: 0 0 35px rgba(198, 138, 46, 0.35), inset 0 0 15px rgba(198, 138, 46, 0.15);
-  }
-}
-
-.animate-core-glow {
-  animation: pulseCoreGlow 3s infinite alternate ease-in-out;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   DIAL (Philosophy section)
-   ══════════════════════════════════════════════════════════════ */
-.dial-container {
-  transform-origin: center center;
-}
-
-.node-position {
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-
-.node-1 { left: 50%; top: calc(50% - 165px); }
-.node-2 { left: calc(50% + 106px); top: calc(50% - 126px); }
-.node-3 { left: calc(50% + 162.5px); top: calc(50% - 28.5px); }
-.node-4 { left: calc(50% + 143px); top: calc(50% + 82.5px); }
-.node-5 { left: calc(50% + 56.5px); top: calc(50% + 155px); }
-.node-6 { left: calc(50% - 56.5px); top: calc(50% + 155px); }
-.node-7 { left: calc(50% - 143px); top: calc(50% + 82.5px); }
-.node-8 { left: calc(50% - 162.5px); top: calc(50% - 28.5px); }
-.node-9 { left: calc(50% - 106px); top: calc(50% - 126px); }
-
-.stroke-text {
-  -webkit-text-stroke: 1px rgba(198, 138, 46, 0.3);
-}
-
-.bg-radial-gradient-glow {
-  background: radial-gradient(circle, rgba(198, 138, 46, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-}
-
-/* ══════════════════════════════════════════════════════════════
-   NOISE / FILM GRAIN (2%)
-   ══════════════════════════════════════════════════════════════ */
-.noise-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  content: "";
-  opacity: 0.02;
-  z-index: 9999;
-  pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  --breakpoint-xs: 376px;
+  --breakpoint-sm: 481px;
+  --breakpoint-md: 769px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-xl: 1367px;
+  --breakpoint-2xl: 1601px;
+  --breakpoint-3xl: 1921px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -373,319 +36,240 @@ body.cursor-hovering-connect .cursor-ring {
    ══════════════════════════════════════════════════════════════ */
 .blueprint-grid-line {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.02);
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .blueprint-grid-line.vertical {
   top: 0;
-  height: 100%;
+  bottom: 0;
   width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(201, 122, 61, 0.05) 20%,
+    rgba(201, 122, 61, 0.05) 80%,
+    transparent 100%
+  );
 }
 
 .blueprint-grid-line.horizontal {
   left: 0;
-  width: 100%;
+  right: 0;
   height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(201, 122, 61, 0.05) 20%,
+    rgba(201, 122, 61, 0.05) 80%,
+    transparent 100%
+  );
 }
 
 /* ══════════════════════════════════════════════════════════════
-   REVEAL MASK (text animation)
+   PHILOSOPHY DIAL
    ══════════════════════════════════════════════════════════════ */
-.reveal-mask {
-  overflow: hidden;
-  display: block;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   MISC ANIMATIONS
-   ══════════════════════════════════════════════════════════════ */
-@keyframes scanLine {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(180%); }
-}
-
-.animate-scanner-line {
-  animation: scanLine 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes ambientMove1 {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(4%, 6%) scale(1.08); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes ambientMove2 {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-6%, -4%) scale(0.96); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-.animate-volumetric-1 {
-  animation: ambientMove1 18s infinite ease-in-out alternate;
-}
-
-.animate-volumetric-2 {
-  animation: ambientMove2 15s infinite ease-in-out alternate;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE: CANVAS ORBIT WRAPPER
-   Breakpoints: phone centered → tablet partial → desktop offset
-   ══════════════════════════════════════════════════════════════ */
-.canvas-orbit-wrapper {
-  transform: translateX(0%) scale(var(--orbit-scale, 1));
-  transition: transform 0.1s ease-out;
-}
-
-/* 481px+ iPads/tablets — slight offset */
-@media (min-width: 481px) {
-  .canvas-orbit-wrapper {
-    transform: translateX(8%) scale(var(--orbit-scale, 1));
-  }
-}
-
-/* 769px+ large tablets — more offset */
-@media (min-width: 769px) {
-  .canvas-orbit-wrapper {
-    transform: translateX(12%) scale(var(--orbit-scale, 1));
-  }
-}
-
-/* 1025px+ laptops — full offset */
-@media (min-width: 1025px) {
-  .canvas-orbit-wrapper {
-    transform: translateX(18%) scale(var(--orbit-scale, 1));
-  }
-}
-
-/* 1921px+ ultrawide — slightly more to keep orbit in visual frame */
-@media (min-width: 1921px) {
-  .canvas-orbit-wrapper {
-    transform: translateX(22%) scale(var(--orbit-scale, 1));
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE: PHILOSOPHY DIAL
-   Scale down on smaller screens to prevent overflow
-   ══════════════════════════════════════════════════════════════ */
-
-/* Small phones (320–375px) */
 .philosophy-dial-container {
-  transform: scale(0.55);
-  margin: -60px auto;
-}
-
-/* Large phones (376–480px) */
-@media (min-width: 376px) {
-  .philosophy-dial-container {
-    transform: scale(0.65);
-    margin: -40px auto;
-  }
-}
-
-/* iPads/tablets (481–768px) */
-@media (min-width: 481px) {
-  .philosophy-dial-container {
-    transform: scale(0.78);
-    margin: -25px auto;
-  }
-}
-
-/* Large tablets (769–1024px) */
-@media (min-width: 769px) {
-  .philosophy-dial-container {
-    transform: scale(0.85);
-    margin: -15px auto;
-  }
-}
-
-/* Small laptops+ (1025px) — full size */
-@media (min-width: 1025px) {
-  .philosophy-dial-container {
-    transform: scale(1);
-    margin: 0 auto;
-  }
+  position: relative;
+  width: min(380px, 90vw);
+  height: min(380px, 90vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   TOUCH DEVICE TWEAKS
+   CURSOR — fix blend mode dot color
    ══════════════════════════════════════════════════════════════ */
-@media (hover: none) and (pointer: coarse) {
-  /* Remove underline hover effects on nav links */
-  .nav-link::after {
-    display: none !important;
-  }
-
-  /* Make touch targets larger */
-  .node-position {
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  /* Enhanced touch feedback for buttons */
-  button:active,
-  a:active {
-    transform: scale(0.96);
-    transition: transform 0.1s ease;
-  }
-
-  /* Touch feedback for cards */
-  .service-cabinet-box:active {
-    transform: scale(0.98) !important;
-    transition: transform 0.1s ease;
-  }
-
-  /* Better touch target spacing */
-  .nav-item-animate {
-    padding: 8px 12px;
-  }
-
-  /* Remove magnetic effects on touch */
-  .service-cabinet-box-wrapper {
-    transform: none !important;
-  }
+.cursor-dot {
+  mix-blend-mode: normal;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ULTRAWIDE (1921px+) — expand max-widths
+   SECTION ENTRANCE ANIMATIONS
    ══════════════════════════════════════════════════════════════ */
-@media (min-width: 1921px) {
-  .max-w-\[1400px\] {
-    max-width: 1600px;
-  }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .max-w-\[1200px\] {
-    max-width: 1400px;
-  }
+.fade-in-el {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.fade-in-el:nth-child(1) { animation-delay: 0.05s; }
+.fade-in-el:nth-child(2) { animation-delay: 0.15s; }
+.fade-in-el:nth-child(3) { animation-delay: 0.25s; }
+.fade-in-el:nth-child(4) { animation-delay: 0.35s; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARD HOVER — premium lift
+   ══════════════════════════════════════════════════════════════ */
+.card-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(201, 122, 61, 0.08);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   HERO HEADING & CONTENT BREAKPOINT RESPONSIVENESS
+   MOBILE MENU SLIDE-IN
    ══════════════════════════════════════════════════════════════ */
-.hero-heading {
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-slide {
+  animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SELECTION HIGHLIGHT
+   ══════════════════════════════════════════════════════════════ */
+::selection {
+  background: #C97A3D;
+  color: #1B1F24;
+}
+
+/* Global Reset & Base Styling */
+html {
+  scroll-behavior: auto;
+  background-color: #1B1F24;
+  color: #C4C8CF;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #1B1F24;
+  background-image: radial-gradient(circle at 50% 50%, #252B33 0%, #1B1F24 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1B1F24;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 122, 61, 0.2);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 122, 61, 0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM UTILITIES & OVERLAYS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Lightweight grain — static tile, no SVG filters */
+.noise-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.018;
+  z-index: 999;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+}
+
+/* Subtle architectural grid guidelines */
+.blueprint-dot-matrix {
+  background-image: radial-gradient(rgba(201, 122, 61, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* High-contrast outline typography stroke styling */
+.stroke-text {
+  -webkit-text-stroke: 1px rgba(244, 241, 235, 0.06);
+  color: transparent;
+}
+
+/* Custom radial lighting pools */
+.glow-light-pool {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 122, 61, 0.02) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Responsive typography clamp settings */
+.editorial-display-lg {
+  font-size: clamp(2.4rem, 6vw, 6.5rem);
   font-family: var(--font-heading);
-  font-weight: 500;
-  text-transform: none;
-  color: rgba(255, 255, 255, 0.95);
-  user-select: none;
-  line-height: 0.96;
-  letter-spacing: -0.025em;
-  font-size: clamp(2.0rem, 8vw, 3.2rem); /* fluid sizing for elegant serif */
 }
 
-/* Enhanced typography for section headings */
-.section-heading {
+.editorial-display-md {
+  font-size: clamp(1.6rem, 4vw, 4.2rem);
   font-family: var(--font-heading);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.1;
 }
 
-.subheading {
-  font-family: var(--font-subheading);
-  letter-spacing: 0.12em;
+.editorial-body-sm {
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
   line-height: 1.6;
 }
 
-.body-text {
-  font-family: var(--font-body);
-  letter-spacing: 0.005em;
-  line-height: 1.7;
+.editorial-body-md {
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  line-height: 1.68;
 }
 
-/* Subtle text gradient for key headings */
-.text-gradient-subtle {
-  background: linear-gradient(135deg, #ffffff 0%, #e8e8e8 50%, #d4d4d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* SVG Line Animations */
+.animated-draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2.5s ease-out forwards;
 }
 
-.text-gradient-amber {
-  background: linear-gradient(135deg, #d49b3f 0%, #e5b364 50%, #d49b3f 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
-/* Dark vignette overlay for depth background */
-.vignette-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(circle at center, transparent 35%, rgba(5, 5, 21, 0.45) 75%, rgba(5, 5, 21, 0.85) 100%);
-}
-
-/* Border animation for cards */
-.card-border-animate {
+/* Magnets & Micro-hover interactions */
+.magnetic-button {
   position: relative;
-  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 
-.card-border-animate::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(198, 138, 46, 0.15), transparent);
-  transition: left 0.6s ease;
+.magnetic-button:hover {
+  border-color: rgba(201, 122, 61, 0.3);
 }
 
-.card-border-animate:hover::before {
-  left: 100%;
+/* Soft atmospheric vignette */
+.atmospheric-vignette {
+  position: fixed;
+  inset: 0;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 50;
 }
 
-/* Large phones (376px–480px) */
-@media (min-width: 376px) {
-  .hero-heading {
-    font-size: clamp(2.4rem, 8vw, 3.4rem);
-  }
-}
-
-/* iPads and tablets (481px–768px) */
-@media (min-width: 481px) {
-  .hero-heading {
-    font-size: clamp(2.8rem, 7vw, 3.8rem);
-  }
-}
-
-/* Large tablets and notebooks (769px–1024px) */
-@media (min-width: 769px) {
-  .hero-heading {
-    font-size: clamp(3.2rem, 6vw, 4.2rem);
-  }
-}
-
-/* Small laptops (1025px–1366px) */
-@media (min-width: 1025px) {
-  .hero-heading {
-    font-size: clamp(3.6rem, 5vw, 4.6rem);
-  }
-}
-
-/* Large laptops & standard desktops (1367px+) */
-@media (min-width: 1367px) {
-  .hero-heading {
-    font-size: clamp(4.0rem, 4.2vw, 5.2rem);
-  }
-}
-
-/* Height-safety fallback for short screens (e.g., laptop/desktop with small viewport height) */
-@media (min-width: 1025px) and (max-height: 720px) {
-  .hero-heading {
-    font-size: clamp(3.5rem, 7.5vh, 4.8rem) !important;
-  }
-}
-
-/* Very short heights (mobile landscape or extremely short laptop heights) */
-@media (max-height: 520px) {
-  .hero-heading {
-    font-size: clamp(1.8rem, 8.5vh, 2.8rem) !important;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

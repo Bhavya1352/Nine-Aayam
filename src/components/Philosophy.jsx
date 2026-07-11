@@ -193,50 +193,50 @@ export default function Philosophy() {
       <div className="max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Intro */}
-        <div className="flex flex-col items-start mb-10 xs:mb-12 sm:mb-16 md:mb-20 lg:mb-28 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
-          <span className="fade-in-el font-subheading text-[0.6rem] xs:text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.3em] xs:tracking-[0.4em] text-[#d49b3f] uppercase mb-3 xs:mb-4">
+        <div className="flex flex-col items-start mb-12 sm:mb-16 md:mb-20 lg:mb-28 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
+          <span className="fade-in-el font-subheading text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.4em] text-[#d49b3f] uppercase mb-3 sm:mb-4">
             Interactive Grid
           </span>
           <h2 className="fade-in-el font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-none">
             The Nine Dimensions
           </h2>
-          <div className="fade-in-el w-8 xs:w-10 sm:w-12 h-[2px] bg-[#d49b3f]/50 mt-3 xs:mt-4 sm:mt-5 md:mt-6 mb-4 xs:mb-5 sm:mb-6 md:mb-8" />
+          <div className="fade-in-el w-10 sm:w-12 h-[2px] bg-[#d49b3f]/50 mt-4 sm:mt-5 md:mt-6 mb-5 sm:mb-6 md:mb-8" />
           <p className="fade-in-el font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-relaxed max-w-[620px]">
             Click nodes on the visual instrument or explore their properties to see how we project design assets across our unified creative system.
           </p>
         </div>
 
         {/* Two-Column Layout */}
-        <div className="grid lg:grid-cols-12 gap-6 xs:gap-8 sm:gap-10 md:gap-12 lg:gap-20 xl:gap-24 items-center">
+        <div className="grid lg:grid-cols-12 gap-8 sm:gap-10 md:gap-12 lg:gap-20 xl:gap-24 items-center">
           
           {/* Content Pane ── below dial on mobile, left on desktop */}
           <div className="lg:col-span-7 flex flex-col items-start text-left min-h-0 lg:min-h-[460px] pl-0 sm:pl-4 md:pl-8 lg:pl-12 order-2 lg:order-1">
             <div ref={contentRef} className="w-full flex flex-col items-start">
               
-              <span className="anim-fade-up font-heading text-[3rem] xs:text-[4rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#d49b3f]/[0.08] leading-none select-none tracking-tighter mb-1 xs:mb-2">
+              <span className="anim-fade-up font-heading text-[3rem] sm:text-[5rem] md:text-[7rem] lg:text-[9.5rem] font-black text-[#d49b3f]/[0.08] leading-none select-none tracking-tighter mb-1 sm:mb-2">
                 {activeDetails.num}
               </span>
               
-              <span className="anim-fade-up font-subheading text-[10px] xs:text-xs font-bold text-[#d49b3f] tracking-[0.2em] xs:tracking-[0.25em] uppercase block mb-2 xs:mb-3">
+              <span className="anim-fade-up font-subheading text-[10px] sm:text-xs font-bold text-[#d49b3f] tracking-[0.25em] uppercase block mb-2 sm:mb-3">
                 Dimension System
               </span>
               
-              <h3 className="anim-fade-up font-heading text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 xs:mb-4 sm:mb-5 md:mb-6 tracking-tight">
+              <h3 className="anim-fade-up font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4 sm:mb-5 md:mb-6 tracking-tight">
                 {activeDetails.title}
               </h3>
               
-              <p className="anim-fade-up font-body text-gray-300 text-xs xs:text-sm sm:text-base md:text-[1.05rem] leading-relaxed max-w-[600px] mb-5 xs:mb-6 sm:mb-7 md:mb-8">
+              <p className="anim-fade-up font-body text-gray-300 text-sm sm:text-base md:text-[1.05rem] leading-relaxed max-w-[600px] mb-6 sm:mb-7 md:mb-8">
                 {activeDetails.short}
               </p>
               
-              <div className="anim-fade-up w-full border-t border-white/[0.05] pt-4 xs:pt-5 sm:pt-6 md:pt-8">
-                <span className="font-subheading text-[8px] xs:text-[9px] font-bold text-gray-500 uppercase tracking-[0.25em] xs:tracking-[0.3em] block mb-3 xs:mb-4 sm:mb-5">
+              <div className="anim-fade-up w-full border-t border-white/[0.05] pt-5 sm:pt-6 md:pt-8">
+                <span className="font-subheading text-[9px] font-bold text-gray-500 uppercase tracking-[0.3em] block mb-4 sm:mb-5">
                   Scope & Focus Area
                 </span>
-                <ul className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 w-full">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
                   {activeDetails.capabilities.map((cap, i) => (
-                    <li key={i} className="flex items-start gap-2 xs:gap-3 text-[11px] xs:text-xs text-gray-200 font-body">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#d49b3f] mt-1 xs:mt-1.5 flex-shrink-0" />
+                    <li key={i} className="flex items-start gap-2 sm:gap-3 text-xs text-gray-200 font-body">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#d49b3f] mt-1.5 flex-shrink-0" />
                       <span>{cap}</span>
                     </li>
                   ))}
@@ -247,20 +247,20 @@ export default function Philosophy() {
           </div>
 
           {/* Dial Column */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center relative min-h-[200px] xs:min-h-[240px] sm:min-h-[300px] md:min-h-[350px] lg:min-h-[420px] order-1 lg:order-2">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center relative min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[420px] order-1 lg:order-2">
             
             {/* Ambient glow */}
             <div 
               ref={scrollGlowRef}
-              className="absolute w-[200px] xs:w-[250px] sm:w-[300px] md:w-[350px] h-[200px] xs:h-[250px] sm:h-[300px] md:h-[350px] bg-radial-gradient-glow opacity-15 pointer-events-none z-0" 
+              className="absolute w-[220px] sm:w-[280px] md:w-[340px] h-[220px] sm:h-[280px] md:h-[340px] bg-radial-gradient-glow opacity-15 pointer-events-none z-0" 
             />
 
-            <div className="philosophy-dial-container relative w-[380px] h-[380px] flex items-center justify-center select-none z-10">
+            <div className="philosophy-dial-container select-none z-10">
               
               {/* Center indicator */}
-              <div className="absolute z-20 w-20 xs:w-24 h-20 xs:h-24 bg-[#050515] border border-white/[0.08] rounded-full flex flex-col items-center justify-center shadow-2xl">
+              <div className="absolute z-20 w-20 sm:w-24 h-20 sm:h-24 bg-[#050515] border border-white/[0.08] rounded-full flex flex-col items-center justify-center shadow-2xl">
                 <span className="font-heading text-base xs:text-lg font-black text-white">9D</span>
-                <span className="font-subheading text-[6px] xs:text-[7px] font-bold text-gray-500 tracking-[0.15em] xs:tracking-[0.2em]">AAYAM</span>
+                <span className="font-subheading text-[6px] sm:text-[7px] font-bold text-gray-500 tracking-[0.2em]">AAYAM</span>
               </div>
 
               {/* SVG rings */}
@@ -309,12 +309,12 @@ export default function Philosophy() {
             </div>
 
             {/* Mobile tab selector — visible below 1025px */}
-            <div className="flex flex-wrap gap-1.5 xs:gap-2 justify-center mt-4 xs:mt-6 sm:mt-8 md:mt-10 lg:hidden w-full max-w-[350px] xs:max-w-[400px]">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mt-5 sm:mt-8 md:mt-10 lg:hidden w-full max-w-[380px]">
               {nodes.map((num) => (
                 <button
                   key={num}
                   type="button"
-                  className={`py-1 xs:py-1.5 px-2.5 xs:px-3 rounded text-[9px] xs:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
+                  className={`py-1.5 px-3 rounded text-[9px] sm:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
                     activeDim === num 
                       ? 'bg-[#d49b3f] text-[#050515]' 
                       : 'bg-white/[0.02] border border-white/[0.04] text-gray-400 hover:text-white'

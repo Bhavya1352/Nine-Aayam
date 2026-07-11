@@ -5,623 +5,261 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const serviceGridData = [
-  {
-    num: "01",
-    tag: "IDENTITY",
-    title: "Brand Strategy & Identity",
-    desc: "Brand positioning, logo systems, visual identity guidelines, color palettes, typography rules, brand guidelines, tone of voice, and overall brand direction.",
-    bullets: ["Positioning", "Logo Guidelines", "Color Tokens", "Tone of Voice"]
-  },
-  {
-    num: "02",
-    tag: "COLLATERAL",
-    title: "Graphic Design & Marketing Collateral",
-    desc: "Posters, sales profiles, corporate brochures, investor decks, pitch presentations, catalog sheets, standees, and digital/print marketing assets.",
-    bullets: ["Pitch Decks", "Brochures", "Corporate Decks", "Sales assets"]
-  },
-  {
-    num: "03",
-    tag: "COPYWRITING",
-    title: "Content Strategy & Copywriting",
-    desc: "Captions, content calendars, website copy, landing page hooks, ad copywriting, scripts, taglines, brand storytelling, founder narratives, and campaign messaging.",
-    bullets: ["Storytelling", "Video Scripts", "Landing Page Copy", "Ad Headlines"]
-  },
-  {
-    num: "04",
-    tag: "SOCIAL",
-    title: "Social Media Creative",
-    desc: "Instagram posts, LinkedIn carousels, cohesive story grids, monthly layout templates, reels cover styles, festive campaigns, and testimonials.",
-    bullets: ["LinkedIn Editorial", "Instagram Grgrids", "Reels Cover Layouts", "Brand Assets"]
-  },
-  {
-    num: "05",
-    tag: "CAMPAIGNS",
-    title: "Advertising & Campaign Creatives",
-    desc: "Meta ad creative hooks, Google display banners, launch campaigns, festive promotions, campaign concepts, hooks, headlines, and variations packs.",
-    bullets: ["High-CTR layouts", "Meta Ad Sets", "Google Display", "Festive Packs"]
-  },
-  {
-    num: "06",
-    tag: "MOTION",
-    title: "Video, Reels & Motion Design",
-    desc: "Reels concepts, stop-scroll video editing, motion graphics overlays, logo animation, cinematic subtitles, explainer videos, and social video ad structures.",
-    bullets: ["Reels Pacing", "Cinematic Edits", "Motion Graphic Assets", "Logo Motion"]
-  },
-  {
-    num: "07",
-    tag: "PRODUCTION",
-    title: "Photography & Art Direction",
-    desc: "Conceptual shoot planning, founder portrait guidelines, styling boards, office team shoots, staging rules, visual moodboards, and shot lists.",
-    bullets: ["Staging Direction", "Shot Lists", "Visual Moodboards", "Shoot Moods"]
-  },
-  {
-    num: "08",
-    tag: "INTERFACE",
-    title: "UI/UX Design",
-    desc: "Editorial wireframes, interface systems in Figma, responsive structures, client journeys, visual hierarchy, mobile layouts, and design libraries.",
-    bullets: ["UI Systems", "Figma Libraries", "User Journeys", "Prototypes"]
-  },
-  {
-    num: "09",
-    tag: "ENGINEERING",
-    title: "Website & Landing Page Design",
-    desc: "High-performance marketing portals, portfolios, campaign landing pages, website redesigns, and front-end creative React web builds.",
-    bullets: ["React Front-ends", "Landing Pages", "Creative Code", "WebGL Portals"]
-  }
-];
-
-const getCardStyles = (idx) => {
-  switch (idx) {
-    case 0:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[290px] lg:min-h-[340px]",
-        padding: "pt-8 pb-6 px-6",
-        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
-      };
-    case 1:
-      return {
-        colSpan: "col-span-1 md:col-span-2",
-        minHeight: "min-h-[270px] lg:min-h-[310px]",
-        padding: "pt-6 pb-6 px-8",
-        bgGlow: "from-[#110f33]/90 via-[#0a0a24]/95 to-[#050515]/98"
-      };
-    case 2:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[280px] lg:min-h-[320px]",
-        padding: "pt-7 pb-6 px-6",
-        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
-      };
-    case 3:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[310px] lg:min-h-[360px]",
-        padding: "pt-9 pb-7 px-6",
-        bgGlow: "from-[#0e0a2b]/90 via-[#080820]/95 to-[#050515]/98"
-      };
-    case 4:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[250px] lg:min-h-[290px]",
-        padding: "pt-5 pb-5 px-6",
-        bgGlow: "from-[#0a081c]/90 via-[#050515]/95 to-[#02020a]/98"
-      };
-    case 5:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[300px] lg:min-h-[350px]",
-        padding: "pt-8 pb-7 px-6",
-        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
-      };
-    case 6:
-      return {
-        colSpan: "col-span-1 md:col-span-2",
-        minHeight: "min-h-[270px] lg:min-h-[300px]",
-        padding: "pt-6 pb-6 px-8",
-        bgGlow: "from-[#110f33]/90 via-[#0a0a24]/95 to-[#050515]/98"
-      };
-    case 7:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[320px] lg:min-h-[370px]",
-        padding: "pt-9 pb-8 px-6",
-        bgGlow: "from-[#0e0a2b]/90 via-[#080820]/95 to-[#050515]/98"
-      };
-    case 8:
-      return {
-        colSpan: "col-span-1 md:col-span-2",
-        minHeight: "min-h-[280px] lg:min-h-[310px]",
-        padding: "pt-7 pb-6 px-8",
-        bgGlow: "from-[#13103c]/95 via-[#0b0b2b]/97 to-[#050515]/99"
-      };
-    default:
-      return {
-        colSpan: "col-span-1",
-        minHeight: "min-h-[260px]",
-        padding: "p-6",
-        bgGlow: "from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98"
-      };
-  }
-};
-
 export default function Story() {
   const { setCursor } = useCursor();
-
-  // Refs for interactive alignments
-  const watermarkRef = useRef(null);
-  const scopeCardRef = useRef(null);
-  const scopeGlowRef = useRef(null);
-  const waterContainerRef = useRef(null);
-
-  const handleWatermarkMouseMove = (e) => {
-    const watermark = watermarkRef.current;
-    const container = waterContainerRef.current;
-    if (!watermark || !container) return;
-
-    const rect = container.getBoundingClientRect();
-    const mx = e.clientX - rect.left - rect.width / 2;
-    const my = e.clientY - rect.top - rect.height / 2;
-
-    gsap.to(watermark, {
-      x: -mx * 0.09,
-      y: -my * 0.09,
-      duration: 0.6,
-      ease: "power2.out"
-    });
-  };
-
-  const handleWatermarkMouseLeave = () => {
-    if (watermarkRef.current) {
-      gsap.to(watermarkRef.current, { x: 0, y: 0, duration: 0.8, ease: "power2.out" });
-    }
-  };
-
-  const handleScopeMouseMove = (e) => {
-    const card = scopeCardRef.current;
-    const glow = scopeGlowRef.current;
-    if (!card || !glow) return;
-
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    gsap.to(glow, {
-      x: x,
-      y: y,
-      duration: 0.35,
-      ease: "power3.out"
-    });
-  };
-
-  const handleScopeMouseEnter = () => {
-    if (scopeGlowRef.current) {
-      gsap.to(scopeGlowRef.current, { opacity: 0.12, scale: 1, duration: 0.3 });
-    }
-  };
-
-  const handleScopeMouseLeave = () => {
-    if (scopeGlowRef.current) {
-      gsap.to(scopeGlowRef.current, { opacity: 0, scale: 0.5, duration: 0.3 });
-    }
-  };
+  const sectionRef = useRef(null);
 
   useEffect(() => {
-    // 1. Editorial heading reveal with parallax
-    gsap.fromTo(".editorial-text",
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".editorial-trigger",
-          start: "top 75%",
-          toggleActions: "play none none reverse"
+    const ctx = gsap.context(() => {
+
+      // Section header
+      gsap.fromTo('.story-header',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true }
         }
-      }
-    );
+      );
 
-    // Parallax effect for Sanskrit watermark
-    gsap.to(".sanskrit-watermark", {
-      y: -50,
-      scrollTrigger: {
-        trigger: ".editorial-trigger",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1
-      }
-    });
-
-    // 2. Services grid boxes staggered slide-up with scattered reveal and refined easing
-    gsap.fromTo(".service-cabinet-box-wrapper",
-      { 
-        opacity: 0.4,
-        x: (idx) => {
-          const isMobile = window.innerWidth < 768;
-          const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-          
-          if (isMobile) {
-            return gsap.utils.random(-35, 35);
-          } else if (isTablet) {
-            const col = idx % 2;
-            const baseShift = col === 0 ? 180 : -180;
-            return baseShift + gsap.utils.random(-25, 25);
-          } else {
-            const xOffsets = [320, -280, 320, 0, -320, 320, -280, 320, -280];
-            return xOffsets[idx] + gsap.utils.random(-35, 35);
-          }
+      // Cards stagger with ScrollTrigger batch for performance
+      ScrollTrigger.batch('.asym-card', {
+        start: 'top 88%',
+        onEnter: (els) => {
+          gsap.fromTo(els,
+            { opacity: 0, y: 45 },
+            { opacity: 1, y: 0, duration: 0.75, stagger: 0.09, ease: 'power3.out' }
+          );
         },
-        y: (idx) => {
-          const isMobile = window.innerWidth < 768;
-          const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-          
-          if (isMobile) {
-            const diff = 4 - idx;
-            return diff * 90 + gsap.utils.random(-20, 20);
-          } else if (isTablet) {
-            const row = Math.floor(idx / 2);
-            const diff = 2 - row;
-            return diff * 130 + gsap.utils.random(-25, 25);
-          } else {
-            const yOffsets = [220, 220, 50, 50, 50, -150, -150, -300, -300];
-            return yOffsets[idx] + gsap.utils.random(-30, 30);
-          }
-        },
-        rotation: () => gsap.utils.random(-40, 40),
-        scale: 0.72
-      },
-      {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        rotation: 0,
-        scale: 1,
-        duration: () => gsap.utils.random(0.85, 1.05),
-        stagger: {
-          each: () => gsap.utils.random(0.05, 0.08),
-          from: "random"
-        },
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: ".services-grid-trigger",
-          start: "top 40%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
+        once: true
+      });
 
-    // 3. In/Out matrix cards reveal with parallax
-    gsap.fromTo(".matrix-card-trigger",
-      { opacity: 0, y: 60 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.1,
-        stagger: 0.18,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".matrix-trigger",
-          start: "top 75%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
+    }, sectionRef);
 
-    // 4. Horizontal scroll line draw animation with smoother timing
-    gsap.fromTo(".scroll-draw-line",
-      { scaleX: 0 },
-      {
-        scaleX: 1,
-        duration: 1.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".scroll-draw-line",
-          start: "top 90%"
-        }
-      }
-    );
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section id="story" className="relative z-10 bg-[#050515] overflow-hidden border-b border-white/[0.02] py-8">
-      
-      {/* 8. Sanskrit Yantra Geometry background guides */}
-      <div className="absolute top-[8%] left-[4%] w-[480px] h-[480px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#d49b3f]">
-        <svg viewBox="0 0 200 200" className="w-full h-full" fill="none" stroke="currentColor" strokeWidth="0.5">
-          <circle cx="100" cy="100" r="80" strokeDasharray="1 3" />
-          <circle cx="100" cy="100" r="60" />
-          <circle cx="100" cy="100" r="40" strokeDasharray="3 3" />
-          <polygon points="100,20 40,120 160,120" />
-          <polygon points="100,180 40,80 160,80" />
-          <line x1="100" y1="0" x2="100" y2="200" strokeDasharray="1 1" />
-          <line x1="0" y1="100" x2="200" y2="100" strokeDasharray="1 1" />
-          <rect x="15" y="15" width="170" height="170" strokeDasharray="4 8" />
-        </svg>
-      </div>
-
-      <div className="absolute bottom-[25%] right-[2%] w-[500px] h-[500px] opacity-[0.015] pointer-events-none select-none z-0 hidden lg:block text-[#d49b3f]">
-        <svg viewBox="0 0 200 200" className="w-full h-full" fill="none" stroke="currentColor" strokeWidth="0.5">
-          <circle cx="100" cy="100" r="90" />
-          <circle cx="100" cy="100" r="75" strokeDasharray="2 2" />
-          <polygon points="100,30 159,134 41,134" />
-          <polygon points="100,170 159,66 41,66" />
-          <line x1="29.3" y1="29.3" x2="170.7" y2="170.7" strokeDasharray="2 4" />
-          <circle cx="100" cy="100" r="30" />
-        </svg>
-      </div>
-
-      {/* Blueprint Grid Lines */}
-      <div className="blueprint-grid-line vertical left-5 sm:left-6 md:left-16 hidden sm:block" />
-      <div className="blueprint-grid-line vertical left-[50%] hidden lg:block" />
+    <section ref={sectionRef} id="services" className="relative z-10 bg-[#1B1F24] overflow-hidden border-b border-white/[0.02] py-2">
 
       {/* ═══════════════════════════════════════════════════════════
-         SECTION 1: PHILOSOPHICAL FOUNDATION
+         SECTION 2: ASYMMETRICAL EDITORIAL CABINET (Redesigned Asymmetric Sizes)
          ═══════════════════════════════════════════════════════════ */}
-      <div 
-        ref={waterContainerRef}
-        onMouseMove={handleWatermarkMouseMove}
-        onMouseLeave={handleWatermarkMouseLeave}
-        className="editorial-trigger relative pt-4 xs:pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-10 xs:pb-12 sm:pb-16 md:pb-20 lg:pb-24 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-24 border-b border-white/[0.02] select-none"
-      >
+      <div className="grid-trigger relative pt-16 pb-28 md:pt-20 md:pb-36 px-6 md:px-12 lg:px-16">
         
-        {/* Parallax Sanskrit Watermark */}
-        <span 
-          ref={watermarkRef}
-          className="sanskrit-watermark absolute -left-10 bottom-6 font-heading text-[25vw] xs:text-[22vw] sm:text-[18vw] md:text-[15vw] font-bold text-white/[0.007] leading-none pointer-events-none select-none will-change-transform"
-        >
-          आयाम
-        </span>
-
-
-
-        {/* Left aligned inner box (Rhythm break) */}
-        <div className="max-w-[1200px] mr-auto lg:pl-16 flex flex-col items-start relative z-10">
+        <div className="max-w-[1200px] mx-auto relative z-10">
           
-          {/* Large Section Number */}
-          <div className="flex flex-col items-start mb-8 font-heading text-[#d49b3f]/85">
-            <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">01</span>
-            <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">System Foundation</span>
-          </div>
-
-          <h2 className="editorial-text font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium text-white leading-[1.08] tracking-tight max-w-[980px] mb-8 xs:mb-10 translate-x-[3px] section-heading">
-            A Brand is not flat pixels. It is a multi-dimensional posture scaling in space.
-          </h2>
-
-          <div className="w-full flex flex-col md:flex-row md:items-stretch mt-4">
-            
-            {/* Left description text */}
-            <div className="editorial-text max-w-full md:max-w-[450px] text-left">
-              <p className="font-body text-gray-200 text-sm xs:text-base sm:text-lg leading-[1.68] mb-5">
-                Inspired by the Sanskrit word <strong className="text-[#d49b3f] font-medium font-subheading tracking-[-0.03em] italic">Aayam / आयाम</strong>, meaning <em>dimension, expansion, extension, depth, and aspect</em>. It defines how a structure claims visual territory.
-              </p>
+          {/* Section Header */}
+          <div className="story-header flex flex-col items-start mb-16 md:mb-24 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12" style={{ opacity: 0 }}>
+            <div className="flex flex-col items-start mb-6 font-heading text-[#C97A3D]">
+              <span className="text-6xl md:text-7xl font-light tracking-tight leading-none">02</span>
+              <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">Service Cabinet</span>
             </div>
-            
-            {/* Vertical construction connector line */}
-            <div className="hidden md:block w-[1px] bg-gradient-to-b from-[#d49b3f]/30 via-[#d49b3f]/10 to-transparent mx-8 lg:mx-12 self-stretch" />
-
-            {/* Right quote description */}
-            <div className="editorial-text max-w-full md:max-w-[480px] text-left">
-              <p className="font-body text-gray-300 text-xs xs:text-sm md:text-base leading-[1.68]">
-                Nine Aayam is the creative agency vertical of Naya Growth Private Limited. We own the visible, communicative, UI/UX, and experience-driven side of brand growth, aligning nine core dimensions into a single creative system.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════
-         SECTION 2: THE NINE DIMENSIONS CABINET GRID
-         ═══════════════════════════════════════════════════════════ */}
-      <div id="services" className="services-grid-trigger relative pt-10 xs:pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-10 xs:pb-12 sm:pb-16 md:pb-20 lg:pb-24 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 border-b border-white/[0.02]">
-        
-
-
-        <div className="max-w-[1400px] mx-auto relative z-10">
-          
-          {/* Header block with editorial layout */}
-          <div className="flex flex-col items-start mb-14 sm:mb-20">
-            <div className="flex flex-col items-start mb-8 font-heading text-[#d49b3f]/85">
-              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">02</span>
-              <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">Capabilities Cabinet</span>
-            </div>
-            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5 section-heading">
+            <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
               The Nine Creative Dimensions
             </h3>
-            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[500px] body-text">
+            <p className="font-body text-[#C4C8CF] text-sm sm:text-base leading-relaxed max-w-[500px]">
               Every strong brand grows through coordinate alignment. These are the nine public-facing service menus built to shape modern brands.
             </p>
           </div>
 
-          {/* Grid cabinets with varied heights and tactile depth gradients */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-            {serviceGridData.map((item, idx) => {
-              const styles = getCardStyles(idx);
+          {/* Asymmetrical layout: Completely custom card sizes (No repeated grids) */}
+          <div className="flex flex-col gap-8 items-stretch">
+            
+            {/* Block 1: Brand Strategy (Full-width custom split layout) */}
+            <div 
+              className="asym-card card-lift w-full bg-[#2C333D] border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left"
+              onMouseEnter={() => setCursor('view')}
+              onMouseLeave={() => setCursor('')}
+            >
+              <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-start">
+                <div className="md:col-span-5 flex flex-col items-start">
+                  <span className="font-heading text-4xl sm:text-5xl font-light text-[#C97A3D] mb-4">01</span>
+                  <span className="font-subheading text-[9px] font-bold text-gray-400 tracking-widest uppercase mb-2">Dimension Zero One</span>
+                  <h4 className="font-heading text-2xl sm:text-3xl font-medium text-[#F4F1EB] tracking-tight leading-tight">
+                    Brand Strategy & Identity
+                  </h4>
+                </div>
 
-              return (
-                <div
-                  key={idx}
-                  className={`service-cabinet-box-wrapper ${styles.colSpan} w-full h-full`}
-                >
-                  <div
-                    className={`service-cabinet-box card-border-animate bg-gradient-to-b ${styles.bgGlow} border border-[#d49b3f]/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.6)] rounded-lg relative overflow-hidden transition-all duration-[500ms] ease-[cubic-bezier(.22,.61,.36,1)] hover:border-[#d49b3f]/40 group hover:-translate-y-1.5 hover:shadow-[0_25px_50px_rgba(0,0,0,0.75)] cursor-none w-full h-full flex flex-col justify-between ${styles.padding} ${styles.minHeight}`}
-                    onMouseEnter={() => setCursor('view')}
-                    onMouseLeave={() => setCursor('')}
-                  >
-                    {/* corner angle markers */}
-                    <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/5 group-hover:border-[#d49b3f]/30" />
-                    <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/5 group-hover:border-[#d49b3f]/30" />
-                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/5 group-hover:border-[#d49b3f]/30" />
-                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/5 group-hover:border-[#d49b3f]/30" />
-
-                    {/* Rotating compass SVG reticle inside box with enhanced animation */}
-                    <svg className="absolute right-4 bottom-4 w-12 h-12 opacity-[0.02] group-hover:opacity-[0.16] group-hover:scale-110 group-hover:rotate-12 transition-all duration-[700ms] ease-out pointer-events-none" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" stroke="#d49b3f" strokeWidth="0.8" fill="none" strokeDasharray="3 6" className="origin-center animate-[spin_30s_linear_infinite]" />
-                      <line x1="10" y1="50" x2="90" y2="50" stroke="#d49b3f" strokeWidth="0.5" />
-                      <line x1="50" y1="10" x2="50" y2="90" stroke="#d49b3f" strokeWidth="0.5" />
-                    </svg>
-
-                    <div className="flex flex-col justify-between h-full relative z-10">
-                      <div>
-                        <span className="font-subheading text-[8px] font-bold tracking-[0.25em] text-[#d49b3f] block mb-3 text-gradient-amber">
-                          {item.tag}
-                        </span>
-                        <h4 className="font-heading text-lg sm:text-xl font-medium text-white mb-2 leading-snug group-hover:text-[#d49b3f] group-hover:translate-x-1 transition-all duration-300 ease-out">
-                          {item.title}
-                        </h4>
-                        <p className="font-body text-xs text-gray-200 leading-[1.6] mb-4">
-                          {item.desc}
-                        </p>
-                      </div>
-
-                      {/* Bullet badges */}
-                      <div className="flex flex-wrap gap-1.5 mt-auto">
-                        {item.bullets.map((b, i) => (
-                          <span key={i} className="font-subheading text-[7px] sm:text-[7.5px] bg-white/[0.01] border border-white/[0.04] text-white/45 px-2 py-0.5 rounded tracking-wide uppercase group-hover:border-[#d49b3f]/20 group-hover:text-white/60 transition-all duration-300 ease-out">
-                            {b}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                <div className="md:col-span-7 flex flex-col justify-between h-full">
+                  <p className="font-body text-xs sm:text-sm text-[#C4C8CF] leading-relaxed mb-6">
+                    Defining who you are, how you speak, and how you look in the digital landscape. We craft the strategic DNA that guides all visual outputs and brand communication.
+                  </p>
+                  <blockquote className="font-heading text-base sm:text-lg italic text-[#E0A96D] border-l-2 border-[#C97A3D]/40 pl-4 mb-6">
+                    "A logo is not a brand. It is the visible posture of your strategic intent."
+                  </blockquote>
+                  <div className="flex flex-wrap gap-2 border-t border-white/[0.04] pt-4">
+                    {["Positioning", "Logo direction", "Color theory", "Brand guidelines"].map((b, i) => (
+                      <span key={i} className="font-mono text-[8px] bg-white/[0.02] border border-white/[0.08] text-[#C4C8CF] px-2.5 py-0.5 rounded-full">
+                        {b}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              );
-            })}
-          </div>
-
-        </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════
-         SECTION 3: SCOPE MATRIX (CREATIVE IN VS OPS OUT)
-         ═══════════════════════════════════════════════════════════ */}
-      {/* Right aligned outer layout (Rhythm Break) */}
-      <div className="matrix-trigger relative pt-10 xs:pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-20 xs:pb-24 sm:pb-32 md:pb-44 lg:pb-52 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 bg-[#050515]">
-        
-
-
-        <div className="max-w-[1200px] mx-auto relative z-10">
-          
-          {/* Header block with editorial layout pushed to right */}
-          <div className="flex flex-col items-end text-end ml-auto max-w-[700px] mb-14 sm:mb-20 pr-4 md:pr-12">
-            <div className="flex flex-col items-end mb-8 font-heading text-[#d49b3f]/85">
-              <span className="text-6xl md:text-8xl font-light tracking-tight leading-none text-gradient-amber">03</span>
-              <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase mt-4 font-semibold text-gray-500">Operational Boundaries</span>
-            </div>
-            <h3 className="font-heading text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-white mb-5 section-heading">
-              Scope Matrix Alignment
-            </h3>
-            <p className="font-body text-gray-300 text-xs xs:text-sm sm:text-base leading-[1.68] max-w-[600px] body-text">
-              We believe in extreme focus. We own the visible experience of brand growth, while backend systems remain independent.
-            </p>
-          </div>
-
-          {/* Matrix Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 xs:gap-12">
-            
-            {/* Column A: In-Scope (Nine Aayam Creative System) */}
-            <div 
-              ref={scopeCardRef}
-              onMouseMove={handleScopeMouseMove}
-              onMouseEnter={handleScopeMouseEnter}
-              onMouseLeave={handleScopeMouseLeave}
-              className="matrix-card-trigger bg-gradient-to-b from-[#0d0c24]/90 via-[#0a0a1f]/95 to-[#050515]/98 border border-[#d49b3f]/15 p-6 sm:p-8 rounded-lg relative overflow-hidden group hover:border-[#d49b3f]/30 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),inset_0_-1px_12px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.5)]"
-            >
-              {/* Cursor tracking radial light overlay */}
-              <div 
-                ref={scopeGlowRef}
-                className="absolute pointer-events-none w-72 h-72 bg-[#d49b3f] rounded-full filter blur-[100px] opacity-0 -translate-x-1/2 -translate-y-1/2 will-change-transform z-0"
-              />
-
-              <div className="absolute top-0 right-0 bg-[#d49b3f]/10 text-[#d49b3f] text-[8px] font-subheading tracking-widest font-bold px-3 py-1.5 uppercase border-b border-l border-[#d49b3f]/15 rounded-bl select-none">
-                IN-SYSTEM
               </div>
-
-              <div className="flex items-center gap-2 mb-6 relative z-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d49b3f] live-badge-pulse" />
-                <h4 className="font-heading text-xl font-medium text-white select-none">Creative Scope</h4>
-              </div>
-
-              <p className="font-body text-xs text-gray-200 leading-[1.6] mb-6 relative z-10 select-none">
-                The sensory, visible, and interactive assets that establish authority, command customer attention, and shape digital trust.
-              </p>
-
-              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-200 relative z-10">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>Brand Strategy, Logos, Guidelines, Guidelines Assets</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>Graphic Design, Sales Decks, Company Profiles</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>Copywriting, ad scripts, storytelling copy calendars</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>Instagram, LinkedIn creatives, custom Reels templates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>UI/UX prototype wireframes, design systems in Figma</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#d49b3f] font-bold select-none">✓</span>
-                  <span>High-performance front-end creative code, Web builds</span>
-                </li>
-              </ul>
             </div>
 
-            {/* Column B: Out-of-Scope */}
-            <div className="matrix-card-trigger bg-[#050515] border border-white/[0.04] p-6 sm:p-8 rounded-lg relative overflow-hidden group hover:border-white/[0.08] transition-all duration-500 shadow-[0_15px_30px_rgba(0,0,0,0.5)]">
+            {/* Row of asymmetric boxes (Block 2 & 3) */}
+            <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
               
-              <div className="absolute top-0 right-0 bg-white/[0.01] text-gray-500 text-[8px] font-subheading tracking-widest font-bold px-3 py-1.5 uppercase border-b border-l border-white/[0.03] rounded-bl select-none">
-                OUT-SYSTEM
+              {/* Block 2: Graphic Design (Tall, 5 columns) */}
+              <div 
+                className="asym-card card-lift md:col-span-5 bg-[#2C333D] border border-white/[0.08] p-6 sm:p-8 md:p-10 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+                onMouseEnter={() => setCursor('view')}
+                onMouseLeave={() => setCursor('')}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="font-heading text-2xl font-light text-[#C97A3D]">02</span>
+                    <span className="font-mono text-[8px] text-gray-500">SYS_GDC // 02</span>
+                  </div>
+                  <h4 className="font-heading text-xl sm:text-2xl font-semibold text-[#F4F1EB] mb-4">
+                    Graphic Design & Marketing Collaterals
+                  </h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed mb-6">
+                    Premium visual assets engineered to elevate corporate profiles, catalog sheets, sales assets, and investor presentations into category-leading statements.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 border-t border-white/[0.04] pt-6 font-mono text-[9px] text-[#C4C8CF]">
+                  <div>• Sales & pitch decks</div>
+                  <div>• Profiles & flyers</div>
+                  <div>• Banners & catalog books</div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
-                <h4 className="font-heading text-xl font-medium text-gray-500 select-none">Operational Scope</h4>
+              {/* Block 3: Copywriting (Landscape, 7 columns) */}
+              <div 
+                className="asym-card card-lift md:col-span-7 bg-[#2C333D] border border-white/[0.08] p-6 sm:p-8 md:p-10 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+                onMouseEnter={() => setCursor('view')}
+                onMouseLeave={() => setCursor('')}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="font-heading text-2xl font-light text-[#C97A3D]">03</span>
+                    <span className="font-mono text-[8px] text-gray-500">SYS_CSC // 03</span>
+                  </div>
+                  <h4 className="font-heading text-xl sm:text-2xl font-semibold text-[#F4F1EB] mb-4">
+                    Content Strategy & Copywriting
+                  </h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed mb-6">
+                    High-impact language that moves beyond passive reading. We construct campaign headlines, taglines, scripts, and brand narratives designed to convert.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-1.5 border-t border-white/[0.04] pt-6">
+                  {["Landing Page Copy", "Founder story", "Ad script hooks"].map((b, i) => (
+                    <span key={i} className="font-mono text-[7.5px] bg-white/[0.01] border border-white/[0.08] text-[#C4C8CF] px-2.5 py-0.5 rounded">
+                      {b}
+                    </span>
+                  ))}
+                </div>
               </div>
 
-              <p className="font-body text-xs text-gray-300 leading-[1.6] mb-6 select-none">
-                Operational integrations, tracking scripts, sales pipelines, and database automations handled by separate growth verticals.
-              </p>
+            </div>
 
-              <ul className="flex flex-col gap-3.5 border-t border-white/[0.04] pt-6 font-body text-xs text-gray-400">
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>CRM setup, pipelines, and customer database setups</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>WhatsApp automated flows and trigger integrations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>Pixel event setups, dashboard trackers, lead funnels</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>Backend databases, databases scripts, customer portals</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>Operational lead delivery, dashboards pipelines</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-600 font-bold select-none">✗</span>
-                  <span>GrowthOS performance analytics operations</span>
-                </li>
-              </ul>
+            {/* Row of three asymmetric boxes (Block 4, 5, 6) */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
+              
+              {/* Block 4: Social Media Creative */}
+              <div 
+                className="asym-card card-lift bg-[#2C333D] border border-white/[0.08] p-8 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+              >
+                <div>
+                  <span className="font-heading text-lg font-light text-[#C97A3D] block mb-4">04 // SOCIAL</span>
+                  <h4 className="font-heading text-lg font-semibold text-[#F4F1EB] mb-3">Social Media Creative</h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed">
+                    Building active, premium authority across Instagram and LinkedIn. We design cohesive layouts and templates that stand out.
+                  </p>
+                </div>
+                <div className="border-t border-white/[0.04] pt-4 mt-6 font-mono text-[7.5px] text-[#C4C8CF]">
+                  LinkedIn posts • Carousels • Festive setups
+                </div>
+              </div>
+
+              {/* Block 5: Paid Ads Creative */}
+              <div 
+                className="asym-card card-lift bg-[#2C333D] border border-white/[0.08] p-8 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+              >
+                <div>
+                  <span className="font-heading text-lg font-light text-[#C97A3D] block mb-4">05 // CAMPAIGNS</span>
+                  <h4 className="font-heading text-lg font-semibold text-[#F4F1EB] mb-3">Paid Campaign Creatives</h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed">
+                    Strategic paid traffic creatives designed to hook attention. We balance CTR visual layouts with copywriting hooks for conversion.
+                  </p>
+                </div>
+                <div className="border-t border-white/[0.04] pt-4 mt-6 font-mono text-[7.5px] text-[#C4C8CF]">
+                  Meta ad sets • Google search • Offer grids
+                </div>
+              </div>
+
+              {/* Block 6: Photo Direction */}
+              <div 
+                className="asym-card card-lift bg-[#2C333D] border border-white/[0.08] p-8 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+              >
+                <div>
+                  <span className="font-heading text-lg font-light text-[#C97A3D] block mb-4">07 // PRODUCTION</span>
+                  <h4 className="font-heading text-lg font-semibold text-[#F4F1EB] mb-3">Photo & Art Direction</h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed">
+                    Coordination staging that makes photography look intentional. We build styling boards, shot list directions, and founder portrait profiles.
+                  </p>
+                </div>
+                <div className="border-t border-white/[0.04] pt-4 mt-6 font-mono text-[7.5px] text-[#C4C8CF]">
+                  Shoot guidelines • Styling rules • Shot lists
+                </div>
+              </div>
+
+            </div>
+
+            {/* Block 7: Video, Reels & Motion (Wide 8 Columns equivalent layout) */}
+            <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
+              
+              {/* Left Side: Video (Wide, 8 Columns) */}
+              <div 
+                className="asym-card card-lift md:col-span-8 bg-[#2C333D] border border-white/[0.08] p-8 sm:p-10 rounded-2xl hover:border-[#C97A3D]/30 transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+                onMouseEnter={() => setCursor('view')}
+                onMouseLeave={() => setCursor('')}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="font-heading text-2xl font-light text-[#C97A3D]">06</span>
+                    <span className="font-mono text-[8px] text-gray-500">SYS_VRM // 06</span>
+                  </div>
+                  <h4 className="font-heading text-xl sm:text-2xl font-semibold text-[#F4F1EB] mb-4">
+                    Video, Reels & Motion Design
+                  </h4>
+                  <p className="font-body text-xs sm:text-sm text-[#C4C8CF] leading-relaxed">
+                    Cinematic vertical pacing and animated layouts built for modern social feeds. We turn static ideas into fluid motion assets, reels concepts, explainer animations, and logo loop guidelines.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 border-t border-white/[0.04] pt-6 mt-6">
+                  {["Reel concepts", "Cinematic cuts", "Animated loop assets"].map((item, idx) => (
+                    <span key={idx} className="font-mono text-[8px] border border-white/[0.08] text-gray-400 px-2 py-0.5 rounded">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Side: UI/UX & Web (Narrower, 4 Columns) */}
+              <div 
+                className="asym-card card-lift md:col-span-4 bg-[#2C333D] border border-[#C97A3D]/20 p-8 rounded-2xl hover:border-[#C97A3D] transition-all duration-500 shadow-md text-left flex flex-col justify-between"
+                onMouseEnter={() => setCursor('view')}
+                onMouseLeave={() => setCursor('')}
+              >
+                <div>
+                  <span className="font-heading text-lg font-light text-[#C97A3D] block mb-4">08-09 // ENGINEERING</span>
+                  <h4 className="font-heading text-lg sm:text-xl font-semibold text-[#F4F1EB] mb-3">UI/UX & Web Builds</h4>
+                  <p className="font-body text-xs text-[#C4C8CF] leading-relaxed">
+                    Connecting interactive user journeys in Figma directly to custom-coded, light-weight React front-ends. Handcrafted with zero templates.
+                  </p>
+                </div>
+                <div className="border-t border-white/[0.04] pt-4 mt-6 font-mono text-[8px] text-[#C97A3D] font-bold">
+                  Figma systems • React front-ends
+                </div>
+              </div>
+
             </div>
 
           </div>
+
         </div>
       </div>
     </section>
