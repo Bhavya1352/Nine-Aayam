@@ -44,7 +44,7 @@ export default function Story() {
       {/* ═══════════════════════════════════════════════════════════
          SECTION 2: ASYMMETRICAL EDITORIAL CABINET (Redesigned Asymmetric Sizes)
          ═══════════════════════════════════════════════════════════ */}
-      <div className="grid-trigger relative pt-16 pb-28 md:pt-20 md:pb-36 px-6 md:px-12 lg:px-16">
+      <div className="grid-trigger relative pt-10 pb-16 md:pt-12 md:pb-20 px-6 md:px-12 lg:px-16">
         
         <div className="max-w-[1200px] mx-auto relative z-10">
           
@@ -99,7 +99,7 @@ export default function Story() {
             </div>
 
             {/* Row of asymmetric boxes (Block 2 & 3) */}
-            <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
+            <div className="grid md:grid-cols-12 gap-5 md:gap-6 items-stretch">
               
               {/* Block 2: Graphic Design (Tall, 5 columns) */}
               <div 
@@ -156,7 +156,7 @@ export default function Story() {
             </div>
 
             {/* Row of three asymmetric boxes (Block 4, 5, 6) */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 items-stretch">
               
               {/* Block 4: Social Media Creative */}
               <div 
@@ -209,7 +209,7 @@ export default function Story() {
             </div>
 
             {/* Block 7: Video, Reels & Motion (Wide 8 Columns equivalent layout) */}
-            <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
+            <div className="grid md:grid-cols-12 gap-5 md:gap-6 items-stretch">
               
               {/* Left Side: Video (Wide, 8 Columns) */}
               <div 

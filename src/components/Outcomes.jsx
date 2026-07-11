@@ -75,7 +75,7 @@ export default function Outcomes() {
     <section
       ref={sectionRef}
       id="outcomes"
-      className="relative z-10 py-24 sm:py-32 px-6 md:px-12 lg:px-16 bg-[#1B1F24] border-t border-white/[0.08]"
+      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#1B1F24] border-t border-white/[0.08]"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 
@@ -83,7 +83,7 @@ export default function Outcomes() {
 
         <div ref={headerRef} className="flex flex-col items-start mb-16 md:mb-20" style={{ opacity: 0 }}>
           <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
-            09 // CLIENT OUTCOMES
+            03 // CLIENT OUTCOMES
           </span>
           <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
             System Performance Metrics
@@ -93,11 +93,11 @@ export default function Outcomes() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-x-8 md:gap-x-12 gap-y-12 md:gap-y-16 items-start">
+        <div className="grid sm:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-10 md:gap-y-12 items-start">
           {metrics.map((m, idx) => (
             <div
               key={m.label}
-              className={`outcome-stat flex flex-col items-start relative pl-6 sm:pl-8 ${idx % 2 !== 0 ? 'sm:mt-12' : ''}`}
+              className={`outcome-stat flex flex-col items-start relative pl-6 sm:pl-8 ${idx % 2 !== 0 ? 'sm:mt-8' : ''}`}
               style={{ opacity: 0 }}
               onMouseEnter={() => setCursor('read')}
               onMouseLeave={() => setCursor('')}

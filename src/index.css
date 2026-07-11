@@ -138,7 +138,8 @@
 
 /* Global Reset & Base Styling */
 html {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
   background-color: #1B1F24;
   color: #C4C8CF;
   font-family: var(--font-body);
@@ -152,6 +153,8 @@ body {
   background-image: radial-gradient(circle at 50% 50%, #252B33 0%, #1B1F24 100%);
   min-height: 100vh;
   min-height: 100dvh;
+  max-width: 2560px;
+  margin-inline: auto;
 }
 
 /* Premium Scrollbar */

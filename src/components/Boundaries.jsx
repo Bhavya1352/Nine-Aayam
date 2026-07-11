@@ -56,7 +56,7 @@ export default function Boundaries() {
     <section
       ref={sectionRef}
       id="boundaries"
-      className="relative z-10 py-24 sm:py-32 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
+      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 
@@ -64,7 +64,7 @@ export default function Boundaries() {
 
         <div className="boundaries-header flex flex-col items-start mb-16 max-w-[700px] text-left" style={{ opacity: 0 }}>
           <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
-            05 // SCOPE MATRICES
+            04 // SCOPE MATRICES
           </span>
           <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
             System Boundaries
@@ -74,7 +74,7 @@ export default function Boundaries() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 gap-5 md:gap-6 lg:gap-10">
 
           {/* Creative Orbit (In Scope) */}
           <div

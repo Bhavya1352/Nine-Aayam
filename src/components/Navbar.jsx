@@ -2,11 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCursor } from '../context/CursorContext';
 import gsap from 'gsap';
 
+const NAV_LINKS = [
+  { label: 'Philosophy', id: 'philosophy' },
+  { label: 'Services', id: 'services' },
+  { label: 'Process', id: 'process' },
+  { label: 'FAQ', id: 'faq' },
+];
+
 export default function Navbar() {
   const { setCursor } = useCursor();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState('');
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -25,6 +33,27 @@ export default function Navbar() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Active section via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = NAV_LINKS.map((l) => l.id);
+    const observers = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { rootMargin: '-40% 0px -50% 0px', threshold: 0 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   useEffect(() => {
@@ -50,7 +79,7 @@ export default function Navbar() {
       <div className="absolute bottom-0 left-0 h-[1px] bg-[#C97A3D]/60 transition-all duration-100 ease-linear" style={{ width: `${scrollProgress}%` }} />
 
       <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-        
+
         {/* Logo */}
         <a
           href="#"
@@ -63,22 +92,24 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-10">
-          {[
-            { label: 'Philosophy', id: '#philosophy' },
-            { label: 'Services', id: '#services' },
-            { label: 'Boundaries', id: '#boundaries' },
-            { label: 'Brief Configurator', id: '#configurator' }
-          ].map((item) => (
-            <a
-              key={item.label}
-              href={item.id}
-              className="nav-link font-subheading text-[10px] font-medium tracking-[0.2em] text-[#C4C8CF] hover:text-[#F4F1EB] transition-colors relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-[#C97A3D] after:transition-all after:duration-500 hover:after:w-full hover:-translate-y-0.5"
-              onMouseEnter={() => setCursor('view')}
-              onMouseLeave={() => setCursor('')}
-            >
-              {item.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <a
+                key={item.label}
+                href={`#${item.id}`}
+                className={`nav-link font-subheading text-[10px] font-medium tracking-[0.2em] transition-colors relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:bg-[#C97A3D] after:transition-all after:duration-500 hover:-translate-y-0.5 ${
+                  isActive
+                    ? 'text-[#C97A3D] after:w-full'
+                    : 'text-[#C4C8CF] hover:text-[#F4F1EB] after:w-0 hover:after:w-full'
+                }`}
+                onMouseEnter={() => setCursor('view')}
+                onMouseLeave={() => setCursor('')}
+              >
+                {item.label}
+              </a>
+            );
+          })}
 
           <a
             href="mailto:connect@nayagrowth.com"
@@ -114,18 +145,15 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-[56px] left-0 w-full h-[calc(100dvh-56px)] bg-[#1B1F24] border-t border-white/[0.08] z-50 flex flex-col px-6 sm:px-10 py-8 sm:py-10 gap-5 sm:gap-6 animate-fade-in-slide overflow-y-auto">
-          {[
-            { label: 'Philosophy', id: '#philosophy' },
-            { label: 'Services', id: '#services' },
-            { label: 'Boundaries', id: '#boundaries' },
-            { label: 'Brief Configurator', id: '#configurator' }
-          ].map((item) => (
+        <div className="lg:hidden fixed top-[60px] left-0 w-full h-[calc(100dvh-60px)] bg-[#1B1F24] border-t border-white/[0.08] z-50 flex flex-col px-6 sm:px-10 py-8 sm:py-10 gap-5 sm:gap-6 animate-fade-in-slide overflow-y-auto">
+          {NAV_LINKS.map((item) => (
             <a
               key={item.label}
-              href={item.id}
+              href={`#${item.id}`}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="font-subheading text-base font-medium tracking-[0.1em] text-[#C4C8CF] hover:text-[#F4F1EB] transition-colors uppercase text-left"
+              className={`font-subheading text-base font-medium tracking-[0.1em] transition-colors uppercase text-left ${
+                activeSection === item.id ? 'text-[#C97A3D]' : 'text-[#C4C8CF] hover:text-[#F4F1EB]'
+              }`}
             >
               {item.label}
             </a>

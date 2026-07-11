@@ -183,7 +183,7 @@ export default function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="relative z-10 py-14 xs:py-16 sm:py-20 md:py-28 lg:py-36 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 bg-[#050515] border-t border-white/[0.02] overflow-hidden"
+      className="relative z-10 py-12 xs:py-14 sm:py-16 md:py-20 lg:py-24 px-4 xs:px-5 sm:px-6 md:px-12 lg:px-16 bg-[#050515] border-t border-white/[0.02] overflow-hidden"
     >
       {/* Blueprint Grid */}
       <div className="blueprint-grid-line vertical left-5 sm:left-6 md:left-16 hidden sm:block" />
@@ -193,7 +193,7 @@ export default function Philosophy() {
       <div className="max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Intro */}
-        <div className="flex flex-col items-start mb-12 sm:mb-16 md:mb-20 lg:mb-28 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
+        <div className="flex flex-col items-start mb-8 sm:mb-10 md:mb-14 lg:mb-18 text-left pl-0 sm:pl-4 md:pl-8 lg:pl-12">
           <span className="fade-in-el font-subheading text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.4em] text-[#d49b3f] uppercase mb-3 sm:mb-4">
             Interactive Grid
           </span>
@@ -207,7 +207,7 @@ export default function Philosophy() {
         </div>
 
         {/* Two-Column Layout */}
-        <div className="grid lg:grid-cols-12 gap-8 sm:gap-10 md:gap-12 lg:gap-20 xl:gap-24 items-center">
+        <div className="grid lg:grid-cols-12 gap-8 sm:gap-10 md:gap-12 lg:gap-16 xl:gap-20 items-center">
           
           {/* Content Pane ── below dial on mobile, left on desktop */}
           <div className="lg:col-span-7 flex flex-col items-start text-left min-h-0 lg:min-h-[460px] pl-0 sm:pl-4 md:pl-8 lg:pl-12 order-2 lg:order-1">
@@ -246,8 +246,26 @@ export default function Philosophy() {
             </div>
           </div>
 
-          {/* Dial Column */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center relative min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[420px] order-1 lg:order-2">
+          {/* Mobile/Tablet tab selector — visible below lg */}
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center lg:hidden w-full max-w-[420px] mx-auto order-1 mb-6 sm:mb-8">
+            {nodes.map((num) => (
+              <button
+                key={num}
+                type="button"
+                className={`py-1.5 px-3 rounded text-[9px] sm:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
+                  activeDim === num 
+                    ? 'bg-[#d49b3f] text-[#050515]' 
+                    : 'bg-white/[0.02] border border-white/[0.04] text-gray-400 hover:text-white'
+                }`}
+                onClick={() => handleNodeClick(num)}
+              >
+                {num.toString().padStart(2, '0')}
+              </button>
+            ))}
+          </div>
+
+          {/* Dial Column — hidden on mobile, shown lg+ */}
+          <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center relative lg:min-h-[380px] order-1 lg:order-2">
             
             {/* Ambient glow */}
             <div 
@@ -277,17 +295,18 @@ export default function Philosophy() {
                 {nodes.map((num) => {
                   const isActive = activeDim === num;
                   const angle = (num - 1) * 40 * (Math.PI / 180);
-                  const x = 190 + radius * Math.sin(angle);
-                  const y = 190 - radius * Math.cos(angle);
+                  // Use percentage so it scales with the container
+                  const xPct = 50 + (radius / 380) * 100 * Math.sin(angle);
+                  const yPct = 50 - (radius / 380) * 100 * Math.cos(angle);
 
                   return (
                     <button
                       key={num}
                       type="button"
-                      className="node-position absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ease-out transform -translate-x-1/2 -translate-y-1/2"
+                      className="node-position absolute w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-300 ease-out transform -translate-x-1/2 -translate-y-1/2"
                       style={{
-                        left: `${x}px`,
-                        top: `${y}px`,
+                        left: `${xPct}%`,
+                        top: `${yPct}%`,
                       }}
                       onClick={() => handleNodeClick(num)}
                       onMouseEnter={() => setCursor('view')}
@@ -306,24 +325,6 @@ export default function Philosophy() {
                   );
                 })}
               </div>
-            </div>
-
-            {/* Mobile tab selector — visible below 1025px */}
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mt-5 sm:mt-8 md:mt-10 lg:hidden w-full max-w-[380px]">
-              {nodes.map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  className={`py-1.5 px-3 rounded text-[9px] sm:text-[10px] font-bold font-subheading tracking-wider transition-all duration-200 ${
-                    activeDim === num 
-                      ? 'bg-[#d49b3f] text-[#050515]' 
-                      : 'bg-white/[0.02] border border-white/[0.04] text-gray-400 hover:text-white'
-                  }`}
-                  onClick={() => handleNodeClick(num)}
-                >
-                  {num.toString().padStart(2, '0')}
-                </button>
-              ))}
             </div>
 
           </div>

@@ -98,7 +98,7 @@ export default function Configurator() {
     <section 
       ref={sectionRef}
       id="configurator"
-      className="relative z-10 py-24 sm:py-32 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
+      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 
@@ -107,7 +107,7 @@ export default function Configurator() {
         {/* Header */}
         <div className="config-header flex flex-col items-start mb-16 max-w-[700px] text-left" style={{ opacity: 0 }}>
           <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
-            06 // BRIEF BUILDER
+            05 // BRIEF BUILDER
           </span>
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
             Configure Your Creative System
@@ -118,7 +118,7 @@ export default function Configurator() {
         </div>
 
         {/* Clean Form Layout */}
-        <div className="grid lg:grid-cols-12 gap-8 md:gap-10 lg:gap-16 items-start">
+        <div className="grid lg:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-start">
           
           {/* Form Side (Col 7) */}
           <div className="config-form lg:col-span-7 flex flex-col gap-6 md:gap-8 text-left" style={{ opacity: 0 }}>
@@ -138,7 +138,7 @@ export default function Configurator() {
                       onClick={() => toggleDimension(dim.id)}
                       onMouseEnter={() => setCursor('view')}
                       onMouseLeave={() => setCursor('')}
-                      className={`py-2 px-4 rounded border text-[10px] font-subheading tracking-wider uppercase transition-all duration-350 ${
+                      className={`py-1.5 px-3 sm:py-2 sm:px-4 rounded border text-[9px] sm:text-[10px] font-subheading tracking-wider uppercase transition-all duration-350 ${
                         isSelected
                           ? 'bg-[#C97A3D] border-[#C97A3D] text-[#1B1F24] font-bold'
                           : 'bg-[#2C333D] border-white/[0.08] text-[#C4C8CF] hover:border-white/20 hover:text-[#F4F1EB]'

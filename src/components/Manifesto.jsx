@@ -81,8 +81,8 @@ export default function Manifesto() {
   return (
     <section
       ref={containerRef}
-      id="philosophy"
-      className="relative z-10 py-24 sm:py-36 md:py-40 px-6 md:px-12 lg:px-16 bg-[#1B1F24] overflow-hidden select-none"
+      id="manifesto"
+      className="relative z-10 py-16 sm:py-20 md:py-24 px-6 md:px-12 lg:px-16 bg-[#1B1F24] overflow-hidden select-none"
     >
       <span
         ref={watermarkRef}
@@ -110,7 +110,7 @@ export default function Manifesto() {
             onMouseEnter={() => setCursor('read')}
             onMouseLeave={() => setCursor('')}
           >
-            <h2 className="manifesto-reveal-item font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium text-[#F4F1EB] leading-[1.12] tracking-tight max-w-[850px] mb-8" style={{ opacity: 0 }}>
+            <h2 className="manifesto-reveal-item font-heading text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-medium text-[#F4F1EB] leading-[1.12] tracking-tight max-w-[850px] mb-8" style={{ opacity: 0 }}>
               A Brand is not flat pixels. It is a multi-dimensional posture scaling in space.
             </h2>
             

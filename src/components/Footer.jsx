@@ -59,7 +59,7 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="relative z-10 bg-[#1B1F24] border-t border-white/[0.08] pt-20 sm:pt-24 pb-12 px-6 md:px-12 lg:px-16 overflow-hidden"
+      className="relative z-10 bg-[#1B1F24] border-t border-white/[0.08] pt-14 sm:pt-16 pb-10 px-6 md:px-12 lg:px-16 overflow-hidden"
     >
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#C97A3D]/[0.015] rounded-full filter blur-[150px] pointer-events-none z-0" />
 
@@ -71,7 +71,7 @@ export default function Footer() {
           onMouseEnter={() => setCursor('connect')}
           onMouseLeave={() => setCursor('')}
         >
-          <h2 className="font-heading font-light leading-none tracking-tight text-[#F4F1EB] max-w-[850px] text-[2.4rem] sm:text-[3.6rem] md:text-[4.8rem] lg:text-[6rem] xl:text-[6.5rem]">
+          <h2 className="font-heading font-light leading-none tracking-tight text-[#F4F1EB] max-w-[850px] break-words text-[2rem] xs:text-[2.4rem] sm:text-[3.6rem] md:text-[4.8rem] lg:text-[6rem] xl:text-[6.5rem] 2xl:text-[7.5rem]">
             {["Let's", "Build"].map((w, i) => (
               <span key={i} className="footer-word inline-block mr-[0.25em]" style={{ opacity: 0 }}>{w}</span>
             ))}
@@ -107,8 +107,10 @@ export default function Footer() {
             <ul className="flex flex-col gap-3 font-body text-xs">
               {[
                 { label: 'Philosophy', id: '#philosophy' },
+                { label: 'Manifesto', id: '#manifesto' },
                 { label: 'Services Cabinet', id: '#services' },
-                { label: 'System Boundaries', id: '#boundaries' },
+                { label: 'How We Work', id: '#process' },
+                { label: 'FAQ', id: '#faq' },
                 { label: 'Brief Configurator', id: '#configurator' }
               ].map((link) => (
                 <li key={link.label}>
@@ -158,23 +160,15 @@ export default function Footer() {
                   </span>
                 </a>
               </li>
-              <li className="mt-3 pt-3 border-t border-white/[0.08] w-full">
-                <span className="font-mono text-[8px] text-gray-500 tracking-wider block">
-                  SYS_ID: 9D-NG-2026-ACTIVE
-                </span>
-              </li>
+
             </ul>
           </div>
 
         </div>
 
         <div className="footer-meta flex flex-col sm:flex-row items-center justify-between pt-8 gap-4 font-mono text-[9px] text-[#C4C8CF] select-none" style={{ opacity: 0 }}>
-          <p>© 2026 NINE AAYAM. PARENT ORBIT: NAYA GROWTH PRIVATE LIMITED.</p>
-          <div className="flex gap-4">
-            <span className="hover:text-[#F4F1EB] transition-colors">CREATIVE SYSTEM</span>
-            <span>•</span>
-            <span className="hover:text-[#F4F1EB] transition-colors">V1.0.5</span>
-          </div>
+          <p>© 2026 NINE AAYAM.</p>
+
         </div>
 
       </div>

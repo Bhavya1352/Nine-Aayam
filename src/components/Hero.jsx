@@ -7,9 +7,9 @@ export default function Hero() {
   const containerRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
-  // ── Entry animations ──
+  // ── Entry animations — start after page loader (~2.7s) ──
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 0.4 });
+    const tl = gsap.timeline({ delay: 2.9 });
 
     tl.fromTo(".hero-label",
       { opacity: 0, y: 12 },
@@ -34,14 +34,9 @@ export default function Hero() {
       0.85
     );
 
-    tl.fromTo(".hero-bottom-bar",
-      { opacity: 0 },
-      { opacity: 1, duration: 1.0, ease: "power2.out" },
-      1.2
-    );
   }, []);
 
-  // ── Full-screen background constellation canvas ──
+  // ── Full-screen background constellation canvas — fast orbiting concentric orbs ──
   useEffect(() => {
     const canvas = canvasRef.current;
     const section = containerRef.current;
@@ -72,86 +67,163 @@ export default function Hero() {
     };
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    const nodesCount = 9;
+    // ── Config ──
+    const outerNodesCount = 7;
+    const innerNodesCount = 2;
     let baseAngle = 0;
-    const rotationSpeed = (2 * Math.PI) / 5000;
+    let innerAngle = Math.PI * 0.3;
+    const rotationSpeed = (2 * Math.PI) / 600;      // ~8× faster than before
+    const innerRotationSpeed = (2 * Math.PI) / 900;  // counter-rotate inner ring
 
-    function draw() {
+    // Draw a concentric-ring orb (like the reference image)
+    function drawOrb(x, y, size, alpha) {
+      // outer ring
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.7})`;
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      // middle ring
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.62, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.55})`;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      // inner filled dot
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.25, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,169,109,${alpha})`;
+      ctx.fill();
+
+      // glow halo
+      const grd = ctx.createRadialGradient(x, y, 0, x, y, size * 1.6);
+      grd.addColorStop(0, `rgba(201,122,61,${alpha * 0.12})`);
+      grd.addColorStop(1, 'rgba(201,122,61,0)');
+      ctx.beginPath();
+      ctx.arc(x, y, size * 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+
+    let lastTime = 0;
+
+    function draw(timestamp) {
       if (!isVisible) {
         animationFrameId = 0;
         return;
       }
 
+      const dt = lastTime ? (timestamp - lastTime) : 16;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, w, h);
 
-      const cx = w * 0.62;
+      const cx = w < 640 ? w * 0.5 : w * 0.62;
       const cy = h * 0.48;
-      const radius = Math.min(w, h) * 0.32;
+      const outerRadius = Math.min(w, h) * (w < 640 ? 0.28 : 0.34);
+      const innerRadius = outerRadius * 0.45;
 
-      baseAngle += rotationSpeed;
+      baseAngle += rotationSpeed * (dt / 16);
+      innerAngle -= innerRotationSpeed * (dt / 16);
 
-      mouseRef.current.x += (mouseRef.current.tx - mouseRef.current.x) * 0.05;
-      mouseRef.current.y += (mouseRef.current.ty - mouseRef.current.y) * 0.05;
+      mouseRef.current.x += (mouseRef.current.tx - mouseRef.current.x) * 0.06;
+      mouseRef.current.y += (mouseRef.current.ty - mouseRef.current.y) * 0.06;
+
+      // ── Faint orbit path ──
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(201,122,61,0.06)';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([4, 8]);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(201,122,61,0.03)';
-      ctx.lineWidth = 1;
+      ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(201,122,61,0.04)';
+      ctx.lineWidth = 0.6;
+      ctx.setLineDash([3, 6]);
       ctx.stroke();
+      ctx.setLineDash([]);
 
-      const nodes = [];
-      for (let i = 0; i < nodesCount; i++) {
-        const angle = baseAngle + (i / nodesCount) * Math.PI * 2;
-        const x = cx + radius * Math.cos(angle);
-        const y = cy + radius * Math.sin(angle);
-        nodes.push({ x, y });
+      // ── Compute outer nodes ──
+      const outerNodes = [];
+      for (let i = 0; i < outerNodesCount; i++) {
+        const angle = baseAngle + (i / outerNodesCount) * Math.PI * 2;
+        const wobble = Math.sin(timestamp * 0.002 + i * 1.3) * 8;
+        const x = cx + (outerRadius + wobble) * Math.cos(angle);
+        const y = cy + (outerRadius + wobble) * Math.sin(angle);
+        outerNodes.push({ x, y });
       }
 
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < nodesCount; i++) {
-        const a = nodes[i];
-        const b = nodes[(i + 1) % nodesCount];
+      // ── Compute inner nodes ──
+      const innerNodes = [];
+      for (let i = 0; i < innerNodesCount; i++) {
+        const angle = innerAngle + (i / innerNodesCount) * Math.PI * 2;
+        const wobble = Math.sin(timestamp * 0.003 + i * 2.1) * 5;
+        const x = cx + (innerRadius + wobble) * Math.cos(angle);
+        const y = cy + (innerRadius + wobble) * Math.sin(angle);
+        innerNodes.push({ x, y });
+      }
+
+      // ── Connecting lines — outer ring ──
+      ctx.lineWidth = 1;
+      for (let i = 0; i < outerNodesCount; i++) {
+        const a = outerNodes[i];
+        const b = outerNodes[(i + 1) % outerNodesCount];
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = 'rgba(201,122,61,0.04)';
+        ctx.strokeStyle = 'rgba(201,122,61,0.1)';
         ctx.stroke();
       }
 
-      nodes.forEach((node) => {
-        const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
-        const prox = Math.max(0, 1 - dist / 150);
-        const circleSize = 4 + prox * 3;
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, circleSize, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201,122,61,${0.15 + prox * 0.2})`;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, circleSize * 0.4, 0, Math.PI * 2);
-        ctx.fillStyle = prox > 0.3 ? '#E0A96D' : 'rgba(201,122,61,0.5)';
-        ctx.fill();
+      // ── Connecting lines — inner to outer (web pattern) ──
+      ctx.lineWidth = 0.6;
+      innerNodes.forEach((inner) => {
+        // connect to 2 nearest outer nodes
+        const sorted = [...outerNodes].sort(
+          (a, b) => Math.hypot(a.x - inner.x, a.y - inner.y) - Math.hypot(b.x - inner.x, b.y - inner.y)
+        );
+        for (let k = 0; k < 2; k++) {
+          ctx.beginPath();
+          ctx.moveTo(inner.x, inner.y);
+          ctx.lineTo(sorted[k].x, sorted[k].y);
+          ctx.strokeStyle = 'rgba(201,122,61,0.06)';
+          ctx.stroke();
+        }
       });
 
-      ctx.beginPath();
-      ctx.arc(cx, cy, 8, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(201,122,61,0.1)';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(201,122,61,0.4)';
-      ctx.fill();
+      // ── Draw outer orbs ──
+      outerNodes.forEach((node) => {
+        const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
+        const prox = Math.max(0, 1 - dist / 200);
+        const orbSize = 14 + prox * 8 + Math.sin(timestamp * 0.003) * 2;
+        drawOrb(node.x, node.y, orbSize, 0.35 + prox * 0.45);
+      });
 
-      const grd = ctx.createRadialGradient(
+      // ── Draw inner orbs (smaller, counter-rotating) ──
+      innerNodes.forEach((node) => {
+        const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
+        const prox = Math.max(0, 1 - dist / 180);
+        const orbSize = 10 + prox * 5 + Math.cos(timestamp * 0.004) * 1.5;
+        drawOrb(node.x, node.y, orbSize, 0.25 + prox * 0.35);
+      });
+
+      // (no centre hub — total 9 orbs: 7 outer + 2 inner)
+
+      // ── Mouse proximity glow ──
+      const mGrd = ctx.createRadialGradient(
         mouseRef.current.x, mouseRef.current.y, 0,
-        mouseRef.current.x, mouseRef.current.y, 180
+        mouseRef.current.x, mouseRef.current.y, 220
       );
-      grd.addColorStop(0, 'rgba(201,122,61,0.04)');
-      grd.addColorStop(1, 'rgba(201,122,61,0)');
+      mGrd.addColorStop(0, 'rgba(201,122,61,0.06)');
+      mGrd.addColorStop(1, 'rgba(201,122,61,0)');
       ctx.beginPath();
-      ctx.arc(mouseRef.current.x, mouseRef.current.y, 180, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
+      ctx.arc(mouseRef.current.x, mouseRef.current.y, 220, 0, Math.PI * 2);
+      ctx.fillStyle = mGrd;
       ctx.fill();
 
       animationFrameId = requestAnimationFrame(draw);
@@ -161,7 +233,7 @@ export default function Hero() {
       ([entry]) => {
         isVisible = entry.isIntersecting;
         if (isVisible) {
-          if (!animationFrameId) draw();
+          if (!animationFrameId) animationFrameId = requestAnimationFrame(draw);
         } else if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
           animationFrameId = 0;
@@ -171,7 +243,7 @@ export default function Hero() {
     );
     observer.observe(section);
 
-    draw();
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
       isVisible = false;
@@ -198,7 +270,7 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-[#252B33]/80 rounded-full filter blur-[120px] pointer-events-none" />
 
       {/* Content — Centered editorial composition */}
-      <div className="relative z-10 px-6 md:px-12 lg:px-20 xl:px-28 py-28 sm:py-32 md:py-36 lg:py-40 flex flex-col items-start max-w-[1100px] w-full">
+      <div className="relative z-10 px-6 md:px-12 lg:px-20 xl:px-28 py-24 sm:py-28 md:py-32 lg:py-36 flex flex-col items-start max-w-[1100px] w-full mx-auto">
 
         {/* Tagline label */}
         <div className="hero-label flex items-center gap-3 mb-10 opacity-0">
@@ -211,24 +283,24 @@ export default function Hero() {
         {/* Main heading — large, editorial, left-aligned */}
         <h1 className="font-heading text-[#F4F1EB] leading-[1.04] tracking-[-0.025em] mb-10 select-none">
           <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem]">
+            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem]">
               Building Brands
             </span>
           </div>
           <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem]">
+            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem]">
               Across Nine
             </span>
           </div>
           <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] font-light italic text-[#C97A3D]">
+            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem] font-light italic text-[#C97A3D]">
               Dimensions.
             </span>
           </div>
         </h1>
 
         {/* Sub-text + CTAs in a horizontal bar */}
-        <div className="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-10 lg:gap-16">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-8 lg:gap-14">
 
           {/* Manifesto */}
           <p className="hero-sub font-body text-[13px] sm:text-sm leading-[1.75] text-[#C4C8CF]/70 max-w-[380px] opacity-0">
@@ -256,18 +328,7 @@ export default function Hero() {
 
       </div>
 
-      {/* Bottom bar — scroll + metadata */}
-      <div className="hero-bottom-bar absolute bottom-0 left-0 right-0 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between z-10 border-t border-white/[0.04] opacity-0 select-none">
-        <div className="flex items-center gap-3">
-          <div className="w-[1px] h-5 bg-[#C97A3D]/30" />
-          <span className="font-mono text-[8px] text-[#C4C8CF]/30 uppercase tracking-[0.2em]">
-            Scroll to explore
-          </span>
-        </div>
-        <span className="font-mono text-[8px] text-[#C4C8CF]/20 uppercase tracking-[0.15em] hidden sm:block">
-          Nine Aayam / Naya Growth Pvt Ltd
-        </span>
-      </div>
+
 
     </section>
   );
