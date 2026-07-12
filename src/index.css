@@ -136,6 +136,38 @@
   color: #1B1F24;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM SECTION TRANSITIONS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Clip-path angled cuts between sections */
+.section-cut-top {
+  clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 100%);
+  margin-top: -2vw;
+  padding-top: 4vw;
+}
+
+/* Horizontal rule with fade */
+.rule-fade {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,122,61,0.12) 30%, rgba(201,122,61,0.12) 70%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TYPOGRAPHY REFINEMENTS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Prevent FOUT on heading font */
+.font-heading {
+  font-display: swap;
+}
+
+/* Tighter tracking for large display text */
+.display-tight {
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+}
+
 /* Global Reset & Base Styling */
 html {
   scroll-behavior: smooth;
@@ -186,10 +218,10 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.018;
+  opacity: 0.022;
   z-index: 999;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 0.5px, transparent 0.5px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 0.5px, transparent 0.5px);
   background-size: 3px 3px;
 }
 
@@ -263,9 +295,37 @@ body {
 .atmospheric-vignette {
   position: fixed;
   inset: 0;
-  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(0, 0, 0, 0.3);
   pointer-events: none;
   z-index: 50;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO SCROLL PULSE
+   ══════════════════════════════════════════════════════════════ */
+@keyframes scrollPulse {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(200%); opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM HOVER STATES
+   ══════════════════════════════════════════════════════════════ */
+
+/* Clip-path button style */
+.btn-angular {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+/* Line-clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {

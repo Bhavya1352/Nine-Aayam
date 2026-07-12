@@ -13,113 +13,106 @@ export default function Footer() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-
-      // Headline words stagger reveal
-      gsap.fromTo('.footer-word',
-        { opacity: 0, y: 40, skewY: 2 },
-        {
-          opacity: 1, y: 0, skewY: 0,
-          duration: 1.0, stagger: 0.1, ease: 'power4.out',
-          scrollTrigger: { trigger: footerRef.current, start: 'top 80%', once: true }
-        }
+      gsap.fromTo('.ft-word',
+        { opacity: 0, y: 50, skewY: 2 },
+        { opacity: 1, y: 0, skewY: 0, duration: 1.1, stagger: 0.08, ease: 'power4.out',
+          scrollTrigger: { trigger: footerRef.current, start: 'top 80%', once: true } }
       );
-
-      // Gold divider line draw
       gsap.fromTo(lineRef.current,
         { scaleX: 0, transformOrigin: 'left center' },
-        {
-          scaleX: 1, duration: 1.4, ease: 'power3.inOut',
-          scrollTrigger: { trigger: footerRef.current, start: 'top 65%', once: true }
-        }
+        { scaleX: 1, duration: 1.6, ease: 'power3.inOut',
+          scrollTrigger: { trigger: footerRef.current, start: 'top 65%', once: true } }
       );
-
-      // Footer columns stagger up
-      gsap.fromTo('.footer-col',
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: footerRef.current, start: 'top 60%', once: true }
-        }
+      gsap.fromTo('.ft-col',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: footerRef.current, start: 'top 60%', once: true } }
       );
-
-      // Footer meta fade
-      gsap.fromTo('.footer-meta',
+      gsap.fromTo('.ft-meta',
         { opacity: 0 },
-        {
-          opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.3,
-          scrollTrigger: { trigger: footerRef.current, start: 'top 55%', once: true }
-        }
+        { opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.3,
+          scrollTrigger: { trigger: footerRef.current, start: 'top 55%', once: true } }
       );
-
     }, footerRef);
-
     return () => ctx.revert();
   }, []);
 
   return (
-    <footer
-      ref={footerRef}
-      className="relative z-10 bg-[#1B1F24] border-t border-white/[0.08] pt-14 sm:pt-16 pb-10 px-6 md:px-12 lg:px-16 overflow-hidden"
-    >
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#C97A3D]/[0.015] rounded-full filter blur-[150px] pointer-events-none z-0" />
+    <footer ref={footerRef}
+      className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="max-w-[1200px] mx-auto relative z-10 pl-0 sm:pl-4 md:pl-8 lg:pl-12 text-left">
+      <div className="w-full h-[1px]"
+        style={{ background: 'linear-gradient(to right, transparent, rgba(201,122,61,0.2) 30%, rgba(201,122,61,0.2) 70%, transparent)' }} />
 
-        {/* Headline — word split reveal */}
-        <div
-          className="mb-12 sm:mb-16 md:mb-20 overflow-hidden"
+      {/* Ambient glow */}
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.025) 0%, transparent 65%)' }} />
+
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 pt-20 md:pt-28 pb-10">
+
+        {/* Massive CTA headline */}
+        <div className="mb-14 md:mb-20 overflow-hidden"
           onMouseEnter={() => setCursor('connect')}
-          onMouseLeave={() => setCursor('')}
-        >
-          <h2 className="font-heading font-light leading-none tracking-tight text-[#F4F1EB] max-w-[850px] break-words text-[2rem] xs:text-[2.4rem] sm:text-[3.6rem] md:text-[4.8rem] lg:text-[6rem] xl:text-[6.5rem] 2xl:text-[7.5rem]">
+          onMouseLeave={() => setCursor('')}>
+          <h2 className="font-heading font-light leading-[1.0] tracking-tight text-[#F4F1EB] select-none"
+            style={{ fontSize: 'clamp(2.8rem, 8vw, 8.5rem)' }}>
             {["Let's", "Build"].map((w, i) => (
-              <span key={i} className="footer-word inline-block mr-[0.25em]" style={{ opacity: 0 }}>{w}</span>
+              <span key={i} className="ft-word inline-block mr-[0.2em] opacity-0">{w}</span>
             ))}
-            <br className="hidden sm:block" />
+            <br />
             {["Your", "Next"].map((w, i) => (
-              <span key={i} className="footer-word inline-block mr-[0.25em]" style={{ opacity: 0 }}>{w}</span>
+              <span key={i} className="ft-word inline-block mr-[0.2em] opacity-0">{w}</span>
             ))}
-            {" "}
-            <span className="footer-word italic text-[#C97A3D] inline-block" style={{ opacity: 0 }}>Dimension.</span>
+            {' '}
+            <span className="ft-word italic text-[#C97A3D] inline-block opacity-0">Dimension.</span>
           </h2>
         </div>
 
-        {/* Animated gold divider */}
-        <div ref={lineRef} className="w-full h-[1px] bg-gradient-to-r from-[#C97A3D]/40 via-[#C97A3D]/10 to-transparent mb-12 md:mb-16" style={{ scaleX: 0 }} />
+        {/* Gold divider */}
+        <div ref={lineRef} className="w-full h-[1px] mb-14 md:mb-20"
+          style={{ background: 'linear-gradient(to right, rgba(201,122,61,0.5), rgba(201,122,61,0.1) 60%, transparent)', scaleX: 0 }} />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 pb-12 md:pb-16 border-b border-white/[0.08]">
+        {/* Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 pb-14 md:pb-20 border-b border-white/[0.05]">
 
-          {/* Company Brief */}
-          <div className="footer-col md:col-span-6 flex flex-col items-start" style={{ opacity: 0 }}>
-            <span className="font-subheading text-[11px] font-bold tracking-[0.2em] text-[#F4F1EB] mb-4 uppercase">
-              NINE AAYAM <span className="text-[#C4C8CF] font-light">/ 9D</span>
+          {/* Brand */}
+          <div className="ft-col md:col-span-5 opacity-0">
+            <span className="font-subheading text-[11px] font-bold tracking-[0.22em] text-[#F4F1EB] uppercase block mb-4">
+              NINE AAYAM <span className="text-[#C4C8CF]/40 font-light">/ 9D</span>
             </span>
-            <p className="font-body text-xs leading-relaxed text-[#C4C8CF] max-w-[380px] mb-6">
+            <p className="font-body text-xs leading-relaxed text-[#C4C8CF]/50 max-w-[340px] mb-6">
               Nine Aayam is the creative agency vertical of Naya Growth Private Limited. We own the visible, communicative, and sensory front-end representing your identity to the market.
             </p>
+            <a href="mailto:connect@nayagrowth.com"
+              className="group inline-flex items-center gap-2.5 font-mono text-[9px] tracking-[0.3em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors"
+              onMouseEnter={() => setCursor('connect')}
+              onMouseLeave={() => setCursor('')}>
+              <span>Start a Project</span>
+              <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
           </div>
 
-          {/* Site links */}
-          <div className="footer-col md:col-span-3 flex flex-col items-start" style={{ opacity: 0 }}>
-            <span className="font-subheading text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-[0.25em] block mb-4 select-none">
+          {/* Nav links */}
+          <div className="ft-col md:col-span-4 opacity-0">
+            <span className="font-mono text-[8px] tracking-[0.35em] text-[#C4C8CF]/30 uppercase block mb-5">
               System Coordinates
             </span>
-            <ul className="flex flex-col gap-3 font-body text-xs">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-3">
               {[
                 { label: 'Philosophy', id: '#philosophy' },
                 { label: 'Manifesto', id: '#manifesto' },
-                { label: 'Services Cabinet', id: '#services' },
-                { label: 'How We Work', id: '#process' },
+                { label: 'Services', id: '#services' },
+                { label: 'Process', id: '#process' },
                 { label: 'FAQ', id: '#faq' },
-                { label: 'Brief Configurator', id: '#configurator' }
+                { label: 'Brief Builder', id: '#configurator' },
               ].map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.id}
+                  <a href={link.id}
+                    className="font-body text-xs text-[#C4C8CF]/45 hover:text-[#F4F1EB] transition-colors"
                     onMouseEnter={() => setCursor('view')}
-                    onMouseLeave={() => setCursor('')}
-                    className="text-[#C4C8CF] hover:text-[#F4F1EB] transition-colors"
-                  >
+                    onMouseLeave={() => setCursor('')}>
                     {link.label}
                   </a>
                 </li>
@@ -128,47 +121,45 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="footer-col md:col-span-3 flex flex-col items-start" style={{ opacity: 0 }}>
-            <span className="font-subheading text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase tracking-[0.25em] block mb-4 select-none">
-              Connect Channels
+          <div className="ft-col md:col-span-3 opacity-0">
+            <span className="font-mono text-[8px] tracking-[0.35em] text-[#C4C8CF]/30 uppercase block mb-5">
+              Connect
             </span>
-            <ul className="flex flex-col gap-3 font-body text-xs">
+            <ul className="flex flex-col gap-4">
               <li>
-                <a
-                  href="mailto:connect@nayagrowth.com"
+                <a href="mailto:connect@nayagrowth.com"
+                  className="flex items-center gap-2.5 font-body text-xs text-[#C4C8CF]/45 hover:text-[#F4F1EB] transition-colors group"
                   onMouseEnter={() => setCursor('connect')}
-                  onMouseLeave={() => setCursor('')}
-                  className="flex items-center gap-2.5 text-[#C4C8CF] hover:text-[#F4F1EB] transition-colors"
-                >
-                  <Mail className="w-4 h-4 text-[#C97A3D]" />
-                  <span>connect@nayagrowth.com</span>
+                  onMouseLeave={() => setCursor('')}>
+                  <Mail className="w-3.5 h-3.5 text-[#C97A3D]/60 group-hover:text-[#C97A3D] transition-colors" />
+                  connect@nayagrowth.com
                 </a>
               </li>
               <li>
-                <a
-                  href="https://nayagrowth.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <a href="https://nayagrowth.com" target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 font-body text-xs text-[#C4C8CF]/45 hover:text-[#F4F1EB] transition-colors group"
                   onMouseEnter={() => setCursor('connect')}
-                  onMouseLeave={() => setCursor('')}
-                  className="flex items-center gap-2.5 text-[#C4C8CF] hover:text-[#F4F1EB] transition-colors"
-                >
-                  <Globe className="w-4 h-4 text-[#C97A3D]" />
-                  <span className="flex items-center">
+                  onMouseLeave={() => setCursor('')}>
+                  <Globe className="w-3.5 h-3.5 text-[#C97A3D]/60 group-hover:text-[#C97A3D] transition-colors" />
+                  <span className="flex items-center gap-0.5">
                     nayagrowth.com
-                    <ArrowUpRight className="w-3 h-3 ml-0.5 opacity-60" />
+                    <ArrowUpRight className="w-2.5 h-2.5 opacity-40" />
                   </span>
                 </a>
               </li>
-
             </ul>
           </div>
 
         </div>
 
-        <div className="footer-meta flex flex-col sm:flex-row items-center justify-between pt-8 gap-4 font-mono text-[9px] text-[#C4C8CF] select-none" style={{ opacity: 0 }}>
-          <p>© 2026 NINE AAYAM.</p>
-
+        {/* Meta bar */}
+        <div className="ft-meta flex flex-col sm:flex-row items-start sm:items-center justify-between pt-8 gap-3 opacity-0">
+          <p className="font-mono text-[8px] text-[#C4C8CF]/25 tracking-widest">
+            © 2026 NINE AAYAM — NAYA GROWTH PRIVATE LIMITED
+          </p>
+          <p className="font-mono text-[8px] text-[#C4C8CF]/20 tracking-widest">
+            NINE DIMENSIONS. ONE CREATIVE SYSTEM.
+          </p>
         </div>
 
       </div>

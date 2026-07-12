@@ -1,42 +1,48 @@
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 export default function Hero() {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  const mouseRef = useRef({ x: -999, y: -999, tx: -999, ty: -999 });
+  const [hoveredNode, setHoveredNode] = useState(null);
 
-  // ── Entry animations — start after page loader (~2.7s) ──
+  // ── Entry animations ──
   useEffect(() => {
     const tl = gsap.timeline({ delay: 2.9 });
 
-    tl.fromTo(".hero-label",
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }
-    );
-
-    tl.fromTo(".reveal-line",
-      { y: "110%", opacity: 0 },
-      { y: "0%", opacity: 1, duration: 1.3, ease: "power4.out", stagger: 0.08 },
-      0.15
-    );
-
-    tl.fromTo(".hero-sub",
+    tl.fromTo('.h-eyebrow',
       { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-      0.7
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
     );
-
-    tl.fromTo(".hero-cta",
+    tl.fromTo('.h-line',
+      { y: '105%' },
+      { y: '0%', duration: 1.4, ease: 'power4.out', stagger: 0.07 },
+      0.1
+    );
+    tl.fromTo('.h-sub',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' },
+      0.65
+    );
+    tl.fromTo('.h-cta',
       { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.12 },
-      0.85
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.1 },
+      0.8
     );
-
+    tl.fromTo('.h-scroll-hint',
+      { opacity: 0 },
+      { opacity: 1, duration: 1.0, ease: 'power2.out' },
+      1.4
+    );
+    tl.fromTo('.h-side-label',
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' },
+      1.0
+    );
   }, []);
 
-  // ── Full-screen background constellation canvas — fast orbiting concentric orbs ──
+  // ── Dimensional constellation canvas ──
   useEffect(() => {
     const canvas = canvasRef.current;
     const section = containerRef.current;
@@ -44,292 +50,347 @@ export default function Hero() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId;
-    let isVisible = true;
+    let raf, isVisible = true;
     let w, h;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const setSize = () => {
+    const resize = () => {
       w = canvas.offsetWidth;
       h = canvas.offsetHeight;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-    setSize();
-    window.addEventListener('resize', setSize);
+    resize();
+    window.addEventListener('resize', resize);
 
-    const handleMouseMove = (e) => {
-      if (!isVisible) return;
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.tx = e.clientX - rect.left;
-      mouseRef.current.ty = e.clientY - rect.top;
+    const onMove = (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouseRef.current.tx = e.clientX - r.left;
+      mouseRef.current.ty = e.clientY - r.top;
     };
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mousemove', onMove, { passive: true });
 
-    // ── Config ──
-    const outerNodesCount = 7;
-    const innerNodesCount = 2;
-    let baseAngle = 0;
-    let innerAngle = Math.PI * 0.3;
-    const rotationSpeed = (2 * Math.PI) / 600;      // ~8× faster than before
-    const innerRotationSpeed = (2 * Math.PI) / 900;  // counter-rotate inner ring
+    // 9 dimension nodes arranged in a sacred geometry pattern
+    // Center + inner ring (3) + outer ring (5)
+    const nodeLabels = ['01','02','03','04','05','06','07','08','09'];
+    let t = 0;
 
-    // Draw a concentric-ring orb (like the reference image)
-    function drawOrb(x, y, size, alpha) {
-      // outer ring
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.7})`;
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
+    // Connection map: which nodes connect to which
+    const connections = [
+      [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8], // center to all
+      [1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,1], // outer ring
+      [1,4],[2,5],[3,6],[4,7],[5,8],[6,1],[7,2],[8,3], // cross connections
+    ];
 
-      // middle ring
-      ctx.beginPath();
-      ctx.arc(x, y, size * 0.62, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.55})`;
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
+    function getNodes(time) {
+      const cx = w < 768 ? w * 0.5 : w * 0.64;
+      const cy = h * 0.5;
+      const R1 = Math.min(w, h) * (w < 768 ? 0.22 : 0.26); // inner ring
+      const R2 = Math.min(w, h) * (w < 768 ? 0.38 : 0.42); // outer ring
 
-      // inner filled dot
-      ctx.beginPath();
-      ctx.arc(x, y, size * 0.25, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(224,169,109,${alpha})`;
-      ctx.fill();
+      const nodes = [];
 
-      // glow halo
-      const grd = ctx.createRadialGradient(x, y, 0, x, y, size * 1.6);
-      grd.addColorStop(0, `rgba(201,122,61,${alpha * 0.12})`);
-      grd.addColorStop(1, 'rgba(201,122,61,0)');
-      ctx.beginPath();
-      ctx.arc(x, y, size * 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
-    }
+      // Center node (dimension 0 — the core)
+      nodes.push({
+        x: cx + Math.sin(time * 0.0003) * 3,
+        y: cy + Math.cos(time * 0.0004) * 3,
+        size: 18, label: '9D', isCenter: true, idx: -1
+      });
 
-    let lastTime = 0;
-
-    function draw(timestamp) {
-      if (!isVisible) {
-        animationFrameId = 0;
-        return;
+      // Inner ring — 4 nodes
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2 + time * 0.0004 + Math.PI / 4;
+        const wobble = Math.sin(time * 0.002 + i * 1.7) * 6;
+        nodes.push({
+          x: cx + (R1 + wobble) * Math.cos(a),
+          y: cy + (R1 + wobble) * Math.sin(a),
+          size: 13, label: nodeLabels[i], idx: i
+        });
       }
 
-      const dt = lastTime ? (timestamp - lastTime) : 16;
-      lastTime = timestamp;
+      // Outer ring — 5 nodes (counter-rotate)
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2 - time * 0.00025 + Math.PI / 5;
+        const wobble = Math.sin(time * 0.0015 + i * 2.3) * 8;
+        nodes.push({
+          x: cx + (R2 + wobble) * Math.cos(a),
+          y: cy + (R2 + wobble) * Math.sin(a),
+          size: 11, label: nodeLabels[i + 4], idx: i + 4
+        });
+      }
+
+      return nodes;
+    }
+
+    function drawNode(node, alpha, isHovered) {
+      const { x, y, size, label, isCenter } = node;
+      const s = isHovered ? size * 1.35 : size;
+
+      // Outer glow
+      const grd = ctx.createRadialGradient(x, y, 0, x, y, s * 2.8);
+      grd.addColorStop(0, `rgba(201,122,61,${alpha * (isHovered ? 0.18 : 0.08)})`);
+      grd.addColorStop(1, 'rgba(201,122,61,0)');
+      ctx.beginPath();
+      ctx.arc(x, y, s * 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(x, y, s, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(201,122,61,${alpha * (isHovered ? 0.9 : 0.5)})`;
+      ctx.lineWidth = isCenter ? 1.5 : 1.2;
+      ctx.stroke();
+
+      // Inner ring
+      ctx.beginPath();
+      ctx.arc(x, y, s * 0.6, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(201,122,61,${alpha * (isHovered ? 0.6 : 0.3)})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(x, y, s * 0.28, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,169,109,${alpha * (isHovered ? 1 : 0.7)})`;
+      ctx.fill();
+
+      // Label
+      if (!isCenter) {
+        ctx.font = `bold ${Math.round(s * 0.55)}px "Space Mono", monospace`;
+        ctx.fillStyle = `rgba(201,122,61,${alpha * (isHovered ? 0.9 : 0.5)})`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, x, y);
+      } else {
+        ctx.font = `bold ${Math.round(s * 0.6)}px "Plus Jakarta Sans", sans-serif`;
+        ctx.fillStyle = `rgba(244,241,235,${alpha * 0.9})`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('9D', x, y);
+      }
+    }
+
+    function draw(timestamp) {
+      if (!isVisible) { raf = 0; return; }
+      t = timestamp;
 
       ctx.clearRect(0, 0, w, h);
 
-      const cx = w < 640 ? w * 0.5 : w * 0.62;
-      const cy = h * 0.48;
-      const outerRadius = Math.min(w, h) * (w < 640 ? 0.28 : 0.34);
-      const innerRadius = outerRadius * 0.45;
+      // Smooth mouse
+      mouseRef.current.x += (mouseRef.current.tx - mouseRef.current.x) * 0.05;
+      mouseRef.current.y += (mouseRef.current.ty - mouseRef.current.y) * 0.05;
 
-      baseAngle += rotationSpeed * (dt / 16);
-      innerAngle -= innerRotationSpeed * (dt / 16);
+      const nodes = getNodes(timestamp);
 
-      mouseRef.current.x += (mouseRef.current.tx - mouseRef.current.x) * 0.06;
-      mouseRef.current.y += (mouseRef.current.ty - mouseRef.current.y) * 0.06;
+      // Draw orbit paths
+      const cx = w < 768 ? w * 0.5 : w * 0.64;
+      const cy = h * 0.5;
+      const R1 = Math.min(w, h) * (w < 768 ? 0.22 : 0.26);
+      const R2 = Math.min(w, h) * (w < 768 ? 0.38 : 0.42);
 
-      // ── Faint orbit path ──
-      ctx.beginPath();
-      ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(201,122,61,0.06)';
-      ctx.lineWidth = 0.8;
-      ctx.setLineDash([4, 8]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(201,122,61,0.04)';
-      ctx.lineWidth = 0.6;
-      ctx.setLineDash([3, 6]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // ── Compute outer nodes ──
-      const outerNodes = [];
-      for (let i = 0; i < outerNodesCount; i++) {
-        const angle = baseAngle + (i / outerNodesCount) * Math.PI * 2;
-        const wobble = Math.sin(timestamp * 0.002 + i * 1.3) * 8;
-        const x = cx + (outerRadius + wobble) * Math.cos(angle);
-        const y = cy + (outerRadius + wobble) * Math.sin(angle);
-        outerNodes.push({ x, y });
-      }
-
-      // ── Compute inner nodes ──
-      const innerNodes = [];
-      for (let i = 0; i < innerNodesCount; i++) {
-        const angle = innerAngle + (i / innerNodesCount) * Math.PI * 2;
-        const wobble = Math.sin(timestamp * 0.003 + i * 2.1) * 5;
-        const x = cx + (innerRadius + wobble) * Math.cos(angle);
-        const y = cy + (innerRadius + wobble) * Math.sin(angle);
-        innerNodes.push({ x, y });
-      }
-
-      // ── Connecting lines — outer ring ──
-      ctx.lineWidth = 1;
-      for (let i = 0; i < outerNodesCount; i++) {
-        const a = outerNodes[i];
-        const b = outerNodes[(i + 1) % outerNodesCount];
+      [R1, R2].forEach((r, ri) => {
         ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = 'rgba(201,122,61,0.1)';
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(201,122,61,${ri === 0 ? 0.04 : 0.03})`;
+        ctx.lineWidth = 0.6;
+        ctx.setLineDash([3, 9]);
         ctx.stroke();
-      }
-
-      // ── Connecting lines — inner to outer (web pattern) ──
-      ctx.lineWidth = 0.6;
-      innerNodes.forEach((inner) => {
-        // connect to 2 nearest outer nodes
-        const sorted = [...outerNodes].sort(
-          (a, b) => Math.hypot(a.x - inner.x, a.y - inner.y) - Math.hypot(b.x - inner.x, b.y - inner.y)
-        );
-        for (let k = 0; k < 2; k++) {
-          ctx.beginPath();
-          ctx.moveTo(inner.x, inner.y);
-          ctx.lineTo(sorted[k].x, sorted[k].y);
-          ctx.strokeStyle = 'rgba(201,122,61,0.06)';
-          ctx.stroke();
-        }
+        ctx.setLineDash([]);
       });
 
-      // ── Draw outer orbs ──
-      outerNodes.forEach((node) => {
+      // Draw connections
+      connections.forEach(([a, b]) => {
+        const na = nodes[a + 1] || nodes[0]; // +1 because center is index 0
+        const nb = nodes[b + 1] || nodes[0];
+        const nodeA = a === -1 ? nodes[0] : nodes[a + 1];
+        const nodeB = b === -1 ? nodes[0] : nodes[b + 1];
+
+        const distA = Math.hypot(mouseRef.current.x - nodeA.x, mouseRef.current.y - nodeA.y);
+        const distB = Math.hypot(mouseRef.current.x - nodeB.x, mouseRef.current.y - nodeB.y);
+        const prox = Math.max(0, 1 - Math.min(distA, distB) / 180);
+
+        const grad = ctx.createLinearGradient(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
+        grad.addColorStop(0, `rgba(201,122,61,${0.04 + prox * 0.12})`);
+        grad.addColorStop(0.5, `rgba(201,122,61,${0.06 + prox * 0.16})`);
+        grad.addColorStop(1, `rgba(201,122,61,${0.04 + prox * 0.12})`);
+
+        ctx.beginPath();
+        ctx.moveTo(nodeA.x, nodeA.y);
+        ctx.lineTo(nodeB.x, nodeB.y);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 0.5 + prox * 0.8;
+        ctx.stroke();
+      });
+
+      // Draw nodes
+      nodes.forEach((node, i) => {
         const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
-        const prox = Math.max(0, 1 - dist / 200);
-        const orbSize = 14 + prox * 8 + Math.sin(timestamp * 0.003) * 2;
-        drawOrb(node.x, node.y, orbSize, 0.35 + prox * 0.45);
+        const prox = Math.max(0, 1 - dist / 120);
+        const isHovered = prox > 0.3;
+        drawNode(node, 0.6 + prox * 0.4, isHovered);
       });
 
-      // ── Draw inner orbs (smaller, counter-rotating) ──
-      innerNodes.forEach((node) => {
-        const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
-        const prox = Math.max(0, 1 - dist / 180);
-        const orbSize = 10 + prox * 5 + Math.cos(timestamp * 0.004) * 1.5;
-        drawOrb(node.x, node.y, orbSize, 0.25 + prox * 0.35);
-      });
-
-      // (no centre hub — total 9 orbs: 7 outer + 2 inner)
-
-      // ── Mouse proximity glow ──
-      const mGrd = ctx.createRadialGradient(
+      // Mouse proximity glow
+      const mg = ctx.createRadialGradient(
         mouseRef.current.x, mouseRef.current.y, 0,
-        mouseRef.current.x, mouseRef.current.y, 220
+        mouseRef.current.x, mouseRef.current.y, 200
       );
-      mGrd.addColorStop(0, 'rgba(201,122,61,0.06)');
-      mGrd.addColorStop(1, 'rgba(201,122,61,0)');
+      mg.addColorStop(0, 'rgba(201,122,61,0.04)');
+      mg.addColorStop(1, 'rgba(201,122,61,0)');
       ctx.beginPath();
-      ctx.arc(mouseRef.current.x, mouseRef.current.y, 220, 0, Math.PI * 2);
-      ctx.fillStyle = mGrd;
+      ctx.arc(mouseRef.current.x, mouseRef.current.y, 200, 0, Math.PI * 2);
+      ctx.fillStyle = mg;
       ctx.fill();
 
-      animationFrameId = requestAnimationFrame(draw);
+      raf = requestAnimationFrame(draw);
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible) {
-          if (!animationFrameId) animationFrameId = requestAnimationFrame(draw);
-        } else if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = 0;
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(section);
-
-    animationFrameId = requestAnimationFrame(draw);
+    const obs = new IntersectionObserver(([e]) => {
+      isVisible = e.isIntersecting;
+      if (isVisible && !raf) raf = requestAnimationFrame(draw);
+      else if (!isVisible && raf) { cancelAnimationFrame(raf); raf = 0; }
+    }, { threshold: 0.05 });
+    obs.observe(section);
+    raf = requestAnimationFrame(draw);
 
     return () => {
       isVisible = false;
-      cancelAnimationFrame(animationFrameId);
-      observer.disconnect();
-      window.removeEventListener('resize', setSize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(raf);
+      obs.disconnect();
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMove);
     };
   }, []);
 
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen min-h-dvh w-full flex flex-col justify-center overflow-hidden bg-[#1B1F24]"
+      className="relative min-h-screen min-h-dvh w-full overflow-hidden bg-[#1B1F24] flex items-center"
     >
-      {/* Full-screen constellation as background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
-      />
+      {/* Canvas — full bleed background */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
 
-      {/* Ambient glows */}
-      <div className="absolute top-0 right-0 w-[50vw] h-[60vh] bg-[#C97A3D]/[0.012] rounded-full filter blur-[180px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-[#252B33]/80 rounded-full filter blur-[120px] pointer-events-none" />
+      {/* Deep atmospheric layers */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[55vw] h-[70vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.025) 0%, transparent 65%)' }} />
+        <div className="absolute bottom-[-15%] left-[-10%] w-[50vw] h-[60vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.8) 0%, transparent 70%)' }} />
+        {/* Horizontal rule — editorial grid line */}
+        <div className="absolute bottom-[18%] left-0 right-0 h-[1px]"
+          style={{ background: 'linear-gradient(to right, transparent, rgba(201,122,61,0.06) 30%, rgba(201,122,61,0.06) 70%, transparent)' }} />
+      </div>
 
-      {/* Content — Centered editorial composition */}
-      <div className="relative z-10 px-6 md:px-12 lg:px-20 xl:px-28 py-24 sm:py-28 md:py-32 lg:py-36 flex flex-col items-start max-w-[1100px] w-full mx-auto">
+      {/* Side label — vertical typography */}
+      <div className="h-side-label absolute left-5 md:left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:flex flex-col items-center gap-4 opacity-0">
+        <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-[#C97A3D]/30" />
+        <span className="font-mono text-[8px] tracking-[0.35em] text-[#C97A3D]/40 uppercase"
+          style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+          Nine Dimensions
+        </span>
+        <div className="w-[1px] h-16 bg-gradient-to-t from-transparent to-[#C97A3D]/30" />
+      </div>
 
-        {/* Tagline label */}
-        <div className="hero-label flex items-center gap-3 mb-10 opacity-0">
-          <div className="w-10 h-[1px] bg-[#C97A3D]/60" />
-          <span className="font-subheading text-[10px] sm:text-[11px] font-semibold tracking-[0.3em] text-[#C97A3D] uppercase">
-            Creative Agency System
+      {/* Main content — left-anchored editorial */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 xl:px-28 pt-28 pb-20 md:pt-32 md:pb-24">
+
+        {/* Eyebrow */}
+        <div className="h-eyebrow flex items-center gap-4 mb-10 opacity-0">
+          <div className="w-8 h-[1px] bg-[#C97A3D]/50" />
+          <span className="font-mono text-[9px] tracking-[0.4em] text-[#C97A3D]/70 uppercase">
+            Creative Agency System — Est. 2024
           </span>
         </div>
 
-        {/* Main heading — large, editorial, left-aligned */}
-        <h1 className="font-heading text-[#F4F1EB] leading-[1.04] tracking-[-0.025em] mb-10 select-none">
-          <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem]">
+        {/* Headline — large editorial, intentional line breaks */}
+        <h1 className="font-heading text-[#F4F1EB] leading-[1.02] tracking-[-0.02em] mb-12 select-none max-w-[820px]">
+          <div className="overflow-hidden mb-1">
+            <span className="h-line block"
+              style={{ fontSize: 'clamp(2.6rem, 7.5vw, 7.2rem)' }}>
               Building Brands
             </span>
           </div>
-          <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem]">
-              Across Nine
+          <div className="overflow-hidden mb-1">
+            <span className="h-line block"
+              style={{ fontSize: 'clamp(2.6rem, 7.5vw, 7.2rem)' }}>
+              That Occupy
             </span>
           </div>
           <div className="overflow-hidden">
-            <span className="reveal-line block text-[2.2rem] xs:text-[2.6rem] sm:text-[3.6rem] md:text-[4.6rem] lg:text-[5.6rem] xl:text-[6.4rem] 2xl:text-[7rem] font-light italic text-[#C97A3D]">
-              Dimensions.
+            <span className="h-line block font-light italic text-[#C97A3D]"
+              style={{ fontSize: 'clamp(2.6rem, 7.5vw, 7.2rem)' }}>
+              Nine Dimensions.
             </span>
           </div>
         </h1>
 
-        {/* Sub-text + CTAs in a horizontal bar */}
-        <div className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-8 lg:gap-14">
+        {/* Sub-row: descriptor + CTAs */}
+        <div className="flex flex-col sm:flex-row sm:items-end gap-8 sm:gap-14 lg:gap-20">
 
-          {/* Manifesto */}
-          <p className="hero-sub font-body text-[13px] sm:text-sm leading-[1.75] text-[#C4C8CF]/70 max-w-[380px] opacity-0">
-            Nine creative disciplines — from identity systems and design to motion, UI/UX, and front-end engineering — unified into one growth architecture.
-          </p>
+          <div className="h-sub opacity-0 max-w-[360px]">
+            <p className="font-body text-[13px] leading-[1.8] text-[#C4C8CF]/65">
+              Nine creative disciplines — identity, design, motion, copy, UI/UX, and engineering — unified into one growth architecture.
+            </p>
+            {/* Dimension count indicator */}
+            <div className="flex items-center gap-3 mt-5">
+              {[...Array(9)].map((_, i) => (
+                <div key={i}
+                  className="w-1 h-1 rounded-full transition-all duration-300"
+                  style={{ background: i < 3 ? '#C97A3D' : 'rgba(201,122,61,0.2)' }} />
+              ))}
+              <span className="font-mono text-[8px] text-[#C97A3D]/50 tracking-widest ml-1">9 / 9</span>
+            </div>
+          </div>
 
-          {/* CTAs */}
-          <div className="flex gap-4 select-none shrink-0">
-            <a
-              href="#philosophy"
-              className="hero-cta group inline-flex items-center gap-2 px-5 py-3 bg-[#C97A3D] text-[#1B1F24] rounded transition-all duration-300 font-subheading text-[10px] font-bold tracking-[0.1em] uppercase hover:bg-[#E0A96D] opacity-0"
-            >
-              <span>Explore</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          <div className="flex items-center gap-4 shrink-0">
+            <a href="#philosophy"
+              className="h-cta group relative overflow-hidden inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#C97A3D] text-[#1B1F24] font-subheading text-[10px] font-bold tracking-[0.12em] uppercase opacity-0 transition-all duration-500 hover:bg-[#E0A96D]"
+              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}>
+              <span>Explore System</span>
+              <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </a>
 
-            <a
-              href="mailto:connect@nayagrowth.com"
-              className="hero-cta inline-flex items-center gap-2 px-5 py-3 border border-white/[0.1] hover:border-white/20 text-[#C4C8CF] hover:text-[#F4F1EB] rounded transition-all duration-300 font-subheading text-[10px] font-bold tracking-[0.1em] uppercase opacity-0"
-            >
-              <span>Start Project</span>
+            <a href="mailto:connect@nayagrowth.com"
+              className="h-cta inline-flex items-center gap-2 px-6 py-3.5 border border-white/[0.1] hover:border-[#C97A3D]/40 text-[#C4C8CF] hover:text-[#F4F1EB] font-subheading text-[10px] font-bold tracking-[0.12em] uppercase opacity-0 transition-all duration-500">
+              Start Project
             </a>
           </div>
         </div>
 
+        {/* Bottom row — metrics strip */}
+        <div className="h-sub opacity-0 mt-16 md:mt-20 pt-8 border-t border-white/[0.05] grid grid-cols-3 gap-6 max-w-[560px]">
+          {[
+            { val: '9', label: 'Dimensions' },
+            { val: '14', label: 'Day Sprint' },
+            { val: '100%', label: 'Bespoke' },
+          ].map((m) => (
+            <div key={m.label} className="flex flex-col gap-1">
+              <span className="font-heading text-2xl md:text-3xl text-[#C97A3D] leading-none">{m.val}</span>
+              <span className="font-mono text-[8px] tracking-[0.25em] text-[#C4C8CF]/40 uppercase">{m.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Scroll hint */}
+      <div className="h-scroll-hint absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0">
+        <span className="font-mono text-[7px] tracking-[0.4em] text-[#C4C8CF]/30 uppercase">Scroll</span>
+        <div className="w-[1px] h-10 overflow-hidden">
+          <div className="w-full h-full bg-gradient-to-b from-[#C97A3D]/40 to-transparent"
+            style={{ animation: 'scrollPulse 2s ease-in-out infinite' }} />
+        </div>
+      </div>
 
-
+      <style>{`
+        @keyframes scrollPulse {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(200%); }
+        }
+      `}</style>
     </section>
   );
 }

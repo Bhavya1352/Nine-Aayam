@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCursor } from '../context/CursorContext';
-import { Plus, Minus } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -13,11 +12,11 @@ const faqs = [
   },
   {
     q: 'Typical project timeline kya hoti hai?',
-    a: 'Brand identity + guidelines: 10–14 days. Full creative system (multiple dimensions): 3–6 weeks. Accelerated sprint available hai urgent launches ke liye. Timeline Brief Configurator mein select kar sakte ho.',
+    a: 'Brand identity + guidelines: 10–14 days. Full creative system (multiple dimensions): 3–6 weeks. Accelerated sprint available hai urgent launches ke liye.',
   },
   {
     q: 'Kya aap ek hi dimension pe kaam karte ho ya full system chahiye?',
-    a: 'Dono. Aap sirf ek dimension — jaise sirf web development ya sirf social media creative — ke liye engage kar sakte ho. Ya phir full Nine Aayam system activate kar sakte ho. Scope aapka, execution hamara.',
+    a: 'Dono. Aap sirf ek dimension — jaise sirf web development ya sirf social media creative — ke liye engage kar sakte ho. Ya phir full Nine Aayam system activate kar sakte ho.',
   },
   {
     q: 'Templates use karte ho ya sab handcrafted hota hai?',
@@ -25,11 +24,11 @@ const faqs = [
   },
   {
     q: 'Revision cycles kaise kaam karte hain?',
-    a: 'Har project mein structured review rounds included hain. Discovery ke baad ek direction brief approve hota hai, phir design phase mein 2 revision rounds. Scope ke bahar changes separately scoped hote hain.',
+    a: 'Har project mein structured review rounds included hain. Discovery ke baad ek direction brief approve hota hai, phir design phase mein 2 revision rounds.',
   },
   {
     q: 'Kya aap ongoing retainer pe kaam karte ho?',
-    a: 'Haan. Monthly creative retainers available hain — social media, motion, aur campaign creatives ke liye. Retainer structure Brief Configurator mein "Market Leader Campaign" scope select karne ke baad discuss hota hai.',
+    a: 'Haan. Monthly creative retainers available hain — social media, motion, aur campaign creatives ke liye.',
   },
 ];
 
@@ -37,105 +36,111 @@ export default function FAQ() {
   const { setCursor } = useCursor();
   const sectionRef = useRef(null);
   const [open, setOpen] = useState(null);
+  const answerRefs = useRef([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.faq-header',
+      gsap.fromTo('.fq-hdr',
         { opacity: 0, y: 24 },
-        {
-          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true }
-        }
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true } }
       );
-      gsap.fromTo('.faq-item',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true }
-        }
+      gsap.fromTo('.fq-item',
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true } }
       );
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
 
-  const toggle = (idx) => setOpen(open === idx ? null : idx);
+  const toggle = (idx) => {
+    const prev = open;
+    setOpen(open === idx ? null : idx);
+    // Animate answer in
+    if (open !== idx && answerRefs.current[idx]) {
+      gsap.fromTo(answerRefs.current[idx],
+        { opacity: 0, y: -8 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.05 }
+      );
+    }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      id="faq"
-      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#1B1F24] border-t border-white/[0.08]"
-    >
-      <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
+    <section ref={sectionRef} id="faq"
+      className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="max-w-[1200px] mx-auto relative z-10 pl-0 sm:pl-4 md:pl-8 lg:pl-12">
+      <div className="w-full h-[1px]"
+        style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
 
-        <div className="faq-header flex flex-col items-start mb-14 text-left" style={{ opacity: 0 }}>
-          <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
-            09 // COMMON QUESTIONS
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-20 sm:py-28 md:py-36">
+
+        {/* Header */}
+        <div className="fq-hdr mb-16 md:mb-20 opacity-0">
+          <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-4">
+            09 — Common Questions
           </span>
-          <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
-            Frequently Asked
+          <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}>
+            Frequently<br /><span className="italic text-[#C97A3D]">Asked</span>
           </h3>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
-          {/* FAQ list */}
-          <div className="lg:col-span-8 flex flex-col divide-y divide-white/[0.06]">
+          {/* Accordion */}
+          <div className="lg:col-span-8 divide-y divide-white/[0.05]">
             {faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="faq-item py-5 sm:py-6"
-                style={{ opacity: 0 }}
-              >
-                <button
-                  type="button"
-                  className="w-full flex items-start justify-between gap-4 text-left group"
+              <div key={idx} className="fq-item opacity-0">
+                <button type="button"
+                  className="w-full flex items-start justify-between gap-6 py-6 text-left group"
                   onClick={() => toggle(idx)}
                   onMouseEnter={() => setCursor('view')}
-                  onMouseLeave={() => setCursor('')}
-                >
-                  <span className="font-heading text-base sm:text-lg md:text-xl font-medium text-[#F4F1EB] leading-snug group-hover:text-[#E0A96D] transition-colors">
+                  onMouseLeave={() => setCursor('')}>
+                  <span className="font-heading text-base sm:text-lg md:text-xl font-medium text-[#F4F1EB] leading-snug group-hover:text-[#E0A96D] transition-colors duration-300">
                     {faq.q}
                   </span>
-                  <span className="shrink-0 mt-0.5 text-[#C97A3D]">
-                    {open === idx ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  <span className="shrink-0 mt-1 w-5 h-5 border border-[#C97A3D]/30 flex items-center justify-center text-[#C97A3D] transition-all duration-300"
+                    style={{ transform: open === idx ? 'rotate(45deg)' : 'rotate(0deg)' }}>
+                    <svg viewBox="0 0 10 10" className="w-2.5 h-2.5" fill="none">
+                      <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
                   </span>
                 </button>
 
                 {open === idx && (
-                  <p className="font-body text-sm text-[#C4C8CF] leading-relaxed mt-4 max-w-[640px] animate-fade-in-slide">
-                    {faq.a}
-                  </p>
+                  <div ref={el => answerRefs.current[idx] = el} className="pb-6">
+                    <p className="font-body text-sm text-[#C4C8CF]/60 leading-relaxed max-w-[600px]">
+                      {faq.a}
+                    </p>
+                  </div>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Side CTA */}
-          <div className="lg:col-span-4 faq-item" style={{ opacity: 0 }}>
-            <div className="bg-[#2C333D] border border-white/[0.08] rounded-xl p-6 sm:p-8 flex flex-col gap-5 text-left">
-              <span className="font-subheading text-[9px] font-bold text-[#C97A3D] tracking-widest uppercase">
+          {/* Side CTA — typographic, no card box */}
+          <div className="lg:col-span-4 fq-item opacity-0 lg:pt-6">
+            <div className="relative pl-6 border-l border-[#C97A3D]/20">
+              <span className="font-mono text-[8px] tracking-[0.35em] text-[#C97A3D]/50 uppercase block mb-4">
                 Still have questions?
               </span>
-              <p className="font-body text-sm text-[#C4C8CF] leading-relaxed">
-                Drop us a line directly. We respond within 24 hours.
+              <p className="font-heading text-xl md:text-2xl font-light text-[#F4F1EB] leading-snug mb-6">
+                Drop us a line. We respond within 24 hours.
               </p>
-              <a
-                href="mailto:connect@nayagrowth.com"
-                className="inline-flex items-center justify-center py-3 px-5 bg-[#C97A3D] text-[#1B1F24] rounded font-subheading text-[10px] font-bold tracking-[0.15em] uppercase hover:bg-[#E0A96D] transition-colors"
+              <a href="mailto:connect@nayagrowth.com"
+                className="group inline-flex items-center gap-2.5 font-mono text-[9px] tracking-[0.3em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors"
                 onMouseEnter={() => setCursor('connect')}
-                onMouseLeave={() => setCursor('')}
-              >
-                Connect With Us
+                onMouseLeave={() => setCursor('')}>
+                <span>Connect With Us</span>
+                <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </a>
             </div>
           </div>
 
         </div>
-
       </div>
     </section>
   );
