@@ -16,6 +16,8 @@ const metrics = [
     desc: 'Organic authority reach compiled across active LinkedIn and Instagram custom guidelines.' },
 ];
 
+
+
 export default function Outcomes() {
   const { setCursor } = useCursor();
   const sectionRef = useRef(null);
@@ -35,6 +37,14 @@ export default function Outcomes() {
         { opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 68%', once: true } }
       );
+
+      gsap.fromTo('.pr-metric-line',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1.8, ease: 'power3.out', stagger: 0.12,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 65%', once: true } }
+      );
+
+
 
       numRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -58,31 +68,31 @@ export default function Outcomes() {
     <section
       ref={sectionRef}
       id="outcomes"
-      className="relative z-10 bg-[#1B1F24] overflow-hidden"
+      className="relative z-10 bg-[#050505] overflow-hidden py-16 sm:py-20 md:py-24"
     >
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[15%] left-[-8%] w-[45vw] h-[55vh] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.025) 0%, transparent 60%)' }} />
+          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.02) 0%, transparent 60%)' }} />
         <div className="absolute bottom-[20%] right-[-10%] w-[40vw] h-[50vh] rounded-full"
           style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.8) 0%, transparent 65%)' }} />
       </div>
 
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-0">
 
         {/* Header — asymmetric */}
         <div className="oc-header grid md:grid-cols-12 gap-8 items-end mb-14 md:mb-18 opacity-0">
           <div className="md:col-span-7">
             <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
-              03 — Client Outcomes
+              02 — Client Outcomes
             </span>
             <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
               style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>
               System Performance <span className="italic text-[#C97A3D]">Metrics</span>
             </h3>
           </div>
-          <p className="md:col-span-5 font-body text-sm text-[#C4C8CF]/55 leading-relaxed">
+          <p className="md:col-span-5 font-body text-sm text-[#C4C8CF]/80 leading-relaxed">
             When every dimension works in unison, the results compound. We build front-ends that don't just look premium — they deliver measurable brand authority.
           </p>
         </div>
@@ -93,25 +103,25 @@ export default function Outcomes() {
             <div
               key={m.label}
               className={`oc-stat group relative opacity-0 py-10 md:py-12 px-8 md:px-10
-                ${idx % 2 === 0 ? 'border-r border-white/[0.04]' : ''}
-                ${idx < 2 ? 'border-b border-white/[0.04]' : ''}
+                ${idx % 2 === 0 ? 'border-r border-white/[0.03]' : ''}
+                ${idx < 2 ? 'border-b border-white/[0.03]' : ''}
                 ${idx === 1 ? 'sm:mt-12' : ''}
                 ${idx === 3 ? 'sm:-mt-12' : ''}
               `}
               style={{ 
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.01) 0%, transparent 100%)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)'
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.01)'
               }}
               onMouseEnter={() => setCursor('read')}
               onMouseLeave={() => setCursor('')}
             >
-              {/* Hover fill - layered */}
+              {/* Hover fill - radial glow */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-600 pointer-events-none"
-                style={{ background: 'radial-gradient(ellipse at 25% 50%, rgba(201,122,61,0.05) 0%, transparent 70%)' }} />
+                style={{ background: 'radial-gradient(ellipse at 25% 50%, rgba(201,122,61,0.04) 0%, transparent 70%)' }} />
               
-              {/* Data visualization bar */}
-              <div className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#C97A3D] to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"
-                style={{ width: `${(idx + 1) * 25}%` }} />
+              {/* Top Progress line — dynamic scroll reveal */}
+              <div className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#C97A3D] to-transparent pr-metric-line"
+                style={{ width: `${(idx + 1) * 25}%`, scaleX: 0, transformOrigin: 'left center' }} />
 
               <div className="relative z-10">
                 <span
@@ -126,15 +136,15 @@ export default function Outcomes() {
                   {m.label}
                 </span>
 
-                <p className="font-body text-xs text-[#C4C8CF]/55 leading-relaxed max-w-[340px]">
+                <p className="font-body text-xs text-[#C4C8CF]/80 group-hover:text-[#F4F1EB]/95 leading-relaxed max-w-[500px]">
                   {m.desc}
                 </p>
               </div>
 
               {/* Corner accent */}
               <div className="absolute bottom-5 right-5 w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                <div className="absolute bottom-0 right-0 w-full h-[1px] bg-[#C97A3D]/50" />
-                <div className="absolute bottom-0 right-0 w-[1px] h-full bg-[#C97A3D]/50" />
+                <div className="absolute bottom-0 right-0 w-full h-[1px] bg-[#C97A3D]/40" />
+                <div className="absolute bottom-0 right-0 w-[1px] h-full bg-[#C97A3D]/40" />
               </div>
             </div>
           ))}

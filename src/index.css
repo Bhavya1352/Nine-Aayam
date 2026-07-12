@@ -3,8 +3,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-obsidian-deep: #1B1F24;
-  --color-obsidian-dark: #252B33;
+  --color-obsidian-deep: #050505;
+  --color-obsidian-dark: #121212;
   --color-card-premium: #2C333D;
   --color-neon-emerald: #C97A3D;
   --color-mint-green: #E0A96D;
@@ -133,7 +133,7 @@
    ══════════════════════════════════════════════════════════════ */
 ::selection {
   background: #C97A3D;
-  color: #1B1F24;
+  color: #050505;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -172,7 +172,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
-  background-color: #1B1F24;
+  background-color: #050505;
   color: #C4C8CF;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -181,8 +181,8 @@ html {
 
 body {
   overflow-x: hidden;
-  background-color: #1B1F24;
-  background-image: radial-gradient(circle at 50% 50%, #252B33 0%, #1B1F24 100%);
+  background-color: #050505;
+  background-image: radial-gradient(circle at 50% 50%, #121212 0%, #050505 100%);
   min-height: 100vh;
   min-height: 100dvh;
   max-width: 2560px;
@@ -196,7 +196,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1B1F24;
+  background: #050505;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -267,6 +267,8 @@ body {
   font-size: clamp(0.85rem, 1.5vw, 1.1rem);
   line-height: 1.68;
 }
+
+
 
 /* SVG Line Animations */
 .animated-draw-line {

@@ -68,7 +68,7 @@ export default function Testimonials() {
 
   return (
     <section ref={sectionRef} id="testimonials"
-      className="relative z-10 bg-[#1B1F24] overflow-hidden">
+      className="relative z-10 bg-[#050505] overflow-hidden">
 
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -79,13 +79,13 @@ export default function Testimonials() {
       </div>
 
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16 sm:py-20 md:py-24">
 
         {/* Header */}
         <div className="tm-hdr flex items-end justify-between mb-14 md:mb-18 opacity-0">
           <div>
             <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
-              10 — System Feedback
+              06 — System Feedback
             </span>
             <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
               style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>
@@ -127,23 +127,22 @@ export default function Testimonials() {
         </div>
 
         {/* Secondary testimonials — horizontal list with enhanced styling */}
-        <div className="grid sm:grid-cols-3 gap-0">
+        <div className="grid sm:grid-cols-3 gap-6 mt-8">
           {testimonials.filter((_, i) => i !== active).map((t, i) => {
             const realIdx = testimonials.indexOf(t);
             return (
               <button key={realIdx} type="button"
-                className="tm-secondary opacity-0 text-left p-8 md:p-10 border-r border-white/[0.04] last:border-r-0 group transition-all duration-500"
+                className="tm-secondary opacity-0 text-left p-8 md:p-10 rounded-xl bg-gradient-to-br from-[#121212]/60 to-[#050505]/30 border border-white/[0.02] hover:border-[#C97A3D]/25 hover:-translate-y-1 group transition-all duration-500 relative overflow-hidden"
                 style={{ 
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.005) 0%, transparent 100%)',
                   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.01)'
                 }}
                 onClick={() => handleSwitch(realIdx)}
                 onMouseEnter={() => setCursor('read')}
                 onMouseLeave={() => setCursor('')}>
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(201,122,61,0.03) 0%, transparent 65%)' }} />
+                  style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(201,122,61,0.04) 0%, transparent 65%)' }} />
                 <div className="relative z-10">
-                  <p className="font-heading italic text-sm text-[#C4C8CF]/55 leading-relaxed mb-5 group-hover:text-[#C4C8CF]/85 transition-colors line-clamp-3">
+                  <p className="font-heading italic text-sm text-[#C4C8CF]/75 leading-relaxed mb-5 group-hover:text-[#C4C8CF]/95 transition-colors line-clamp-3">
                     "{t.quote}"
                   </p>
                   <div className="flex items-center gap-3">

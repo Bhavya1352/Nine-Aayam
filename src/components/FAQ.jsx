@@ -68,7 +68,7 @@ export default function FAQ() {
 
   return (
     <section ref={sectionRef} id="faq"
-      className="relative z-10 bg-[#1B1F24] overflow-hidden">
+      className="relative z-10 bg-[#050505] overflow-hidden">
 
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -79,12 +79,12 @@ export default function FAQ() {
       </div>
 
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16 sm:py-20 md:py-24">
 
         {/* Header */}
         <div className="fq-hdr mb-14 md:mb-18 opacity-0">
           <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
-            09 — Common Questions
+            07 — Common Questions
           </span>
           <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
             style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>

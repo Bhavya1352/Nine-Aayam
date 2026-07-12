@@ -26,13 +26,13 @@ export default function Marquee() {
 
   return (
     <div
-      className="relative z-10 w-full overflow-hidden border-y border-white/[0.06] py-4 bg-[#1B1F24]"
+      className="relative z-10 w-full overflow-hidden border-y border-white/[0.06] py-4 bg-[#050505]"
       onMouseEnter={pause}
       onMouseLeave={resume}
     >
       {/* Fade edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-[#1B1F24] to-transparent z-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-[#1B1F24] to-transparent z-10" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-[#050505] to-transparent z-10" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-[#050505] to-transparent z-10" />
 
       <div
         ref={trackRef}

@@ -4,7 +4,6 @@ import PageLoader from './components/PageLoader';
 import Cursor from './components/Cursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Marquee from './components/Marquee';
 import Manifesto from './components/Manifesto';
 import Story from './components/Story';
 import Outcomes from './components/Outcomes';
@@ -22,7 +21,7 @@ export default function App() {
     <CursorProvider>
       {!loaded && <PageLoader onComplete={() => setLoaded(true)} />}
 
-      <div className="relative min-h-screen bg-[#1B1F24] text-[#C4C8CF] overflow-x-hidden selection:bg-[#C97A3D] selection:text-[#1B1F24]">
+      <div className="relative min-h-screen bg-[#050505] text-[#C4C8CF] overflow-x-hidden selection:bg-[#C97A3D] selection:text-[#050505]">
 
         <div className="noise-bg" />
         <div className="atmospheric-vignette" />

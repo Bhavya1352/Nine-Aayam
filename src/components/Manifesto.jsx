@@ -60,7 +60,7 @@ export default function Manifesto() {
     <section
       ref={containerRef}
       id="manifesto"
-      className="relative z-10 overflow-hidden bg-[#1B1F24] py-12 sm:py-16 md:py-20 select-none"
+      className="relative z-10 overflow-hidden bg-[#050505] py-16 sm:py-20 md:py-24 select-none"
     >
       {/* Watermark */}
       <span
@@ -112,7 +112,7 @@ export default function Manifesto() {
             Design systems should establish spatial authority, not just arrange components. We shape the visible, tactile, and interactive sensory front-end representing your identity to the market.
           </p>
           <div className="mf-body opacity-0">
-            <p className="font-body text-sm leading-[1.85] text-[#C4C8CF]/60 mb-6">
+            <p className="font-body text-sm leading-[1.85] text-[#C4C8CF]/80 mb-6">
               Operations stay behind the curtain. What faces the market — layouts, language, motion, and interfaces — is what we engineer to feel custom, handcrafted, and structurally complete.
             </p>
             <a href="#philosophy"

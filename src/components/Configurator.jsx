@@ -98,7 +98,7 @@ export default function Configurator() {
     <section 
       ref={sectionRef}
       id="configurator"
-      className="relative z-10 py-12 sm:py-16 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
+      className="relative z-10 py-12 sm:py-16 px-6 md:px-12 lg:px-16 bg-[#050505]"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 
@@ -106,8 +106,8 @@ export default function Configurator() {
         
         {/* Header */}
         <div className="config-header flex flex-col items-start mb-12 max-w-[700px] text-left" style={{ opacity: 0 }}>
-          <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
-            05 // BRIEF BUILDER
+          <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold select-none">
+            05 — Brief Builder
           </span>
           <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-medium tracking-tight text-[#F4F1EB] mb-4">
             Configure Your Creative System
@@ -140,7 +140,7 @@ export default function Configurator() {
                       onMouseLeave={() => setCursor('')}
                       className={`py-1.5 px-3 sm:py-2 sm:px-4 rounded border text-[9px] sm:text-[10px] font-subheading tracking-wider uppercase transition-all duration-350 ${
                         isSelected
-                          ? 'bg-[#C97A3D] border-[#C97A3D] text-[#1B1F24] font-bold'
+                          ? 'bg-[#C97A3D] border-[#C97A3D] text-[#050505] font-bold'
                           : 'bg-[#2C333D] border-white/[0.08] text-[#C4C8CF] hover:border-white/20 hover:text-[#F4F1EB]'
                       }`}
                     >
@@ -271,7 +271,7 @@ export default function Configurator() {
                   onClick={(e) => selected.length === 0 && e.preventDefault()}
                   onMouseEnter={() => setCursor('connect')}
                   onMouseLeave={() => setCursor('')}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-3 bg-[#C97A3D] disabled:opacity-40 hover:bg-[#C97A3D]/90 text-[#1B1F24] rounded text-[9px] font-subheading font-bold tracking-wider uppercase transition-all duration-300 text-center"
+                  className="flex-1 flex items-center justify-center gap-1.5 py-3 bg-[#C97A3D] disabled:opacity-40 hover:bg-[#C97A3D]/90 text-[#050505] rounded text-[9px] font-subheading font-bold tracking-wider uppercase transition-all duration-300 text-center"
                 >
                   <Send className="w-4 h-4" />
                   <span>Send Brief</span>

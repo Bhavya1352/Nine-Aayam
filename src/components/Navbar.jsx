@@ -71,7 +71,7 @@ export default function Navbar() {
       style={{ opacity: 0 }}
       className={`fixed top-0 left-0 w-full z-[1000] px-6 md:px-12 lg:px-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isScrolled
-          ? 'bg-[#1B1F24]/90 border-b border-white/[0.08] backdrop-blur-md py-4 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+          ? 'bg-[#050505]/90 border-b border-white/[0.08] backdrop-blur-md py-4 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
           : 'bg-transparent border-b border-transparent py-6 md:py-8'
       }`}
     >
@@ -113,7 +113,7 @@ export default function Navbar() {
 
           <a
             href="mailto:connect@nayagrowth.com"
-            className="font-subheading text-[10px] font-bold tracking-[0.2em] text-[#C97A3D] border border-[#C97A3D]/30 rounded px-5 py-2 hover:bg-[#C97A3D] hover:text-[#1B1F24] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#C97A3D]/5"
+            className="font-subheading text-[10px] font-bold tracking-[0.2em] text-[#C97A3D] border border-[#C97A3D]/30 rounded px-5 py-2 hover:bg-[#C97A3D] hover:text-[#050505] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#C97A3D]/5"
             onMouseEnter={() => setCursor('connect')}
             onMouseLeave={() => setCursor('')}
           >
@@ -145,7 +145,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-[60px] left-0 w-full h-[calc(100dvh-60px)] bg-[#1B1F24] border-t border-white/[0.08] z-50 flex flex-col px-6 sm:px-10 py-8 sm:py-10 gap-5 sm:gap-6 animate-fade-in-slide overflow-y-auto">
+        <div className="lg:hidden fixed top-[60px] left-0 w-full h-[calc(100dvh-60px)] bg-[#050505] border-t border-white/[0.08] z-50 flex flex-col px-6 sm:px-10 py-8 sm:py-10 gap-5 sm:gap-6 animate-fade-in-slide overflow-y-auto">
           {NAV_LINKS.map((item) => (
             <a
               key={item.label}
@@ -161,7 +161,7 @@ export default function Navbar() {
           <a
             href="mailto:connect@nayagrowth.com"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="font-subheading text-xs font-bold tracking-[0.15em] text-[#C97A3D] border border-[#C97A3D]/30 rounded py-3.5 text-center bg-[#C97A3D]/5 hover:bg-[#C97A3D] hover:text-[#1B1F24] transition-all duration-300 uppercase mt-4"
+            className="font-subheading text-xs font-bold tracking-[0.15em] text-[#C97A3D] border border-[#C97A3D]/30 rounded py-3.5 text-center bg-[#C97A3D]/5 hover:bg-[#C97A3D] hover:text-[#050505] transition-all duration-300 uppercase mt-4"
           >
             Start project
           </a>

@@ -69,7 +69,7 @@ export default function CaseStudies() {
     <section
       ref={sectionRef}
       id="work"
-      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#252B33] border-t border-white/[0.08] overflow-hidden"
+      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#121212] border-t border-white/[0.08] overflow-hidden"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 

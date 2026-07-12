@@ -41,15 +41,17 @@ export default function MagneticButton({
   const baseStyles = "flex items-center justify-center font-subheading font-semibold rounded-full gap-1.5 transition-all duration-300";
   
   const variants = {
-    primary: "bg-[#c68a2e] text-[#050515] shadow-lg shadow-[#c68a2e]/20 hover:bg-[#c68a2e]/90 hover:shadow-[#c68a2e]/30",
-    outline: "bg-transparent text-white border border-[#c68a2e]/25 backdrop-blur hover:bg-[#c68a2e]/10"
+    primary: "bg-[#C97A3D] text-[#050505] shadow-lg shadow-[#C97A3D]/20 hover:bg-[#E0A96D] hover:shadow-[#C97A3D]/30",
+    outline: "bg-transparent text-white border border-[#C97A3D]/25 backdrop-blur hover:bg-[#C97A3D]/10"
   };
+
+  const finalClassName = variant === 'custom' ? className : `${baseStyles} ${variants[variant]} ${className}`;
 
   return (
     <a
       ref={buttonRef}
       href={href}
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={finalClassName}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setCursor(cursorType)}
       onMouseLeave={handleMouseLeave}

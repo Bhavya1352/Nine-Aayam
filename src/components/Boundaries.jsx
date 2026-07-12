@@ -53,22 +53,22 @@ export default function Boundaries() {
 
   return (
     <section ref={sectionRef} id="boundaries"
-      className="relative z-10 bg-[#1B1F24] overflow-hidden">
+      className="relative z-10 bg-[#050505] overflow-hidden">
 
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16 sm:py-20 md:py-24">
 
         {/* Header */}
         <div className="bd-hdr mb-12 md:mb-16 opacity-0">
           <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-3">
-            04 — Scope Matrices
+            03 — Scope Matrices
           </span>
           <div className="flex flex-col md:flex-row md:items-end gap-5 md:gap-12">
             <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none shrink-0"
               style={{ fontSize: 'clamp(1.6rem, 3.2vw, 3.2rem)' }}>
               System <span className="italic text-[#C97A3D]">Boundaries</span>
             </h3>
-            <p className="font-body text-sm text-[#C4C8CF]/55 leading-relaxed max-w-[440px]">
+            <p className="font-body text-sm text-[#C4C8CF]/80 leading-relaxed max-w-[440px]">
               We own what customers see, read, and interact with — not the pipelines behind it. Creative front-ends live here; operational systems live elsewhere.
             </p>
           </div>
@@ -113,14 +113,14 @@ export default function Boundaries() {
           </div>
 
           {/* Out-of-scope — dim panel */}
-          <div className="bd-right opacity-0 relative p-8 md:p-12 border border-white/[0.05] bg-[#1B1F24] md:border-l-0"
+          <div className="bd-right opacity-0 relative p-8 md:p-12 border border-white/[0.05] bg-[#050505] md:border-l-0"
             style={{ clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 0px) 100%, 0 100%, 0 16px)' }}
             onMouseEnter={() => setCursor('view')}
             onMouseLeave={() => setCursor('')}>
 
             <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/[0.05]">
               <div>
-                <span className="font-heading text-lg font-semibold text-[#C4C8CF]/50 block">Operations Engine</span>
+                <span className="font-heading text-lg font-semibold text-[#C4C8CF]/75 block">Operations Engine</span>
                 <span className="font-mono text-[7px] tracking-[0.35em] text-[#C4C8CF]/25 uppercase mt-1 block">
                   Naya Growth — Out of Scope
                 </span>
@@ -130,7 +130,7 @@ export default function Boundaries() {
               </div>
             </div>
 
-            <p className="font-body text-xs text-[#C4C8CF]/40 leading-relaxed mb-8">
+            <p className="font-body text-xs text-[#C4C8CF]/70 leading-relaxed mb-8">
               Operational integrations, tracking scripts, sales pipelines, and database automations handled by separate growth verticals.
             </p>
 

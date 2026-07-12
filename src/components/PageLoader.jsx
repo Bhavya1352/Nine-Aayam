@@ -37,7 +37,7 @@ export default function PageLoader({ onComplete }) {
   return (
     <div
       ref={loaderRef}
-      className="fixed inset-0 z-[9999] bg-[#1B1F24] flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center overflow-hidden"
     >
       {/* Ambient glow */}
       <div className="absolute w-[400px] h-[400px] bg-[#C97A3D]/[0.04] rounded-full blur-[120px] pointer-events-none" />
