@@ -73,16 +73,16 @@ export default function Story() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo('.story-hdr',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true } }
+        { opacity: 0, y: 35, x: -20 },
+        { opacity: 1, y: 0, x: 0, duration: 1.0, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true } }
       );
 
       ScrollTrigger.batch('.dim-item', {
-        start: 'top 90%',
+        start: 'top 85%',
         onEnter: (els) => gsap.fromTo(els,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: 'power3.out' }
+          { opacity: 0, y: 60, scale: 0.98 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out' }
         ),
         once: true
       });
@@ -92,53 +92,40 @@ export default function Story() {
 
   // Layout: row 1 = full width (01), row 2 = 5+7 (02,03), row 3 = 4+4+4 (04,05,06 wide), row 4 = 7+5 (07,08), row 5 = full (09)
   return (
-    <section ref={sectionRef} id="services" className="relative z-10 bg-[#1B1F24] overflow-hidden py-2">
+    <section ref={sectionRef} id="services" className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="relative pt-12 pb-20 md:pt-16 md:pb-28 px-6 md:px-12 lg:px-20">
+      {/* Ambient background layers */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[20%] right-[-5%] w-[40vw] h-[50vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.02) 0%, transparent 60%)' }} />
+        <div className="absolute bottom-[10%] left-[-10%] w-[35vw] h-[45vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.7) 0%, transparent 65%)' }} />
+      </div>
+
+      <div className="relative pt-12 pb-16 md:pt-16 md:pb-20 px-6 md:px-12 lg:px-20">
         <div className="max-w-[1200px] mx-auto">
 
           {/* Header */}
-          <div className="story-hdr flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-24 opacity-0">
+          <div className="story-hdr flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-18 opacity-0">
             <div>
-              <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-4">
+              <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
                 02 — Service Cabinet
               </span>
               <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
-                style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}>
-                The Nine Creative<br />
-                <span className="italic text-[#C97A3D]">Dimensions</span>
+                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>
+                The Nine Creative <span className="italic text-[#C97A3D]">Dimensions</span>
               </h3>
             </div>
-            <p className="font-body text-sm text-[#C4C8CF]/60 leading-relaxed max-w-[340px] md:text-right">
+            <p className="font-body text-sm text-[#C4C8CF]/55 leading-relaxed max-w-[380px] md:text-right">
               Every strong brand grows through coordinate alignment. Nine public-facing service menus built to shape modern brands.
             </p>
           </div>
 
-          {/* Row 1: Full-width hero dimension */}
-          <DimCard d={dims[0]} layout="hero" setCursor={setCursor} />
-
-          {/* Row 2: 5/12 + 7/12 */}
-          <div className="grid md:grid-cols-12 gap-4 md:gap-5 mt-4 md:mt-5">
-            <div className="md:col-span-5"><DimCard d={dims[1]} layout="tall" setCursor={setCursor} /></div>
-            <div className="md:col-span-7"><DimCard d={dims[2]} layout="wide" setCursor={setCursor} /></div>
-          </div>
-
-          {/* Row 3: 3 equal */}
-          <div className="grid md:grid-cols-3 gap-4 md:gap-5 mt-4 md:mt-5">
-            <DimCard d={dims[3]} layout="square" setCursor={setCursor} />
-            <DimCard d={dims[4]} layout="square" setCursor={setCursor} />
-            <DimCard d={dims[5]} layout="square" setCursor={setCursor} />
-          </div>
-
-          {/* Row 4: 7/12 + 5/12 */}
-          <div className="grid md:grid-cols-12 gap-4 md:gap-5 mt-4 md:mt-5">
-            <div className="md:col-span-7"><DimCard d={dims[6]} layout="wide" setCursor={setCursor} /></div>
-            <div className="md:col-span-5"><DimCard d={dims[7]} layout="tall" setCursor={setCursor} /></div>
-          </div>
-
-          {/* Row 5: Full-width highlight */}
-          <div className="mt-4 md:mt-5">
-            <DimCard d={dims[8]} layout="hero" setCursor={setCursor} />
+          {/* Handcrafted Dimension List */}
+          <div className="space-y-4 md:space-y-6">
+            {dims.map((d, idx) => (
+              <DimCard key={d.num} d={d} idx={idx} setCursor={setCursor} />
+            ))}
           </div>
 
         </div>
@@ -147,74 +134,58 @@ export default function Story() {
   );
 }
 
-function DimCard({ d, layout, setCursor }) {
-  const isHero = layout === 'hero';
-  const isTall = layout === 'tall';
-
+function DimCard({ d, idx, setCursor }) {
+  const isHighlight = d.highlight;
+  
   return (
     <div
-      className={`dim-item group relative overflow-hidden opacity-0 transition-all duration-500 cursor-default
-        ${d.highlight
-          ? 'bg-[#C97A3D]/[0.06] border border-[#C97A3D]/25 hover:border-[#C97A3D]/50'
-          : 'bg-[#252B33] border border-white/[0.06] hover:border-white/[0.12]'}
-        ${isHero ? 'p-8 sm:p-10 md:p-12' : isTall ? 'p-7 sm:p-8' : 'p-7 sm:p-8'}
+      className={`dim-item group relative p-6 md:p-8 transition-all duration-500 cursor-default
+        ${isHighlight 
+          ? 'bg-gradient-to-r from-[#C97A3D]/[0.08] to-[#C97A3D]/[0.02] border-l-4 border-[#C97A3D]' 
+          : 'bg-gradient-to-r from-[#252B33] to-[#1B1F24] border-l-2 border-[#C97A3D]/30'}
       `}
-      style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
       onMouseEnter={() => setCursor('view')}
       onMouseLeave={() => setCursor('')}
     >
-      {/* Hover glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 30% 30%, rgba(201,122,61,0.04) 0%, transparent 60%)' }} />
-
-      {isHero ? (
-        <div className="grid md:grid-cols-12 gap-8 items-start">
-          <div className="md:col-span-5">
-            <div className="flex items-baseline gap-4 mb-5">
-              <span className="font-heading text-[5rem] md:text-[7rem] font-light text-[#C97A3D]/20 leading-none">{d.num}</span>
-              <span className="font-mono text-[8px] text-[#C97A3D]/40 tracking-widest">{d.code}</span>
-            </div>
-            <h4 className="font-heading font-medium text-[#F4F1EB] leading-tight tracking-tight"
-              style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2.4rem)', whiteSpace: 'pre-line' }}>
-              {d.title}
-            </h4>
+      <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+        {/* Left side - Number & Code */}
+        <div className="flex-shrink-0">
+          <div className="flex items-baseline gap-3 mb-2">
+            <span className="font-heading text-3xl md:text-4xl font-light text-[#C97A3D] leading-none">
+              {d.num}
+            </span>
+            <span className="font-mono text-[10px] text-[#C97A3D]/60 tracking-widest font-semibold">
+              {d.code}
+            </span>
           </div>
-          <div className="md:col-span-7 flex flex-col justify-between h-full gap-6">
-            <p className="font-body text-sm text-[#C4C8CF]/70 leading-relaxed">{d.desc}</p>
-            {d.quote && (
-              <blockquote className="font-heading text-base italic text-[#E0A96D]/80 border-l-2 border-[#C97A3D]/30 pl-4">
-                "{d.quote}"
-              </blockquote>
-            )}
-            <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.04]">
-              {d.tags.map((t) => (
-                <span key={t} className="font-mono text-[8px] border border-white/[0.08] text-[#C4C8CF]/50 px-2.5 py-1 hover:border-[#C97A3D]/30 hover:text-[#C97A3D]/70 transition-colors">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
+          <div className="w-12 h-[1px] bg-gradient-to-r from-[#C97A3D]/50 to-transparent" />
         </div>
-      ) : (
-        <div className="flex flex-col h-full gap-5">
-          <div className="flex items-baseline justify-between">
-            <span className="font-heading text-3xl font-light text-[#C97A3D]/30 leading-none">{d.num}</span>
-            <span className="font-mono text-[7px] text-[#C4C8CF]/25 tracking-widest">{d.code}</span>
-          </div>
-          <h4 className="font-heading font-medium text-[#F4F1EB] leading-tight tracking-tight"
-            style={{ fontSize: 'clamp(1.1rem, 1.8vw, 1.5rem)', whiteSpace: 'pre-line' }}>
+
+        {/* Right side - Content */}
+        <div className="flex-1">
+          <h4 className="font-heading font-medium text-[#F4F1EB] leading-tight tracking-tight mb-3"
+            style={{ fontSize: 'clamp(1.3rem, 2.2vw, 1.8rem)', whiteSpace: 'pre-line' }}>
             {d.title}
           </h4>
-          <p className="font-body text-xs text-[#C4C8CF]/60 leading-relaxed flex-1">{d.desc}</p>
-          <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.04]">
+          <p className="font-body text-sm text-[#C4C8CF]/70 leading-relaxed mb-4">
+            {d.desc}
+          </p>
+          
+          {d.quote && (
+            <blockquote className="font-heading text-base italic text-[#E0A96D]/90 mb-4 pl-4 border-l-2 border-[#C97A3D]/40">
+              "{d.quote}"
+            </blockquote>
+          )}
+
+          <div className="flex flex-wrap gap-2">
             {d.tags.map((t) => (
-              <span key={t} className="font-mono text-[7.5px] border border-white/[0.07] text-[#C4C8CF]/40 px-2 py-0.5 hover:border-[#C97A3D]/30 hover:text-[#C97A3D]/60 transition-colors">
+              <span key={t} className="font-mono text-[8px] text-[#C4C8CF]/50 px-2 py-1 border border-[#C97A3D]/20 hover:bg-[#C97A3D]/10 hover:text-[#C97A3D] transition-all duration-300">
                 {t}
               </span>
             ))}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

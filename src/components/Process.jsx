@@ -35,19 +35,24 @@ export default function Process() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo('.pr-hdr',
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        { opacity: 0, y: 30, x: -15 },
+        { opacity: 1, y: 0, x: 0, duration: 1.0, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true } }
       );
       gsap.fromTo('.pr-step',
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.85, stagger: 0.14, ease: 'power3.out',
+        { opacity: 0, y: 55, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.15, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true } }
       );
       gsap.fromTo('.pr-line',
         { scaleX: 0, transformOrigin: 'left center' },
-        { scaleX: 1, duration: 1.6, ease: 'power3.inOut',
+        { scaleX: 1, duration: 1.8, ease: 'power3.inOut',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 65%', once: true } }
+      );
+      gsap.fromTo('.pr-progress',
+        { width: '0%' },
+        { width: '100%', duration: 2.0, ease: 'power2.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 60%', once: true } }
       );
     }, sectionRef);
     return () => ctx.revert();
@@ -57,20 +62,26 @@ export default function Process() {
     <section ref={sectionRef} id="process"
       className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="w-full h-[1px]"
-        style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
+      {/* Ambient background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[25%] right-[-5%] w-[50vw] h-[60vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.02) 0%, transparent 60%)' }} />
+        <div className="absolute bottom-[15%] left-[-10%] w-[45vw] h-[55vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.75) 0%, transparent 65%)' }} />
+      </div>
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-20 sm:py-28 md:py-36">
+
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
 
         {/* Header */}
-        <div className="pr-hdr grid md:grid-cols-12 gap-8 items-end mb-16 md:mb-24 opacity-0">
+        <div className="pr-hdr grid md:grid-cols-12 gap-8 items-end mb-14 md:mb-18 opacity-0">
           <div className="md:col-span-6">
-            <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-4">
+            <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
               07 — How We Work
             </span>
             <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}>
-              The Creative<br /><span className="italic text-[#C97A3D]">Process</span>
+              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>
+              The Creative <span className="italic text-[#C97A3D]">Process</span>
             </h3>
           </div>
           <p className="md:col-span-6 font-body text-sm text-[#C4C8CF]/55 leading-relaxed">
@@ -78,9 +89,10 @@ export default function Process() {
           </p>
         </div>
 
-        {/* Timeline connector — desktop only */}
+        {/* Timeline connector — desktop only with progress */}
         <div className="hidden lg:block relative mb-0">
-          <div className="pr-line absolute top-[28px] left-[28px] right-[28px] h-[1px] bg-gradient-to-r from-[#C97A3D]/30 via-[#C97A3D]/15 to-[#C97A3D]/30" style={{ scaleX: 0 }} />
+          <div className="pr-line absolute top-[32px] left-[32px] right-[32px] h-[2px] bg-gradient-to-r from-[#C97A3D]/40 via-[#C97A3D]/20 to-[#C97A3D]/40" style={{ scaleX: 0 }} />
+          <div className="pr-progress absolute top-[32px] left-[32px] h-[2px] bg-gradient-to-r from-[#C97A3D] to-[#E0A96D]" style={{ width: '0%' }} />
         </div>
 
         {/* Steps */}
@@ -91,29 +103,32 @@ export default function Process() {
               onMouseEnter={() => setCursor('view')}
               onMouseLeave={() => setCursor('')}>
 
-              {/* Number node */}
-              <div className="relative z-10 mb-6">
-                <div className="w-14 h-14 border border-[#C97A3D]/25 bg-[#1B1F24] flex items-center justify-center relative"
-                  style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}>
-                  <span className="font-mono text-[11px] font-bold text-[#C97A3D]">{step.num}</span>
+              {/* Number node with enhanced styling */}
+              <div className="relative z-10 mb-7">
+                <div className="w-16 h-16 border border-[#C97A3D]/30 bg-gradient-to-br from-[#252B33] to-[#1B1F24] flex items-center justify-center relative group-hover:border-[#C97A3D]/50 transition-colors duration-500"
+                  style={{ 
+                    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+                  }}>
+                  <span className="font-mono text-[12px] font-bold text-[#C97A3D] group-hover:text-[#E0A96D] transition-colors duration-300">{step.num}</span>
                 </div>
                 {/* Vertical connector — mobile */}
                 {idx < steps.length - 1 && (
-                  <div className="lg:hidden absolute left-7 top-full w-[1px] h-8 bg-gradient-to-b from-[#C97A3D]/20 to-transparent" />
+                  <div className="lg:hidden absolute left-8 top-full w-[1px] h-10 bg-gradient-to-b from-[#C97A3D]/30 to-transparent" />
                 )}
               </div>
 
-              <span className="font-heading text-xl md:text-2xl font-semibold text-[#F4F1EB] mb-3 tracking-tight">
+              <span className="font-heading text-2xl md:text-3xl font-semibold text-[#F4F1EB] mb-4 tracking-tight group-hover:text-[#E0A96D]/80 transition-colors duration-300">
                 {step.phase}
               </span>
 
-              <p className="font-body text-xs text-[#C4C8CF]/60 leading-relaxed mb-5 flex-1">
+              <p className="font-body text-xs text-[#C4C8CF]/65 leading-relaxed mb-6 flex-1">
                 {step.desc}
               </p>
 
-              <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
+              <div className="flex flex-wrap gap-2 pt-5">
                 {step.tags.map((tag) => (
-                  <span key={tag} className="font-mono text-[7.5px] border border-white/[0.07] text-[#C4C8CF]/40 px-2 py-0.5 hover:border-[#C97A3D]/30 hover:text-[#C97A3D]/60 transition-colors">
+                  <span key={tag} className="font-mono text-[8px] bg-white/[0.02] text-[#C4C8CF]/45 px-3 py-1.5 hover:bg-[#C97A3D]/10 hover:text-[#C97A3D]/70 transition-all duration-300">
                     {tag}
                   </span>
                 ))}
@@ -123,14 +138,14 @@ export default function Process() {
         </div>
 
         {/* Bottom CTA strip */}
-        <div className="mt-16 md:mt-20 pt-10 border-t border-white/[0.05] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <p className="font-body text-sm text-[#C4C8CF]/50 max-w-[400px]">
+        <div className="mt-20 md:mt-24 pt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+          <p className="font-body text-sm text-[#C4C8CF]/55 max-w-[420px]">
             Ready to activate your creative system? Configure your brief and we'll respond within 24 hours.
           </p>
           <a href="#configurator"
-            className="group inline-flex items-center gap-2.5 font-mono text-[9px] tracking-[0.3em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors shrink-0">
+            className="group inline-flex items-center gap-3 font-mono text-[10px] tracking-[0.35em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors shrink-0">
             <span>Build Your Brief</span>
-            <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
+            <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
               <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </a>

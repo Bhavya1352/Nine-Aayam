@@ -55,20 +55,18 @@ export default function Boundaries() {
     <section ref={sectionRef} id="boundaries"
       className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="w-full h-[1px]"
-        style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-20 sm:py-28 md:py-36">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
 
         {/* Header */}
-        <div className="bd-hdr mb-16 md:mb-24 opacity-0">
-          <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-4">
+        <div className="bd-hdr mb-12 md:mb-16 opacity-0">
+          <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-3">
             04 — Scope Matrices
           </span>
-          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-16">
+          <div className="flex flex-col md:flex-row md:items-end gap-5 md:gap-12">
             <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none shrink-0"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}>
-              System<br /><span className="italic text-[#C97A3D]">Boundaries</span>
+              style={{ fontSize: 'clamp(1.6rem, 3.2vw, 3.2rem)' }}>
+              System <span className="italic text-[#C97A3D]">Boundaries</span>
             </h3>
             <p className="font-body text-sm text-[#C4C8CF]/55 leading-relaxed max-w-[440px]">
               We own what customers see, read, and interact with — not the pipelines behind it. Creative front-ends live here; operational systems live elsewhere.

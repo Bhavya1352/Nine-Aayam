@@ -98,18 +98,18 @@ export default function Configurator() {
     <section 
       ref={sectionRef}
       id="configurator"
-      className="relative z-10 py-16 sm:py-20 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
+      className="relative z-10 py-12 sm:py-16 px-6 md:px-12 lg:px-16 bg-[#1B1F24]"
     >
       <div className="blueprint-grid-line vertical left-6 md:left-12 lg:left-16 hidden sm:block" />
 
       <div className="max-w-[1200px] mx-auto relative z-10 pl-0 sm:pl-4 md:pl-8 lg:pl-12">
         
         {/* Header */}
-        <div className="config-header flex flex-col items-start mb-16 max-w-[700px] text-left" style={{ opacity: 0 }}>
+        <div className="config-header flex flex-col items-start mb-12 max-w-[700px] text-left" style={{ opacity: 0 }}>
           <span className="font-subheading text-[8px] sm:text-[9px] tracking-[0.3em] uppercase font-bold text-gray-500 block mb-3 select-none">
             05 // BRIEF BUILDER
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-[#F4F1EB] mb-4">
+          <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-medium tracking-tight text-[#F4F1EB] mb-4">
             Configure Your Creative System
           </h2>
           <p className="font-body text-[#C4C8CF] text-sm sm:text-base leading-relaxed">
@@ -152,7 +152,7 @@ export default function Configurator() {
             </div>
 
             {/* Scale and Timeline Selectors */}
-            <div className="grid sm:grid-cols-2 gap-6 border-t border-white/[0.08] pt-8">
+            <div className="grid sm:grid-cols-2 gap-6 pt-8">
               
               {/* Scope Scale Selector */}
               <div className="flex flex-col gap-3">
@@ -230,7 +230,7 @@ export default function Configurator() {
                     </p>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 border-t border-white/[0.04] pt-4">
+                  <div className="grid grid-cols-2 gap-4 pt-4">
                     <div>
                       <span className="text-gray-400 block mb-1">Scope Scale</span>
                       <p className="font-semibold text-[#F4F1EB] uppercase text-[10px] tracking-wider">{scopeScale}</p>
@@ -244,7 +244,7 @@ export default function Configurator() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 mt-8 border-t border-white/[0.04] pt-6 select-none">
+              <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 select-none">
                 <button
                   type="button"
                   disabled={selected.length === 0}

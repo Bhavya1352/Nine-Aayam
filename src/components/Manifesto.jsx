@@ -60,7 +60,7 @@ export default function Manifesto() {
     <section
       ref={containerRef}
       id="manifesto"
-      className="relative z-10 overflow-hidden bg-[#1B1F24] py-20 sm:py-28 md:py-36 select-none"
+      className="relative z-10 overflow-hidden bg-[#1B1F24] py-12 sm:py-16 md:py-20 select-none"
     >
       {/* Watermark */}
       <span
@@ -78,8 +78,8 @@ export default function Manifesto() {
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
 
         {/* Eyebrow row */}
-        <div className="mf-eyebrow flex items-center gap-5 mb-12 md:mb-16 opacity-0">
-          <span className="font-heading text-[4rem] sm:text-[5rem] font-light text-[#C97A3D]/70 leading-none">आयाम</span>
+        <div className="mf-eyebrow flex items-center gap-5 mb-10 md:mb-14 opacity-0">
+          <span className="font-heading text-[3rem] sm:text-[4rem] font-light text-[#C97A3D]/70 leading-none">आयाम</span>
           <div className="flex flex-col gap-1">
             <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/50 uppercase">Philosophical Anchor</span>
             <span className="font-mono text-[8px] tracking-[0.3em] text-[#C4C8CF]/30 uppercase">Dimension / आयाम</span>
@@ -93,7 +93,7 @@ export default function Manifesto() {
           onMouseLeave={() => setCursor('')}
         >
           <h2 className="font-heading font-medium text-[#F4F1EB] leading-[1.1] tracking-tight max-w-[900px]"
-            style={{ fontSize: 'clamp(1.8rem, 4.5vw, 4.8rem)' }}>
+            style={{ fontSize: 'clamp(1.4rem, 3.5vw, 3.8rem)' }}>
             {quoteWords.map((word, i) => (
               <span key={i} className="mf-word inline-block mr-[0.22em] opacity-0"
                 style={{ color: word === 'multi-dimensional' ? '#C97A3D' : undefined }}>

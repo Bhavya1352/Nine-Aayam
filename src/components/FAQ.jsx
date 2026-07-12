@@ -41,13 +41,13 @@ export default function FAQ() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo('.fq-hdr',
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        { opacity: 0, y: 30, x: -15 },
+        { opacity: 1, y: 0, x: 0, duration: 1.0, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true } }
       );
       gsap.fromTo('.fq-item',
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out',
+        { opacity: 0, y: 25, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true } }
       );
     }, sectionRef);
@@ -57,11 +57,11 @@ export default function FAQ() {
   const toggle = (idx) => {
     const prev = open;
     setOpen(open === idx ? null : idx);
-    // Animate answer in
+    // Animate answer in with enhanced transitions
     if (open !== idx && answerRefs.current[idx]) {
       gsap.fromTo(answerRefs.current[idx],
-        { opacity: 0, y: -8 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.05 }
+        { opacity: 0, y: -12, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power3.out', delay: 0.08 }
       );
     }
   };
@@ -70,47 +70,59 @@ export default function FAQ() {
     <section ref={sectionRef} id="faq"
       className="relative z-10 bg-[#1B1F24] overflow-hidden">
 
-      <div className="w-full h-[1px]"
-        style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
+      {/* Ambient background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[15%] right-[-5%] w-[40vw] h-[50vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.02) 0%, transparent 60%)' }} />
+        <div className="absolute bottom-[20%] left-[-10%] w-[35vw] h-[45vh] rounded-full"
+          style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.75) 0%, transparent 65%)' }} />
+      </div>
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-20 sm:py-28 md:py-36">
+
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-20">
 
         {/* Header */}
-        <div className="fq-hdr mb-16 md:mb-20 opacity-0">
-          <span className="font-mono text-[8px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-4">
+        <div className="fq-hdr mb-14 md:mb-18 opacity-0">
+          <span className="font-mono text-[9px] tracking-[0.45em] text-[#C97A3D]/70 uppercase block mb-4 font-semibold">
             09 — Common Questions
           </span>
           <h3 className="font-heading font-medium text-[#F4F1EB] tracking-tight leading-none"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}>
-            Frequently<br /><span className="italic text-[#C97A3D]">Asked</span>
+            style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)' }}>
+            Frequently <span className="italic text-[#C97A3D]">Asked</span>
           </h3>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-start">
 
           {/* Accordion */}
-          <div className="lg:col-span-8 divide-y divide-white/[0.05]">
+          <div className="lg:col-span-8 divide-y divide-white/[0.04]">
             {faqs.map((faq, idx) => (
               <div key={idx} className="fq-item opacity-0">
                 <button type="button"
-                  className="w-full flex items-start justify-between gap-6 py-6 text-left group"
+                  className="w-full flex items-start justify-between gap-8 py-8 text-left group transition-colors duration-500"
+                  style={{ 
+                    background: open === idx ? 'linear-gradient(135deg, rgba(255,255,255,0.01) 0%, transparent 100%)' : 'transparent'
+                  }}
                   onClick={() => toggle(idx)}
                   onMouseEnter={() => setCursor('view')}
                   onMouseLeave={() => setCursor('')}>
-                  <span className="font-heading text-base sm:text-lg md:text-xl font-medium text-[#F4F1EB] leading-snug group-hover:text-[#E0A96D] transition-colors duration-300">
+                  <span className="font-heading text-base sm:text-lg md:text-xl font-medium text-[#F4F1EB] leading-snug group-hover:text-[#E0A96D]/90 transition-colors duration-400">
                     {faq.q}
                   </span>
-                  <span className="shrink-0 mt-1 w-5 h-5 border border-[#C97A3D]/30 flex items-center justify-center text-[#C97A3D] transition-all duration-300"
-                    style={{ transform: open === idx ? 'rotate(45deg)' : 'rotate(0deg)' }}>
-                    <svg viewBox="0 0 10 10" className="w-2.5 h-2.5" fill="none">
+                  <span className="shrink-0 mt-1 w-6 h-6 border border-[#C97A3D]/35 flex items-center justify-center text-[#C97A3D] transition-all duration-400 group-hover:border-[#C97A3D]/50"
+                    style={{ 
+                      transform: open === idx ? 'rotate(45deg)' : 'rotate(0deg)',
+                      background: open === idx ? 'rgba(201,122,61,0.05)' : 'transparent'
+                    }}>
+                    <svg viewBox="0 0 10 10" className="w-3 h-3" fill="none">
                       <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   </span>
                 </button>
 
                 {open === idx && (
-                  <div ref={el => answerRefs.current[idx] = el} className="pb-6">
-                    <p className="font-body text-sm text-[#C4C8CF]/60 leading-relaxed max-w-[600px]">
+                  <div ref={el => answerRefs.current[idx] = el} className="pb-8">
+                    <p className="font-body text-sm text-[#C4C8CF]/65 leading-relaxed max-w-[620px]">
                       {faq.a}
                     </p>
                   </div>
@@ -119,21 +131,25 @@ export default function FAQ() {
             ))}
           </div>
 
-          {/* Side CTA — typographic, no card box */}
-          <div className="lg:col-span-4 fq-item opacity-0 lg:pt-6">
-            <div className="relative pl-6 border-l border-[#C97A3D]/20">
-              <span className="font-mono text-[8px] tracking-[0.35em] text-[#C97A3D]/50 uppercase block mb-4">
+          {/* Side CTA — typographic, no card box with enhanced styling */}
+          <div className="lg:col-span-4 fq-item opacity-0 lg:pt-8">
+            <div className="relative pl-8 border-l-2 border-[#C97A3D]/30"
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.005) 0%, transparent 100%)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.01)'
+              }}>
+              <span className="font-mono text-[9px] tracking-[0.4em] text-[#C97A3D]/60 uppercase block mb-5">
                 Still have questions?
               </span>
-              <p className="font-heading text-xl md:text-2xl font-light text-[#F4F1EB] leading-snug mb-6">
+              <p className="font-heading text-2xl md:text-3xl font-light text-[#F4F1EB] leading-snug mb-8">
                 Drop us a line. We respond within 24 hours.
               </p>
               <a href="mailto:connect@nayagrowth.com"
-                className="group inline-flex items-center gap-2.5 font-mono text-[9px] tracking-[0.3em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors"
+                className="group inline-flex items-center gap-3 font-mono text-[10px] tracking-[0.35em] text-[#C97A3D] uppercase hover:text-[#E0A96D] transition-colors"
                 onMouseEnter={() => setCursor('connect')}
                 onMouseLeave={() => setCursor('')}>
                 <span>Connect With Us</span>
-                <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" viewBox="0 0 12 12" fill="none">
                   <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </a>
