@@ -83,11 +83,11 @@ export default function Navbar() {
         {/* Logo */}
         <a
           href="#"
-          className="logo-link font-subheading text-[11px] font-bold tracking-[0.25em] text-[#F4F1EB] hover:text-[#C97A3D] transition-colors uppercase"
+          className="logo-link font-subheading text-[11px] font-bold tracking-[0.32em] text-[#F4F1EB] hover:text-[#C97A3D] transition-colors uppercase flex items-center"
           onMouseEnter={() => setCursor('connect')}
           onMouseLeave={() => setCursor('')}
         >
-          NINE AAYAM <span className="text-[#C4C8CF] font-light">/ 9D</span>
+          NINE AAYAM <span className="text-white/20 mx-3.5 font-light text-[10px]">|</span> <span className="text-[#C97A3D] font-medium tracking-[0.25em]">9D</span>
         </a>
 
         {/* Desktop Navigation */}
@@ -98,10 +98,10 @@ export default function Navbar() {
               <a
                 key={item.label}
                 href={`#${item.id}`}
-                className={`nav-link font-subheading text-[10px] font-medium tracking-[0.2em] transition-colors relative uppercase after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:bg-[#C97A3D] after:transition-all after:duration-500 hover:-translate-y-0.5 ${
+                className={`nav-link font-subheading text-[9.5px] font-medium tracking-[0.2em] relative uppercase transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:h-[1px] after:bg-[#C97A3D] after:origin-left after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[1px] hover:tracking-[0.25em] ${
                   isActive
-                    ? 'text-[#C97A3D] after:w-full'
-                    : 'text-[#C4C8CF] hover:text-[#F4F1EB] after:w-0 hover:after:w-full'
+                    ? 'text-[#C97A3D] after:scale-x-100'
+                    : 'text-[#C4C8CF] hover:text-[#F4F1EB] after:scale-x-0 hover:after:scale-x-100'
                 }`}
                 onMouseEnter={() => setCursor('view')}
                 onMouseLeave={() => setCursor('')}
@@ -113,11 +113,12 @@ export default function Navbar() {
 
           <a
             href="mailto:connect@nayagrowth.com"
-            className="font-subheading text-[10px] font-bold tracking-[0.2em] text-[#C97A3D] border border-[#C97A3D]/30 rounded px-5 py-2 hover:bg-[#C97A3D] hover:text-[#050505] transition-all duration-300 uppercase hover:scale-[1.02] shadow-sm shadow-[#C97A3D]/5"
+            className="font-subheading text-[9.5px] font-bold tracking-[0.2em] text-[#C97A3D] hover:text-[#050505] border border-[#C97A3D]/30 rounded-sm px-6 py-2.5 relative overflow-hidden transition-colors duration-500 uppercase hover:scale-[1.02] group"
             onMouseEnter={() => setCursor('connect')}
             onMouseLeave={() => setCursor('')}
           >
-            Start project
+            <span className="relative z-10">Start project</span>
+            <span className="absolute inset-0 bg-[#C97A3D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
           </a>
         </nav>
 

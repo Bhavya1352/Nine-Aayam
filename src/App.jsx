@@ -4,6 +4,7 @@ import PageLoader from './components/PageLoader';
 import Cursor from './components/Cursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Philosophy from './components/Philosophy';
 import Manifesto from './components/Manifesto';
 import Story from './components/Story';
 import Outcomes from './components/Outcomes';
@@ -28,6 +29,7 @@ export default function App() {
 
         <Navbar />
         <Hero />
+        <Philosophy />
         <Manifesto />
         <Story />
         <Outcomes />

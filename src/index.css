@@ -212,17 +212,32 @@ body {
    DESIGN SYSTEM UTILITIES & OVERLAYS
    ══════════════════════════════════════════════════════════════ */
 
-/* Lightweight grain — static tile, no SVG filters */
+/* High-end moving noise jitter texture */
+@keyframes noiseJitter {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-0.5%, -0.5%); }
+  20% { transform: translate(-1%, 0.5%); }
+  30% { transform: translate(0.5%, -1%); }
+  40% { transform: translate(-0.5%, 1%); }
+  50% { transform: translate(-1%, -0.5%); }
+  60% { transform: translate(1%, 0.5%); }
+  70% { transform: translate(0.5%, -0.5%); }
+  80% { transform: translate(-1%, 1%); }
+  90% { transform: translate(0.5%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
 .noise-bg {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.022;
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  opacity: 0.025;
   z-index: 999;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 0.5px, transparent 0.5px);
-  background-size: 3px 3px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px);
+  background-size: 3.5px 3.5px;
+  animation: noiseJitter 0.8s steps(2) infinite;
 }
 
 /* Subtle architectural grid guidelines */
@@ -328,6 +343,197 @@ body {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO REVAMP CUSTOM STYLES (NayaGrowth Aesthetics)
+   ══════════════════════════════════════════════════════════════ */
+
+/* Interactive Dimension Items on the Right */
+.dimension-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.dimension-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.dimension-item::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #C97A3D 0%, rgba(201, 122, 61, 0.4) 50%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dimension-item:hover::before {
+  transform: scaleX(1);
+}
+
+.dimension-item-hovered {
+  border-bottom-color: transparent;
+}
+
+.dimension-item-hovered::before {
+  transform: scaleX(1);
+}
+
+.dimension-item-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dimension-item:hover .dimension-item-left,
+.dimension-item-hovered .dimension-item-left {
+  transform: translateX(8px);
+}
+
+.dimension-item-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: rgba(201, 122, 61, 0.5);
+  transition: color 0.4s ease;
+}
+
+.dimension-item:hover .dimension-item-num,
+.dimension-item-hovered .dimension-item-num {
+  color: #E0A96D;
+}
+
+.dimension-item-name {
+  font-family: var(--font-subheading);
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(244, 241, 235, 0.65);
+  text-transform: uppercase;
+  transition: color 0.4s ease;
+}
+
+.dimension-item:hover .dimension-item-name,
+.dimension-item-hovered .dimension-item-name {
+  color: #F4F1EB;
+}
+
+.dimension-item-arrow {
+  color: rgba(201, 122, 61, 0.3);
+  transform: translateX(-10px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dimension-item:hover .dimension-item-arrow,
+.dimension-item-hovered .dimension-item-arrow {
+  transform: translateX(0);
+  opacity: 1;
+  color: #C97A3D;
+}
+
+/* Gradient text utility */
+.gradient-text-gold {
+  background: linear-gradient(135deg, #F4F1EB 30%, #E0A96D 70%, #C97A3D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animated radial shifting background glows */
+@keyframes glowShift1 {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(8%, -5%) scale(1.15); opacity: 0.75; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+}
+
+@keyframes glowShift2 {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(-10%, 10%) scale(1.1); opacity: 0.8; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+}
+
+@keyframes gradientMovement {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-glow-1 {
+  animation: glowShift1 12s ease-in-out infinite alternate;
+}
+
+.animate-glow-2 {
+  animation: glowShift2 16s ease-in-out infinite alternate-reverse;
+}
+
+/* Heading Line Mask Container */
+.h-line-container {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Scroll Hint Line Progress */
+@keyframes scrollHintPulse {
+  0% { transform: translateY(-100%); opacity: 0; }
+  30% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.scroll-indicator-line {
+  animation: scrollHintPulse 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Premium Divider Line */
+.premium-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(201, 122, 61, 0.12) 20%, 
+    rgba(201, 122, 61, 0.12) 80%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.premium-vertical-divider {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(201, 122, 61, 0.08) 15%,
+    rgba(201, 122, 61, 0.08) 85%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Noise background refined */
+.noise-bg-moving {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.016;
+  z-index: 999;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.3) 0.5px, transparent 0.5px);
+  background-size: 4px 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
