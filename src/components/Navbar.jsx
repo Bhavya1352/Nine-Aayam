@@ -5,8 +5,10 @@ import gsap from 'gsap';
 const NAV_LINKS = [
   { label: 'Philosophy', id: 'philosophy' },
   { label: 'Services', id: 'services' },
+  { label: 'Work', id: 'work' },
+  { label: 'About', id: 'story' },
   { label: 'Process', id: 'process' },
-  { label: 'FAQ', id: 'faq' },
+  { label: 'Insights', id: 'faq' },
 ];
 
 export default function Navbar() {
@@ -71,37 +73,42 @@ export default function Navbar() {
       style={{ opacity: 0 }}
       className={`fixed top-0 left-0 w-full z-[1000] px-6 md:px-12 lg:px-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isScrolled
-          ? 'bg-[#050505]/90 border-b border-white/[0.08] backdrop-blur-md py-4 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
-          : 'bg-transparent border-b border-transparent py-6 md:py-8'
+          ? 'bg-[#050505]/92 border-b border-white/[0.08] backdrop-blur-md py-3.5 shadow-[0_4px_30px_rgba(0,0,0,0.6)]'
+          : 'bg-transparent border-b border-transparent py-5 md:py-7'
       }`}
     >
       {/* Scroll progress line */}
       <div className="absolute bottom-0 left-0 h-[1px] bg-[#C97A3D]/60 transition-all duration-100 ease-linear" style={{ width: `${scrollProgress}%` }} />
 
-      <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between">
 
         {/* Logo */}
         <a
           href="#"
-          className="logo-link font-subheading text-[11px] font-bold tracking-[0.32em] text-[#F4F1EB] hover:text-[#C97A3D] transition-colors uppercase flex items-center"
+          className="logo-link flex flex-col group"
           onMouseEnter={() => setCursor('connect')}
           onMouseLeave={() => setCursor('')}
         >
-          NINE AAYAM <span className="text-white/20 mx-3.5 font-light text-[10px]">|</span> <span className="text-[#C97A3D] font-medium tracking-[0.25em]">9D</span>
+          <span className="font-heading text-[20px] font-medium tracking-[0.2em] text-[#F4F1EB] group-hover:text-[#C97A3D] transition-colors uppercase leading-none">
+            NINE AAYAM
+          </span>
+          <span className="font-subheading text-[8px] font-medium tracking-[0.25em] text-[#A69E93] group-hover:text-[#F4F1EB]/80 transition-colors uppercase mt-1">
+            NINE DIMENSIONS. ONE CREATIVE SYSTEM.
+          </span>
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-10">
+        <nav className="hidden lg:flex items-center gap-9">
           {NAV_LINKS.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <a
                 key={item.label}
                 href={`#${item.id}`}
-                className={`nav-link font-subheading text-[9.5px] font-medium tracking-[0.2em] relative uppercase transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:h-[1px] after:bg-[#C97A3D] after:origin-left after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[1px] hover:tracking-[0.25em] ${
+                className={`nav-link font-subheading text-[10px] font-semibold tracking-[0.22em] relative uppercase transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:h-[1px] after:bg-[#C97A3D] after:origin-left after:transition-transform after:duration-300 ${
                   isActive
                     ? 'text-[#C97A3D] after:scale-x-100'
-                    : 'text-[#C4C8CF] hover:text-[#F4F1EB] after:scale-x-0 hover:after:scale-x-100'
+                    : 'text-[#C4C8CF]/80 hover:text-[#F4F1EB] after:scale-x-0 hover:after:scale-x-100'
                 }`}
                 onMouseEnter={() => setCursor('view')}
                 onMouseLeave={() => setCursor('')}
@@ -113,12 +120,15 @@ export default function Navbar() {
 
           <a
             href="mailto:connect@nayagrowth.com"
-            className="font-subheading text-[9.5px] font-bold tracking-[0.2em] text-[#C97A3D] hover:text-[#050505] border border-[#C97A3D]/30 rounded-sm px-6 py-2.5 relative overflow-hidden transition-colors duration-500 uppercase hover:scale-[1.02] group"
+            className="font-subheading text-[10px] font-bold tracking-[0.2em] text-[#F4F1EB] hover:text-[#050505] border border-[#C97A3D]/40 bg-[#0c0c0c]/80 rounded-none px-6 py-3 relative overflow-hidden transition-all duration-300 uppercase flex items-center gap-2 group hover:border-[#C97A3D]"
             onMouseEnter={() => setCursor('connect')}
             onMouseLeave={() => setCursor('')}
           >
-            <span className="relative z-10">Start project</span>
-            <span className="absolute inset-0 bg-[#C97A3D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
+            <span className="relative z-10">START A PROJECT</span>
+            <svg className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="absolute inset-0 bg-[#C97A3D] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
           </a>
         </nav>
 

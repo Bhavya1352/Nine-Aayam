@@ -1,765 +1,341 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import MagneticButton from './MagneticButton';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const DIMENSIONS = [
-  { num: '01', name: 'Strategy', desc: 'Growth blueprints, market positioning, and architectural planning.' },
-  { num: '02', name: 'Identity', desc: 'Bespoke brand marks, modular assets, and system guidelines.' },
-  { num: '03', name: 'Design', desc: 'High-fidelity visual expressions, layouts, and art direction.' },
-  { num: '04', name: 'Motion', desc: 'Cinematic choreography, 3D rendering, and responsive transitions.' },
-  { num: '05', name: 'Engineering', desc: 'Handcrafted frontends, micro-interactions, and robust code architectures.' },
-  { num: '06', name: 'AI Integration', desc: 'Cognitive neural layers, generative pipelines, and workflow automations.' },
-  { num: '07', name: 'UI/UX Design', desc: 'Immersive human systems, interactive design patterns, and friction-free flows.' },
-  { num: '08', name: 'Brand Story', desc: 'Editorial narratives, copy systems, and concept architecture.' },
-  { num: '09', name: 'Growth System', desc: 'Conversion optimization layers, analytical pipelines, and scaling frameworks.' }
+const NINE_DIMENSIONS = [
+  { num: '01', title: 'Strategy', category: 'Foundation', desc: 'Strategic positioning, market intelligence, and brand architecture.' },
+  { num: '02', title: 'Identity', category: 'Visual', desc: 'Brand systems, visual language, and iconic design elements.' },
+  { num: '03', title: 'Design', category: 'Creative', desc: 'Art direction, typography, and visual communication systems.' },
+  { num: '04', title: 'Motion', category: 'Dynamic', desc: 'Cinematic animation, micro-interactions, and visual storytelling.' },
+  { num: '05', title: 'AI', category: 'Intelligence', desc: 'Artificial intelligence, automation, and smart creative solutions.' },
+  { num: '06', title: 'Engineering', category: 'Technical', desc: 'Full-stack development, performance optimization, and scalable systems.' },
+  { num: '07', title: 'Experience', category: 'Human', desc: 'User experience, interaction design, and seamless journeys.' },
+  { num: '08', title: 'Content', category: 'Narrative', desc: 'Strategic storytelling, copywriting, and content architecture.' },
+  { num: '09', title: 'Growth', category: 'Scale', desc: 'Performance marketing, analytics, and sustainable growth systems.' }
 ];
 
 export default function Hero() {
-  const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const contentRef = useRef(null);
-  const mouseRef = useRef({ x: -999, y: -999, tx: -999, ty: -999 });
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hoveredDimension, setHoveredDimension] = useState(null);
-  const hoveredDimensionRef = useRef(null);
+  const wheelRef = useRef(null);
+  const [activeNode, setActiveNode] = useState(0);
 
-  // Sync state to ref for access in requestAnimationFrame loop
+  // ── Entry GSAP animations ──
   useEffect(() => {
-    hoveredDimensionRef.current = hoveredDimension;
-  }, [hoveredDimension]);
+    const tl = gsap.timeline({ delay: 0.2 });
 
-  // ── Entry animations ──
-  useEffect(() => {
-    const tl = gsap.timeline({ delay: 2.9 });
-
-    tl.fromTo('.h-line',
-      { y: '105%', opacity: 0 },
-      { y: '0%', opacity: 1, duration: 1.6, ease: 'power4.out', stagger: 0.12 }
+    tl.fromTo('.hero-fade-up',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', stagger: 0.1 }
     );
 
-    tl.fromTo('.h-sub',
-      { opacity: 0, y: 30, filter: 'blur(8px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out', stagger: 0.15 },
-      '-=1.0'
+    tl.fromTo('.hero-wheel-anim',
+      { opacity: 0, scale: 0.92 },
+      { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' },
+      '-=0.7'
     );
-
-    tl.fromTo('.h-cta',
-      { opacity: 0, y: 25, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: 'power3.out', stagger: 0.15 },
-      '-=0.8'
-    );
-    
-    setIsLoaded(true);
   }, []);
 
-  // ── Enhanced parallax scroll effect with depth ──
+  // ── Auto rotation between 9 dimensions ──
   useEffect(() => {
-    if (!isLoaded) return;
-    
-    const ctx = gsap.context(() => {
-      // Parallax text content slide-up
-      gsap.to(contentRef.current, {
-        y: -120,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
-      });
-      
-      // Subtle scale effect on scroll for depth
-      gsap.to(canvasRef.current, {
-        scale: 1.08,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, [isLoaded]);
-
-  // ── Dimensional constellation canvas ──
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const section = containerRef.current;
-    if (!canvas || !section) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let raf, isVisible = true;
-    let w = canvas.offsetWidth;
-    let h = canvas.offsetHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    let ripples = [];
-    const particles = [];
-
-    const resize = () => {
-      w = canvas.offsetWidth;
-      h = canvas.offsetHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // Re-initialize particles on resize to fill screen
-      particles.length = 0;
-      for (let i = 0; i < 45; i++) {
-        particles.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.14,
-          vy: (Math.random() - 0.5) * 0.14,
-          size: Math.random() * 1.5 + 0.4,
-          alpha: Math.random() * 0.25 + 0.08,
-          parallax: Math.random() * 0.03 + 0.012
-        });
-      }
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    // Compute node coordinates based on layout width
-    function getNodes(time, scrollPercent) {
-      // Constellation centered around the right side on desktop, center on mobile
-      const cx = w < 1024 ? w * 0.5 : w * 0.70;
-      const cy = h * 0.5;
-      
-      const R1 = Math.min(w, h) * (w < 768 ? 0.20 : 0.26) * (1 + scrollPercent * 0.15); // inner ring
-      const R2 = Math.min(w, h) * (w < 768 ? 0.36 : 0.43) * (1 + scrollPercent * 0.15); // outer ring
-
-      const nodes = [];
-
-      // Center node (the core 9D) - Prominent but not overpowering
-      const centerPulse = Math.sin(time * 0.001) * 3;
-      nodes.push({
-        x: cx + Math.sin(time * 0.0003) * 2 + centerPulse,
-        y: cy + Math.cos(time * 0.0004) * 2 + centerPulse,
-        size: 28 + centerPulse * 0.2, label: '9D', isCenter: true, idx: -1
-      });
-
-      // Inner ring — 4 nodes
-      const nodeLabels = ['01','02','03','04','05','06','07','08','09'];
-      for (let i = 0; i < 4; i++) {
-        const a = (i / 4) * Math.PI * 2 + time * 0.0003 + Math.PI / 4 + scrollPercent * Math.PI * 0.15;
-        const wobble = Math.sin(time * 0.0015 + i * 1.7) * 7;
-        const baseX = cx + (R1 + wobble) * Math.cos(a);
-        const baseY = cy + (R1 + wobble) * Math.sin(a);
-        
-        // Calculate magnetic pull towards cursor if mouse is within 240px
-        const distToMouse = Math.hypot(mouseRef.current.x - baseX, mouseRef.current.y - baseY);
-        let pullX = 0;
-        let pullY = 0;
-        if (mouseRef.current.x > -100 && distToMouse < 240) {
-          const force = (1 - distToMouse / 240) * 32;
-          const angleToMouse = Math.atan2(mouseRef.current.y - baseY, mouseRef.current.x - baseX);
-          pullX = Math.cos(angleToMouse) * force;
-          pullY = Math.sin(angleToMouse) * force;
-        }
-
-        nodes.push({
-          x: baseX + pullX,
-          y: baseY + pullY,
-          size: 14, label: nodeLabels[i], name: DIMENSIONS[i].name, idx: i
-        });
-      }
-
-      // Outer ring — 5 nodes
-      for (let i = 0; i < 5; i++) {
-        const a = (i / 5) * Math.PI * 2 - time * 0.00015 + Math.PI / 5 - scrollPercent * Math.PI * 0.15;
-        const wobble = Math.sin(time * 0.0012 + i * 2.3) * 9;
-        const baseX = cx + (R2 + wobble) * Math.cos(a);
-        const baseY = cy + (R2 + wobble) * Math.sin(a);
-        
-        const distToMouse = Math.hypot(mouseRef.current.x - baseX, mouseRef.current.y - baseY);
-        let pullX = 0;
-        let pullY = 0;
-        if (mouseRef.current.x > -100 && distToMouse < 240) {
-          const force = (1 - distToMouse / 240) * 24;
-          const angleToMouse = Math.atan2(mouseRef.current.y - baseY, mouseRef.current.x - baseX);
-          pullX = Math.cos(angleToMouse) * force;
-          pullY = Math.sin(angleToMouse) * force;
-        }
-
-        nodes.push({
-          x: baseX + pullX,
-          y: baseY + pullY,
-          size: 12, label: nodeLabels[i + 4], name: DIMENSIONS[i + 4].name, idx: i + 4
-        });
-      }
-
-      return nodes;
-    }
-
-    const onMove = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const mx = e.clientX - r.left;
-      const my = e.clientY - r.top;
-      mouseRef.current.tx = mx;
-      mouseRef.current.ty = my;
-
-      // Parallax rotation & translation for perspective grid
-      const percentX = (e.clientX / window.innerWidth - 0.5) * 2;
-      const percentY = (e.clientY / window.innerHeight - 0.5) * 2;
-      gsap.to('.hero-grid', {
-        x: percentX * 25,
-        y: percentY * 15,
-        rotationY: percentX * 5,
-        rotationX: 65 + percentY * 4,
-        duration: 1.5,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
-
-      // Bi-directional hover tracking (Canvas -> List)
-      const scrollPercent = Math.min(1, window.scrollY / (window.innerHeight || 800));
-      const currentNodes = getNodes(performance.now(), scrollPercent);
-      
-      let foundHover = -1;
-      for (let i = 0; i < currentNodes.length; i++) {
-        const node = currentNodes[i];
-        if (node.idx !== -1) {
-          const dist = Math.hypot(mx - node.x, my - node.y);
-          if (dist < 38) {
-            foundHover = node.idx;
-            break;
-          }
-        }
-      }
-      
-      if (foundHover !== hoveredDimensionRef.current) {
-        setHoveredDimension(foundHover === -1 ? null : foundHover);
-      }
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-
-    const onClick = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const rx = e.clientX - r.left;
-      const ry = e.clientY - r.top;
-      ripples.push({
-        x: rx,
-        y: ry,
-        radius: 0,
-        maxRadius: Math.max(w, h) * 0.45,
-        speed: 8,
-        opacity: 0.9
-      });
-    };
-    window.addEventListener('click', onClick, { passive: true });
-
-    // Connection map
-    const connections = [
-      [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8], // center to all
-      [1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,1], // outer ring
-      [1,4],[2,5],[3,6],[4,7],[5,8],[6,1],[7,2],[8,3], // cross connections
-      [1,3],[2,4],[3,5],[4,6],[5,7],[6,8],[7,1],[8,2], // additional complexity
-    ];
-
-    function drawNode(node, alpha, isNodeActive, scaleVal = 1.0) {
-      const { x, y, size, label, isCenter, name } = node;
-      const s = size * scaleVal;
-      const pulse = Math.sin(t * 0.0018 + node.idx * 1.5) * (isNodeActive ? 0.14 : 0.06) + 1;
-
-      // Outer glow - layered (Center 9D glow reduced by ~15-20% to avoid overpowering)
-      if (isCenter) {
-        // Center node glow (softened to keep heading as primary focal point)
-        const centerGrd = ctx.createRadialGradient(x, y, 0, x, y, s * 3.3 * pulse);
-        centerGrd.addColorStop(0, `rgba(255, 235, 190, ${alpha * 0.62})`);
-        centerGrd.addColorStop(0.35, `rgba(201, 122, 61, ${alpha * 0.38})`);
-        centerGrd.addColorStop(0.7, `rgba(201, 122, 61, ${alpha * 0.12})`);
-        centerGrd.addColorStop(1, 'rgba(201, 122, 61, 0)');
-        ctx.beginPath();
-        ctx.arc(x, y, s * 3.3 * pulse, 0, Math.PI * 2);
-        ctx.fillStyle = centerGrd;
-        ctx.fill();
-      } else {
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, s * 4.6 * pulse);
-        grd.addColorStop(0, `rgba(201,122,61,${alpha * (isNodeActive ? 0.65 : 0.26)})`);
-        grd.addColorStop(0.5, `rgba(201,122,61,${alpha * (isNodeActive ? 0.35 : 0.12)})`);
-        grd.addColorStop(1, 'rgba(201,122,61,0)');
-        ctx.beginPath();
-        ctx.arc(x, y, s * 4.6 * pulse, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-      }
-
-      // Dotted outer halos around center node
-      if (isCenter) {
-        ctx.beginPath();
-        ctx.arc(x, y, s * 1.45, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.55})`;
-        ctx.lineWidth = 0.95;
-        ctx.setLineDash([4, 6]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        
-        ctx.beginPath();
-        ctx.arc(x, y, s * 1.95, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(201,122,61,${alpha * 0.25})`;
-        ctx.lineWidth = 0.65;
-        ctx.stroke();
-      }
-
-      // Outer ring
-      ctx.beginPath();
-      ctx.arc(x, y, s * 1.15, 0, Math.PI * 2);
-      ctx.strokeStyle = isNodeActive 
-        ? `rgba(244,241,235,${alpha * 0.98})` 
-        : `rgba(201,122,61,${alpha * 0.55})`;
-      ctx.lineWidth = isCenter ? 1.95 : 0.95;
-      if (!isCenter) {
-        ctx.setLineDash([4, 6]);
-      }
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Inner ring
-      ctx.beginPath();
-      ctx.arc(x, y, s * 0.75, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(201,122,61,${alpha * (isNodeActive ? 0.88 : 0.38)})`;
-      ctx.lineWidth = 0.7;
-      ctx.stroke();
-
-      // Core dot with intense glow (brightest white core for Center 9D node)
-      const coreGrd = ctx.createRadialGradient(x, y, 0, x, y, s * 0.4);
-      if (isCenter) {
-        coreGrd.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
-        coreGrd.addColorStop(0.4, `rgba(255, 215, 150, ${alpha * 0.95})`);
-        coreGrd.addColorStop(1, `rgba(201, 122, 61, ${alpha * 0.7})`);
-      } else {
-        coreGrd.addColorStop(0, `rgba(255, 255, 255, ${alpha * (isNodeActive ? 1.0 : 0.88)})`);
-        coreGrd.addColorStop(0.4, `rgba(224, 169, 109, ${alpha * (isNodeActive ? 0.92 : 0.72)})`);
-        coreGrd.addColorStop(1, `rgba(201, 122, 61, ${alpha * 0.35})`);
-      }
-      ctx.beginPath();
-      ctx.arc(x, y, s * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = coreGrd;
-      ctx.fill();
-
-      // Label details
-      if (!isCenter) {
-        ctx.font = `bold ${Math.round(s * 0.48)}px "Space Mono", monospace`;
-        ctx.fillStyle = isNodeActive 
-          ? `rgba(244,241,235,${alpha * 0.98})`
-          : `rgba(201,122,61,${alpha * 0.6})`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(label, x, y - s * 0.05);
-        
-        // Dimension label name text tag
-        if (isNodeActive && name) {
-          ctx.font = `bold ${Math.round(s * 0.36)}px "Plus Jakarta Sans", sans-serif`;
-          ctx.fillStyle = `rgba(244,241,235,${alpha * 0.98})`;
-          ctx.fillText(name, x, y + s * 0.95);
-        }
-      } else {
-        ctx.font = `bold ${Math.round(s * 0.52)}px "Plus Jakarta Sans", sans-serif`;
-        ctx.fillStyle = `rgba(244,241,235,${alpha * 0.98})`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('9D', x, y);
-      }
-    }
-
-    let t = 0;
-    let activeConnections = new Set();
-
-    function draw(timestamp) {
-      if (!isVisible) { raf = 0; return; }
-      t = timestamp;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Smooth mouse coordinates lerp
-      mouseRef.current.x += (mouseRef.current.tx - mouseRef.current.x) * 0.06;
-      mouseRef.current.y += (mouseRef.current.ty - mouseRef.current.y) * 0.06;
-
-      // Update and draw floating particles (background depth)
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        const px = p.x + (mouseRef.current.x - w / 2) * p.parallax;
-        const py = p.y + (mouseRef.current.y - h / 2) * p.parallax;
-
-        ctx.beginPath();
-        ctx.arc(px, py, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201,122,61,${p.alpha})`;
-        ctx.fill();
-      });
-
-      // Connect background particles with very faint lines for depth
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
-          if (dist < 80) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(201, 122, 61, ${(1 - dist / 80) * 0.045})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Update ripples
-      ripples.forEach(rip => {
-        rip.radius += rip.speed;
-        rip.opacity -= 0.015;
-      });
-      ripples = ripples.filter(rip => rip.opacity > 0 && rip.radius < rip.maxRadius);
-
-      const scrollPercent = Math.min(1, window.scrollY / (window.innerHeight || 800));
-      const baseNodes = getNodes(timestamp, scrollPercent);
-
-      // Apply ripple force displacement to nodes
-      const nodes = baseNodes.map(node => {
-        let dx = 0;
-        let dy = 0;
-        ripples.forEach(rip => {
-          const dist = Math.hypot(node.x - rip.x, node.y - rip.y);
-          const waveDist = Math.abs(dist - rip.radius);
-          if (waveDist < 80) {
-            const force = (1 - waveDist / 80) * rip.opacity * 35;
-            const angle = Math.atan2(node.y - rip.y, node.x - rip.x);
-            dx += Math.cos(angle) * force;
-            dy += Math.sin(angle) * force;
-          }
-        });
-        return { ...node, x: node.x + dx, y: node.y + dy };
-      });
-
-      // Draw orbit rings
-      const cx = w < 1024 ? w * 0.5 : w * 0.70;
-      const cy = h * 0.5;
-      const R1 = Math.min(w, h) * (w < 768 ? 0.20 : 0.26) * (1 + scrollPercent * 0.15);
-      const R2 = Math.min(w, h) * (w < 768 ? 0.36 : 0.43) * (1 + scrollPercent * 0.15);
-
-      [R1, R2].forEach((r, ri) => {
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(201,122,61,${ri === 0 ? 0.055 : 0.038})`;
-        ctx.lineWidth = 0.6;
-        ctx.setLineDash([3, 10]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      });
-
-      // Draw connections (Thinner connection lines for premium look)
-      connections.forEach(([a, b], connIdx) => {
-        const nodeA = a === -1 ? nodes[0] : nodes[a + 1];
-        const nodeB = b === -1 ? nodes[0] : nodes[b + 1];
-
-        const distA = Math.hypot(mouseRef.current.x - nodeA.x, mouseRef.current.y - nodeA.y);
-        const distB = Math.hypot(mouseRef.current.x - nodeB.x, mouseRef.current.y - nodeB.y);
-        const prox = Math.max(0, 1 - Math.min(distA, distB) / 200);
-
-        const isHoverActive = prox > 0.35;
-        if (isHoverActive) {
-          activeConnections.add(connIdx);
-        } else if (activeConnections.size > 6 && Math.random() > 0.985) {
-          activeConnections.delete(connIdx);
-        }
-
-        // Highlight line if either of its nodes is currently hovered
-        const isListHovered = hoveredDimensionRef.current !== null && 
-                             (hoveredDimensionRef.current === a || hoveredDimensionRef.current === b);
-        const isConnActive = activeConnections.has(connIdx) || isListHovered;
-
-        const baseAlpha = isConnActive ? 0.38 : 0.15;
-        const grad = ctx.createLinearGradient(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
-        grad.addColorStop(0, `rgba(201,122,61,${baseAlpha + prox * 0.20})`);
-        grad.addColorStop(0.5, `rgba(201,122,61,${baseAlpha + 0.08 + prox * 0.25})`);
-        grad.addColorStop(1, `rgba(201,122,61,${baseAlpha + prox * 0.20})`);
-
-        ctx.beginPath();
-        ctx.moveTo(nodeA.x, nodeA.y);
-        ctx.lineTo(nodeB.x, nodeB.y);
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = isConnActive ? 1.5 + prox * 0.6 : 0.55 + prox * 0.35;
-        if (isConnActive) {
-          ctx.setLineDash([2, 5]);
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Animated light pulse traveling down connections
-        if (isConnActive) {
-          const progress = (timestamp * 0.0018 + connIdx * 0.3) % 1.0;
-          const px = nodeA.x + (nodeB.x - nodeA.x) * progress;
-          const py = nodeA.y + (nodeB.y - nodeA.y) * progress;
-          
-          ctx.beginPath();
-          ctx.arc(px, py, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
-          ctx.fill();
-        }
-      });
-
-      // Draw cursor constellation connection links (Signature Interaction)
-      if (mouseRef.current.x > -100 && mouseRef.current.y > -100) {
-        const sortedNodes = [...nodes]
-          .map((n) => ({ node: n, dist: Math.hypot(mouseRef.current.x - n.x, mouseRef.current.y - n.y) }))
-          .sort((a, b) => a.dist - b.dist);
-
-        const nearestCount = Math.min(3, sortedNodes.length);
-        for (let i = 0; i < nearestCount; i++) {
-          const { node, dist } = sortedNodes[i];
-          if (dist < 320) {
-            const alpha = (1 - dist / 320) * 0.25;
-            ctx.beginPath();
-            ctx.moveTo(mouseRef.current.x, mouseRef.current.y);
-            ctx.lineTo(node.x, node.y);
-            ctx.strokeStyle = `rgba(201,122,61,${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.setLineDash([2, 4]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-          }
-        }
-      }
-
-      // Draw click ripples
-      ripples.forEach(rip => {
-        ctx.beginPath();
-        ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(201,122,61,${rip.opacity * 0.28})`;
-        ctx.lineWidth = 1.0;
-        ctx.stroke();
-      });
-
-      // Draw nodes (Increased brightness with progressive proximity scaling)
-      nodes.forEach((node) => {
-        const dist = Math.hypot(mouseRef.current.x - node.x, mouseRef.current.y - node.y);
-        const prox = Math.max(0, 1 - dist / 110);
-        const isMouseHovered = prox > 0.35;
-        const isNodeActive = isMouseHovered || (hoveredDimensionRef.current === node.idx);
-        
-        // Progressive scaling (1.0 to 1.6 depending on proximity and active status)
-        const scaleVal = isNodeActive ? 1.4 : (1.0 + prox * 0.4);
-        
-        drawNode(node, 0.7 + prox * 0.3, isNodeActive, scaleVal);
-      });
-
-      // Mouse position ambient glow
-      if (mouseRef.current.x > -100 && mouseRef.current.y > -100) {
-        const mg = ctx.createRadialGradient(
-          mouseRef.current.x, mouseRef.current.y, 0,
-          mouseRef.current.x, mouseRef.current.y, 250
-        );
-        mg.addColorStop(0, 'rgba(201,122,61,0.07)');
-        mg.addColorStop(0.4, 'rgba(201,122,61,0.03)');
-        mg.addColorStop(1, 'rgba(201,122,61,0)');
-        ctx.beginPath();
-        ctx.arc(mouseRef.current.x, mouseRef.current.y, 250, 0, Math.PI * 2);
-        ctx.fillStyle = mg;
-        ctx.fill();
-      }
-
-      raf = requestAnimationFrame(draw);
-    }
-
-    const obs = new IntersectionObserver(([e]) => {
-      isVisible = e.isIntersecting;
-      if (isVisible && !raf) raf = requestAnimationFrame(draw);
-      else if (!isVisible && raf) { cancelAnimationFrame(raf); raf = 0; }
-    }, { threshold: 0.05 });
-    obs.observe(section);
-    raf = requestAnimationFrame(draw);
-
-    return () => {
-      isVisible = false;
-      cancelAnimationFrame(raf);
-      obs.disconnect();
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('click', onClick);
-    };
+    const timer = setInterval(() => {
+      setActiveNode((prev) => (prev + 1) % 9);
+    }, 4500);
+    return () => clearInterval(timer);
   }, []);
 
-  const activeDim = hoveredDimension !== null ? DIMENSIONS[hoveredDimension] : null;
+  // ── Subtle 3D Mouse Parallax Tilt ──
+  const handleMouseMove = (e) => {
+    if (!wheelRef.current) return;
+    const rect = wheelRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    const rotateX = (y / rect.height) * -6;
+    const rotateY = (x / rect.width) * 6;
+
+    gsap.to(wheelRef.current, {
+      rotateX: rotateX,
+      rotateY: rotateY,
+      duration: 0.5,
+      ease: 'power2.out',
+      transformPerspective: 1000
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!wheelRef.current) return;
+    gsap.to(wheelRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+  };
 
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen min-h-dvh w-full overflow-hidden bg-[#050505] flex items-center"
+      id="hero"
+      className="relative h-screen w-full bg-[#050505] text-[#F4F1EB] overflow-hidden pt-16 md:pt-20 pb-6 flex flex-col justify-between"
+      style={{
+        backgroundImage: 'radial-gradient(circle at 75% 35%, rgba(201, 122, 61, 0.07) 0%, rgba(5, 5, 5, 0.98) 75%)',
+      }}
     >
-      {/* Refined multi-layer gradient background for extreme depth (glows softened to blend perfectly) */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        
-        {/* Soft radial amber glow right behind network constellation - blended very softly */}
-        <div className="absolute left-[70%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full pointer-events-none z-0 opacity-35 blur-[200px] animate-pulse"
-          style={{
-            background: 'radial-gradient(circle, rgba(201,122,61,0.09) 0%, rgba(201,122,61,0.02) 50%, transparent 80%)',
-            animationDuration: '6s'
-          }} />
-
-        {/* Ambient shifting gold glow top right */}
-        <div className="animate-glow-1 absolute top-[-15%] right-[-10%] w-[70vw] h-[80vh] rounded-full blur-[140px]"
-          style={{ background: 'radial-gradient(ellipse, rgba(201,122,61,0.05) 0%, rgba(201,122,61,0.01) 50%, transparent 80%)' }} />
-        
-        {/* Ambient shifting indigo glow bottom left */}
-        <div className="animate-glow-2 absolute bottom-[-15%] left-[-15%] w-[65vw] h-[75vh] rounded-full blur-[120px]"
-          style={{ background: 'radial-gradient(ellipse, rgba(37,43,51,0.6) 0%, rgba(201,122,61,0.008) 45%, transparent 75%)' }} />
-
-        {/* Double gradient vignette layout centered on constellation */}
-        <div className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            background: 'radial-gradient(circle at 70% 50%, rgba(201,122,61,0.012) 0%, rgba(5,5,5,0.45) 55%, #050505 100%)',
-          }} />
-
-        {/* 3D Parallax Perspective Grid */}
-        <div className="hero-grid absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(201, 122, 61, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(201, 122, 61, 0.08) 1px, transparent 1px)',
-            backgroundSize: '55px 55px',
-            transform: 'perspective(1000px) rotateX(65deg) translateY(-20%) translateZ(-120px)',
-            transformOrigin: '50% 0%',
-          }} />
+      {/* Background Architectural Grid Lines */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-15">
+        <div className="blueprint-grid-line vertical left-[15%]" />
+        <div className="blueprint-grid-line vertical left-[50%]" />
+        <div className="blueprint-grid-line vertical left-[85%]" />
+        <div className="blueprint-grid-line horizontal top-[30%]" />
+        <div className="blueprint-grid-line horizontal top-[70%]" />
       </div>
 
-      {/* Dynamic Constellation Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0 pointer-events-none w-full h-full"
-      />
-
-      {/* Main content grid (Breathing space increased: gap-16 lg:gap-24) */}
-      <div ref={contentRef} className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 xl:px-24 pt-28 pb-16 min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+      {/* Main Grid Content */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-grow py-4">
         
-        {/* Left Column: Heading & CTAs */}
-        <div className="lg:col-span-7 flex flex-col justify-center items-start text-left z-20">
+        {/* Left Column: Brand Story & Headline */}
+        <div className="lg:col-span-6 flex flex-col justify-center items-start text-left z-20">
+          
+          {/* Top Brand Pill Tag */}
+          <div className="hero-fade-up inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#C97A3D]/30 bg-[#C97A3D]/5 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#C97A3D] animate-ping" />
+            <span className="font-subheading text-[10px] font-bold tracking-[0.25em] text-[#E0A96D] uppercase">
+              NINE AAYAM · CREATIVE SYSTEM
+            </span>
+          </div>
 
-          {/* Heading with thoda and line-height spacing & glow highlight */}
-          <h1 className="font-heading text-[#F4F1EB] leading-[1.08] tracking-[-0.03em] mb-8 select-none">
-            <div className="h-line-container mb-3.5">
-              <span className="h-line block text-[clamp(2.8rem,6.8vw,6.5rem)] font-light">
-                Building Brands
+          {/* Main Headline */}
+          <h1 className="hero-fade-up font-heading leading-[1.05] tracking-[-0.02em] mb-4">
+            <span className="block text-[clamp(2.5rem,4.8vw,5.2rem)] font-light text-[#F4F1EB]">
+              Nine Dimensions.
+            </span>
+            <span className="flex items-baseline gap-3 flex-wrap text-[clamp(2.5rem,4.8vw,5.2rem)] mt-1">
+              <span className="font-heading font-light text-[#E0A96D] text-[clamp(1.7rem,3.3vw,3.6rem)] leading-none -mr-1">
+                One Creative
               </span>
-            </div>
-            <div className="h-line-container mb-3.5">
-              <span className="h-line block text-[clamp(2.8rem,6.8vw,6.5rem)] font-light">
-                That Occupy
+              <span className="font-heading font-medium text-[#F4F1EB] relative inline-block">
+                System.
+                <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#C97A3D]" viewBox="0 0 100 12" preserveAspectRatio="none">
+                  <path d="M2 8 C 30 2, 70 2, 98 8" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                </svg>
               </span>
-            </div>
-            <div className="h-line-container">
-              <span className="h-line block text-[clamp(2.8rem,6.8vw,6.5rem)] font-light italic bg-gradient-to-r from-[#F4F1EB] via-[#E0A96D] to-[#C97A3D] bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(201,122,61,0.22)]">
-                Nine Dimensions.
-              </span>
-            </div>
+            </span>
           </h1>
 
-          {/* Cleaner body text */}
-          <div className="h-sub opacity-0 max-w-[460px] mb-10">
-            <p className="font-body text-[13px] sm:text-[14px] leading-[1.65] text-[#C4C8CF]/95 font-light">
-              Nine creative disciplines — identity, design, motion, engineering, and AI — unified into one architectural framework. Custom-engineered interfaces constructed for conversion and scale.
-            </p>
-          </div>
+          {/* Clear Supporting Paragraph */}
+          <p className="hero-fade-up font-body text-[14px] sm:text-[15.5px] leading-[1.75] text-[#D4D8DF] font-light max-w-[520px] mb-6">
+            We engineer brands through nine interconnected dimensions of creativity, technology, and experience.
+          </p>
 
-          {/* Magnetic CTAs (Premium slide-fill hover animations) */}
-          <div className="flex items-center gap-5 shrink-0">
-            <MagneticButton
-              href="#philosophy"
-              variant="custom"
-              className="h-cta group relative overflow-hidden inline-flex items-center gap-3.5 px-8 py-4.5 bg-[#C97A3D] text-[#050505] font-subheading text-[10px] font-bold tracking-[0.2em] uppercase opacity-0 transition-all duration-500 hover:shadow-[0_0_40px_rgba(201,122,61,0.5)] hover:scale-[1.03]"
-              magnetStrength={0.22}
-            >
-              <span className="relative z-10">Explore System</span>
-              <span className="relative z-10 flex items-center justify-center overflow-hidden w-4 h-4">
-                <svg className="w-4 h-4 transition-transform duration-500 transform group-hover:translate-x-full" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <svg className="w-4 h-4 absolute transition-transform duration-500 transform -translate-x-full group-hover:translate-x-0" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-              <span className="absolute inset-0 bg-[#E0A96D] translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
-            </MagneticButton>
-
-            <MagneticButton
-              href="mailto:connect@nayagrowth.com"
-              variant="custom"
-              cursorType="connect"
-              className="h-cta group relative overflow-hidden inline-flex items-center gap-3.5 px-8 py-4.5 border border-[#C97A3D]/30 hover:border-[#C97A3D]/0 text-[#C4C8CF] hover:text-[#050505] font-subheading text-[10px] font-bold tracking-[0.2em] uppercase opacity-0 transition-all duration-500 hover:shadow-[0_0_30px_rgba(201,122,61,0.22)] hover:scale-[1.03]"
-              magnetStrength={0.22}
-            >
-              <span className="relative z-10">Start Project</span>
-              <span className="relative z-10 flex items-center justify-center overflow-hidden w-4 h-4">
-                <svg className="w-4 h-4 transition-transform duration-500 transform group-hover:translate-x-full" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <svg className="w-4 h-4 absolute transition-transform duration-500 transform -translate-x-full group-hover:translate-x-0" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-              <span className="absolute inset-0 bg-[#C97A3D] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
-            </MagneticButton>
-          </div>
-        </div>
-
-        {/* Right Column: Tech Dashboard Panel (More breathing space, higher contrast description text) */}
-        <div className="lg:col-span-5 z-20 relative flex flex-col justify-center">
-          <div className="h-sub opacity-0 flex flex-col items-start w-full relative">
-            
-            {/* Structural vertical guideline (positioned nicely in spacing margin) */}
-            <div className="hidden lg:block absolute -left-12 top-0 bottom-0 w-[1px] bg-gradient-to-b from-[#C97A3D]/25 via-[#C97A3D]/5 to-transparent" />
-            
-            <h2 className="font-heading text-[#F4F1EB] text-[1.8rem] leading-none tracking-tight mb-4">
-              THE 9D SYSTEM
-            </h2>
-            
-            <p className="font-body text-[14px] text-[#C4C8CF] leading-relaxed mb-6 font-light">
-              Nine creative disciplines. One synchronized growth architecture.
-            </p>
-            
-            {/* Dynamic Active Node Dashboard Specs widget */}
-            {activeDim ? (
-              <div className="mt-2 pt-6 border-t border-white/[0.05] w-full min-h-[120px] flex flex-col justify-start transition-all duration-300">
-                <h3 className="font-heading text-[#F4F1EB] text-[1.5rem] leading-none mb-3">
-                  {activeDim.name}
-                </h3>
-                <p className="font-body text-[13px] text-[#C4C8CF]/95 font-light leading-relaxed">
-                  {activeDim.desc}
-                </p>
-              </div>
-            ) : (
-              <div className="mt-2 pt-6 border-t border-white/[0.05] w-full min-h-[120px] flex flex-col justify-start transition-all duration-300">
-                <h3 className="font-heading text-[#F4F1EB] text-[1.5rem] leading-none mb-3">
-                  ACTIVE NETWORK
-                </h3>
-                <p className="font-body text-[13px] text-[#C4C8CF] font-light leading-relaxed">
-                  Nine disciplines. One synchronized growth architecture.
-                </p>
-              </div>
-            )}
-
+          {/* Action CTAs */}
+          <div className="hero-fade-up flex items-center gap-5 mb-6 flex-wrap">
             <a
               href="#philosophy"
-              className="group inline-flex items-center gap-2.5 text-[#C97A3D] hover:text-[#E0A96D] font-subheading text-[10.5px] font-bold tracking-[0.2em] uppercase transition-colors mt-8"
+              className="inline-flex items-center gap-3.5 px-8 py-4 bg-[#8C5832] hover:bg-[#A3683C] text-[#F4F1EB] font-subheading text-[10.5px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_35px_rgba(140,88,50,0.35)] hover:-translate-y-0.5 group"
             >
-              <span>Explore the System</span>
-              <svg className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform duration-300" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <span>EXPLORE THE 9 DIMENSIONS</span>
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
+
+            <a
+              href="#services"
+              className="inline-flex items-center gap-2 text-[#F4F1EB] hover:text-[#C97A3D] font-subheading text-[10.5px] font-bold tracking-[0.2em] uppercase transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:bg-[#C97A3D]/70 hover:after:bg-[#C97A3D]"
+            >
+              DISCOVER THE SYSTEM
+            </a>
+          </div>
+
+        </div>
+
+        {/* Right Column: Signature 9D System Interactive Wheel / Radial Diagram */}
+        <div 
+          className="lg:col-span-6 relative w-full flex items-center justify-center py-2"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div 
+            ref={wheelRef}
+            className="hero-wheel-anim relative w-full aspect-square max-w-[420px] md:max-w-[460px] flex items-center justify-center p-3 transition-transform duration-300 ease-out"
+          >
+            {/* Background Ambient Glow - Organic pulse */}
+            <div className="absolute inset-0 bg-radial from-[#C97A3D]/12 via-transparent to-transparent blur-3xl opacity-80 pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+
+            {/* Floating ambient particles */}
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-[#C97A3D]/20 blur-sm pointer-events-none"
+                style={{
+                  width: `${4 + Math.random() * 6}px`,
+                  height: `${4 + Math.random() * 6}px`,
+                  left: `${20 + Math.random() * 60}%`,
+                  top: `${20 + Math.random() * 60}%`,
+                  animation: `floatParticle ${8 + Math.random() * 4}s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 2}s`
+                }}
+              />
+            ))}
+
+            {/* Organic flowing rings - not rigid compass */}
+            <svg className="absolute inset-0 w-full h-full text-[#C97A3D]/20 pointer-events-none" viewBox="0 0 500 500">
+              {/* Soft organic outer ring */}
+              <circle cx="250" cy="250" r="220" stroke="currentColor" strokeWidth="0.5" strokeDasharray="8 12" fill="none" opacity="0.6" className="animate-[spin_60s_linear_infinite]" />
+              {/* Middle ring with different dash pattern */}
+              <circle cx="250" cy="250" r="175" stroke="currentColor" strokeWidth="0.4" strokeDasharray="4 8" fill="none" opacity="0.4" className="animate-[spin_45s_linear_infinite_reverse]" />
+              {/* Inner subtle ring */}
+              <circle cx="250" cy="250" r="120" stroke="currentColor" strokeWidth="0.3" fill="none" opacity="0.3" />
+
+              {/* Organic connection lines to nodes - curved, not straight */}
+              {NINE_DIMENSIONS.map((dim, idx) => {
+                const angle = (idx / 9) * Math.PI * 2 - Math.PI / 2;
+                const r = 175;
+                const x2 = 250 + Math.cos(angle) * r;
+                const y2 = 250 + Math.sin(angle) * r;
+                const isActive = activeNode === idx;
+
+                return (
+                  <g key={dim.num}>
+                    <path 
+                      d={`M 250 250 Q ${250 + Math.cos(angle) * 50} ${250 + Math.sin(angle) * 50} ${x2} ${y2}`}
+                      stroke={isActive ? '#E0A96D' : 'rgba(201,122,61,0.55)'} 
+                      strokeWidth={isActive ? '1.2' : '0.5'}
+                      fill="none"
+                      className="transition-all duration-700 ease-out"
+                      style={{ 
+                        opacity: isActive ? 1 : 0.9,
+                        animation: isActive ? 'pulseLine 1.5s ease-in-out infinite' : 'none'
+                      }}
+                    />
+                    {isActive && (
+                      <>
+                        <circle cx={x2} cy={y2} r="6" fill="#E0A96D" opacity="0.6" className="animate-ping" />
+                        {/* Traveling particle along the line */}
+                        <circle r="3" fill="#E0A96D" opacity="0.8">
+                          <animateMotion 
+                            dur="2s" 
+                            repeatCount="indefinite"
+                            path={`M 250 250 Q ${250 + Math.cos(angle) * 50} ${250 + Math.sin(angle) * 50} ${x2} ${y2}`}
+                          />
+                        </circle>
+                      </>
+                    )}
+                    {/* Subtle pulse for inactive lines */}
+                    {!isActive && (
+                      <circle 
+                        cx={x2} cy={y2} 
+                        r="2" 
+                        fill="rgba(201,122,61,0.3)" 
+                        className="animate-pulse" 
+                        style={{ animationDuration: `${2.5 + idx * 0.3}s` }}
+                      />
+                    )}
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Central HERO "9" Core Node - Organic with glow */}
+            <div className="relative z-20 w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#0d0b0a] border border-[#C97A3D]/50 flex flex-col items-center justify-center p-4 text-center group cursor-pointer transition-all duration-700 hover:scale-110 hover:border-[#C97A3D]/80">
+              {/* Subtle glow ring */}
+              <div className="absolute inset-0 rounded-full bg-[#C97A3D]/15 blur-xl opacity-60 animate-pulse" style={{ animationDuration: '4s' }} />
+              <div className="absolute inset-0 rounded-full border border-[#C97A3D]/40 animate-pulse" style={{ animationDuration: '3s' }} />
+              
+              <span className="font-heading text-[68px] md:text-[85px] font-medium text-[#E0A96D] leading-none drop-shadow-[0_0_20px_rgba(201,122,61,0.5)] transition-all duration-700 group-hover:drop-shadow-[0_0_30px_rgba(201,122,61,0.8)]">
+                9
+              </span>
+              <span className="font-subheading text-[8px] md:text-[9px] font-bold tracking-[0.25em] text-[#F4F1EB]/70 uppercase -mt-1">
+                SYSTEM CORE
+              </span>
+              <span className="font-script text-[15px] md:text-[18px] text-[#E0A96D] font-normal leading-none mt-0.5 opacity-90">
+                Aayam
+              </span>
+            </div>
+
+            {/* 9 Outer Interactive Dimension Nodes - Organic with glow */}
+            {NINE_DIMENSIONS.map((dim, idx) => {
+              const angle = (idx / 9) * Math.PI * 2 - Math.PI / 2;
+              const radiusPercent = 37;
+              const leftPos = 50 + radiusPercent * Math.cos(angle);
+              const topPos = 50 + radiusPercent * Math.sin(angle);
+              const isActive = activeNode === idx;
+
+              return (
+                <div
+                  key={dim.num}
+                  onClick={() => setActiveNode(idx)}
+                  onMouseEnter={() => setActiveNode(idx)}
+                  className={`absolute z-30 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-700 flex items-center gap-2 group ${
+                    isActive ? 'scale-115 z-40' : 'opacity-70 hover:opacity-100 hover:scale-108'
+                  }`}
+                  style={{
+                    left: `${leftPos}%`,
+                    top: `${topPos}%`,
+                    animation: isActive ? 'none' : `float ${3 + idx * 0.3}s ease-in-out infinite`,
+                    animationDelay: `${idx * 0.2}s`
+                  }}
+                >
+                  {/* Organic glow behind node */}
+                  {isActive && (
+                    <div className="absolute inset-0 bg-[#C97A3D]/30 blur-2xl rounded-full animate-pulse" style={{ animationDuration: '2.5s' }} />
+                  )}
+                  
+                  {/* Subtle breathing ring for inactive nodes */}
+                  {!isActive && (
+                    <div className="absolute inset-0 rounded-full border border-[#C97A3D]/10 animate-pulse" style={{ animationDuration: `${2 + idx * 0.2}s` }} />
+                  )}
+                  
+                  {/* Node Circle Badge - softer, more organic */}
+                  <div className={`relative w-9 h-9 md:w-11 md:h-11 rounded-full flex items-center justify-center font-subheading text-[10px] md:text-[11px] font-bold transition-all duration-700 border ${
+                    isActive 
+                      ? 'bg-[#C97A3D] text-[#050505] border-[#E0A96D] shadow-[0_0_30px_rgba(201,122,61,0.6)]' 
+                      : 'bg-[#121212]/80 text-[#F4F1EB] border-white/15 group-hover:border-[#C97A3D]/50 group-hover:shadow-[0_0_15px_rgba(201,122,61,0.3)]'
+                  }`}>
+                    {dim.num}
+                  </div>
+
+                  {/* Node Label Text - cleaner */}
+                  <div className={`hidden sm:flex flex-col px-2.5 py-1 rounded-sm backdrop-blur-md border transition-all duration-500 ${
+                    isActive 
+                      ? 'bg-[#181513]/95 border-[#C97A3D]/50 shadow-lg' 
+                      : 'bg-[#0a0a0a]/70 border-white/8 opacity-60 group-hover:opacity-100 group-hover:border-[#C97A3D]/30'
+                  }`}>
+                    <span className={`font-subheading text-[9.5px] font-bold tracking-[0.15em] uppercase whitespace-nowrap ${
+                      isActive ? 'text-[#E0A96D]' : 'text-[#F4F1EB]'
+                    }`}>
+                      {dim.title}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Floating Active Dimension Detail Widget Card - More organic, less infographic */}
+            <div 
+              key={activeNode}
+              className="absolute bottom-6 sm:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-[380px] bg-[#141211]/90 border border-[#C97A3D]/30 backdrop-blur-md rounded-lg p-5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-all duration-700 animate-fadeIn"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-subheading text-[8px] font-bold tracking-[0.3em] text-[#C97A3D]/80 uppercase">
+                  DIMENSION {NINE_DIMENSIONS[activeNode].num}
+                </span>
+                <span className="font-mono text-[8px] text-[#A69E93]/70 uppercase tracking-wider">
+                  {NINE_DIMENSIONS[activeNode].category}
+                </span>
+              </div>
+              <h3 className="font-heading text-[18px] font-medium text-[#F4F1EB] leading-none mb-2 tracking-tight">
+                {NINE_DIMENSIONS[activeNode].title}
+              </h3>
+              <p className="font-body text-[11px] text-[#C4C8CF]/80 font-light leading-relaxed">
+                {NINE_DIMENSIONS[activeNode].desc}
+              </p>
+            </div>
+
           </div>
         </div>
 
       </div>
+
     </section>
   );
 }
