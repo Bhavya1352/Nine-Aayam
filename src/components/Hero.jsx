@@ -268,8 +268,7 @@ export default function Hero({ started = false }) {
         <div className="lg:col-span-6 flex flex-col justify-center items-start text-left z-20">
 
           {/* Top Brand Pill Tag */}
-          <div className="hero-fade-up inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#C97A3D]/30 bg-[#C97A3D]/5 mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#C97A3D] animate-ping" />
+          <div className="hero-fade-up inline-flex items-center px-3.5 py-1.5 rounded-full border border-[#C97A3D]/30 bg-[#C97A3D]/5 mb-4">
             <span className="font-subheading text-[10px] font-bold tracking-[0.25em] text-[#E0A96D] uppercase">
               NINE AAYAM · CREATIVE SYSTEM
             </span>
@@ -323,8 +322,7 @@ export default function Hero({ started = false }) {
           </div>
 
           {/* Micro hint tying headline to the diagram */}
-          <p className="hero-fade-up hidden md:flex items-center gap-2.5 font-subheading text-[9.5px] tracking-[0.22em] uppercase text-[#A69E93]/60">
-            <span className="w-4 h-px bg-[#C97A3D]/50" />
+          <p className="hero-fade-up hidden md:flex items-center font-subheading text-[9.5px] tracking-[0.22em] uppercase text-[#A69E93]/60">
             Hover the system · every node is a live dimension
           </p>
 
