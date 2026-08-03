@@ -28,7 +28,7 @@ export default function App() {
         <div className="atmospheric-vignette" />
 
         <Navbar />
-        <Hero />
+        <Hero started={loaded} />
         <Philosophy />
         <Manifesto />
         <Story />

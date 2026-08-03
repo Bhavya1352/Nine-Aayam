@@ -81,10 +81,24 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   CURSOR — fix blend mode dot color
+   CURSOR — golden magnetic cursor
    ══════════════════════════════════════════════════════════════ */
 .cursor-dot {
   mix-blend-mode: normal;
+  box-shadow: 0 0 12px rgba(224, 169, 109, 0.9), 0 0 32px rgba(201, 122, 61, 0.45);
+}
+
+.cursor-ring {
+  border-color: rgba(224, 169, 109, 0.55) !important;
+  box-shadow: 0 0 22px rgba(201, 122, 61, 0.3), 0 0 44px rgba(201, 122, 61, 0.18), inset 0 0 12px rgba(201, 122, 61, 0.12);
+}
+
+.cursor-aura {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 122, 61, 0.24), rgba(201, 122, 61, 0.06) 55%, transparent 72%);
+  pointer-events: none;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -571,6 +585,239 @@ body {
   pointer-events: none;
   background-image: radial-gradient(rgba(255, 255, 255, 0.3) 0.5px, transparent 0.5px);
   background-size: 4px 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO 2.0 — Discoverable · Assembled · Living System
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  --hero-gold: #C97A3D;
+  --hero-gold-light: #E0A96D;
+}
+
+/* ── Staged assembly targets start hidden (GSAP reveals them in order) ── */
+.hero-wheel-stage { opacity: 1; transform: scale(0.94); }
+.hero-core-node { opacity: 0; }
+.hero-node { opacity: 0; }
+.hero-conn { opacity: 0; }
+.hero-hint, .hero-orbit { opacity: 0; }
+.hero-cursor-light, .hero-beam, .hero-beam-tip { opacity: 0; }
+
+/* ── Breathing ambient halo ── */
+.hero-ambient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(201, 122, 61, 0.14), rgba(201, 122, 61, 0.04) 55%, transparent 72%);
+  filter: blur(28px);
+  pointer-events: none;
+  animation: heroBreath 5.5s ease-in-out infinite;
+}
+
+@keyframes heroBreath {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+
+/* ── Core breathing glow rings ── */
+.hero-core-glow {
+  animation: heroBreath 4.2s ease-in-out infinite;
+}
+
+.hero-core-glow-2 {
+  animation: heroBreath 3.1s ease-in-out infinite reverse;
+}
+
+/* ── Dynamic core label swap (story reinforcement) ── */
+.hero-core-label {
+  display: inline-block;
+  animation: coreLabelIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes coreLabelIn {
+  from { opacity: 0; transform: translateY(4px); letter-spacing: 0.4em; }
+  to   { opacity: 1; transform: translateY(0); letter-spacing: 0.25em; }
+}
+
+/* ── Soft light that follows the cursor inside the wheel ── */
+.hero-cursor-light {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  margin-left: -120px;
+  margin-top: -120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 122, 61, 0.16), rgba(201, 122, 61, 0.05) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.4s ease;
+}
+
+/* ── Connection beam that reaches toward the cursor ── */
+.hero-beam {
+  stroke: rgba(224, 169, 109, 0.75);
+  stroke-width: 1;
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 3 7;
+  filter: drop-shadow(0 0 4px rgba(224, 169, 109, 0.55));
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.hero-beam-tip {
+  fill: rgba(224, 169, 109, 0.9);
+  filter: drop-shadow(0 0 6px rgba(224, 169, 109, 0.8));
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+/* ── Ghost dimension word behind the wheel (story reinforcement) ── */
+.hero-ghost {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-heading);
+  font-size: clamp(3.4rem, 7vw, 7rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(224, 169, 109, 0.065);
+  white-space: nowrap;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 0;
+  animation: ghostIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ghostIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(1.1); letter-spacing: 0.14em; }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); letter-spacing: 0.06em; }
+}
+
+/* ── Rotating orbital seal around the core ── */
+.hero-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 224px;
+  height: 224px;
+  margin-left: -112px;
+  margin-top: -112px;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.hero-orbit-svg {
+  width: 100%;
+  height: 100%;
+  animation: orbitSpin 26s linear infinite;
+}
+
+.hero-orbit-text {
+  font-family: var(--font-subheading);
+  font-size: 8.5px;
+  letter-spacing: 3px;
+  fill: rgba(224, 169, 109, 0.55);
+  text-transform: uppercase;
+}
+
+@keyframes orbitSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Micro hint above the wheel ── */
+.hero-hint {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  position: absolute;
+  top: 1.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  font-family: var(--font-subheading);
+  font-size: 8.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 235, 0.42);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hero-hint-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--hero-gold-light);
+  box-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
+  animation: hintPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── Dimension node float with per-node amplitude ── */
+@keyframes heroFloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(var(--float-amp, -7px)); }
+}
+
+/* ── Node inner wrapper (hover/active scale lives here, not on float) ── */
+.hero-node-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.8;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.hero-node:hover .hero-node-inner,
+.hero-node-active .hero-node-inner {
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.hero-node-active:hover .hero-node-inner {
+  transform: scale(1.18);
+}
+
+.hero-node-badge {
+  will-change: transform;
+}
+
+/* ── One-shot radar pulse on the active node ── */
+.hero-node-radar {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(224, 169, 109, 0.55);
+  animation: discoverPulse 2.8s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes discoverPulse {
+  0% { transform: scale(0.5); opacity: 0.9; }
+  70%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── Progress hairline inside the detail card ── */
+.hero-card-progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.hero-card-progress > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, #C97A3D, #E0A96D);
+  box-shadow: 0 0 8px rgba(201, 122, 61, 0.6);
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

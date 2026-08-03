@@ -86,17 +86,18 @@ export default function Cursor() {
       {/* Tiny solid center dot */}
       <div
         ref={dotRef}
-        className="cursor-dot fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#C97A3D] pointer-events-none z-[9999] transition-opacity duration-300 ease-out"
+        className="cursor-dot fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#E0A96D] pointer-events-none z-[9999] transition-opacity duration-300 ease-out"
         style={{ opacity: 0 }}
       />
-      {/* Outer hollow circle */}
+      {/* Outer hollow circle — golden magnetic ring */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 w-7 h-7 rounded-full border border-[#C97A3D]/40 pointer-events-none z-[9998] transition-opacity duration-300 ease-out flex items-center justify-center"
+        className="cursor-ring fixed top-0 left-0 w-7 h-7 rounded-full border pointer-events-none z-[9998] transition-opacity duration-300 ease-out flex items-center justify-center"
         style={{ opacity: 0 }}
       >
+        <span className="cursor-aura" />
         {cursorType && (
-          <span className="font-mono text-[5px] text-[#E0A96D] font-bold uppercase tracking-widest scale-[0.4] select-none">
+          <span className="relative font-mono text-[5px] text-[#E0A96D] font-bold uppercase tracking-widest scale-[0.4] select-none">
             {cursorLabel || cursorType}
           </span>
         )}
